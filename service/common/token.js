@@ -52,15 +52,15 @@ exports.getToken = (ctx, userInfo, time) => {
  */
 exports.decryptToken = (ctx, tokens) => {
   // 解密
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  // 使用相同的算法、密钥和 iv 进行加密
-  let decrypted = decipher.update(tokens, "hex", "utf8");
   try {
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    // 使用相同的算法、密钥和 iv 进行加密
+    let decrypted = decipher.update(tokens, "hex", "utf8");
     decrypted += decipher.final("utf8");
+    return decrypted;
   } catch (error) {
     return false;
   }
-  return decrypted;
 };
 /**
  * token验证
@@ -71,29 +71,30 @@ exports.decryptToken = (ctx, tokens) => {
 exports.checkToken = (ctx, tokens, type = true) => {
   let checkTokenData = {};
   tokens = tokens.replace(/\s+/g, ""); // 空格替换
-  // 解密
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  // 使用相同的算法、密钥和 iv 进行加密
-  let decrypted = decipher.update(tokens, "hex", "utf8");
   try {
+    // 解密
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    // 使用相同的算法、密钥和 iv 进行加密
+    let decrypted = decipher.update(tokens, "hex", "utf8");
     decrypted += decipher.final("utf8");
-  } catch (error) {
-    return { isValidity: false };
-  }
-  const decoded = jwt.decode(decrypted, secret);
-  // console.log("decoded", decoded, decoded.exp > new DaccessTokenate());
-  // 600秒过期预警
-  if (type) {
-    if (decoded.exp > new Date() / 1000 && decoded.exp < new Date() / 1000 + 600) {
-      // ctx.append("refresh", true);
-      checkTokenData.refresh = true;
-    } else {
-      // ctx.remove("refresh");
-      checkTokenData.refresh = false;
+
+    const decoded = jwt.decode(decrypted, secret);
+    // console.log("decoded", decoded, decoded.exp > new DaccessTokenate());
+    // 600秒过期预警
+    if (type) {
+      if (decoded.exp > new Date() / 1000 && decoded.exp < new Date() / 1000 + 600) {
+        // ctx.append("refresh", true);
+        checkTokenData.refresh = true;
+      } else {
+        // ctx.remove("refresh");
+        checkTokenData.refresh = false;
+      }
     }
+    checkTokenData.isValidity = !(decoded && decoded.exp <= new Date() / 1000);
+    return checkTokenData;
+  } catch (error) {
+    return { isValidity: false, refresh: false };
   }
-  checkTokenData.isValidity = !(decoded && decoded.exp <= new Date() / 1000);
-  return checkTokenData;
   // return !(decoded && decoded.exp <= new Date() / 1000);
 };
 
@@ -104,18 +105,19 @@ exports.checkToken = (ctx, tokens, type = true) => {
  */
 exports.decryptRSAToken = (ctx, tokens) => {
   tokens = tokens.replace(/\s+/g, ""); // 空格替换
-  // 解密
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  // 使用相同的算法、密钥和 iv 进行加密
-  let decrypted = decipher.update(tokens, "hex", "utf8");
   try {
+    // 解密
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    // 使用相同的算法、密钥和 iv 进行加密
+    let decrypted = decipher.update(tokens, "hex", "utf8");
     decrypted += decipher.final("utf8");
+
+    // decrypted += decipher.final('utf8');
+    const decoded = jwt.decode(decrypted, secret);
+    return decoded;
   } catch (error) {
     return false;
   }
-  // decrypted += decipher.final('utf8');
-  const decoded = jwt.decode(decrypted, secret);
-  return decoded;
 };
 
 /**
@@ -124,17 +126,11 @@ exports.decryptRSAToken = (ctx, tokens) => {
  */
 exports.verifyToken = (ctx, token) => {
   token = token.replace(/\s+/g, ""); // 空格替换, 超级账号换行导致会有空格
-
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  // 使用相同的算法、密钥和 iv 进行加密
-  let decrypted = decipher.update(token, "hex", "utf8");
   try {
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    // 使用相同的算法、密钥和 iv 进行加密
+    let decrypted = decipher.update(token, "hex", "utf8");
     decrypted += decipher.final("utf8");
-  } catch (error) {
-    return false;
-  }
-
-  try {
     // jwt.verify方法验证token是否有效
     jwt.verify(decrypted, secret, {
       complete: true,
