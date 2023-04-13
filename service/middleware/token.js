@@ -25,6 +25,7 @@ module.exports = tokenMiddleware = (req, res, next) => {
           }
           next();
         } else {
+          res.status(403);
           send.error(req, res, {
             status: 1,
             message: "token失效",
@@ -34,6 +35,7 @@ module.exports = tokenMiddleware = (req, res, next) => {
         console.error("error:", error);
       }
     } else {
+      res.status(401);
       send.error(req, res, {
         status: 1,
         message: "token无效",
