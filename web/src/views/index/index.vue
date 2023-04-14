@@ -1,5 +1,7 @@
 <template>
-  <div class="index-page">indexpage</div>
+  <div class="index-page">
+    <h1>indexpage</h1>
+  </div>
 </template>
 
 <script>

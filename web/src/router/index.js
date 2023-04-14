@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import indexRotuter from "./modules/index";
+import loginRotuter from "./modules/login";
 
 Vue.use(VueRouter);
 
@@ -10,6 +11,7 @@ const routes = [
     redirect: "/index",
   },
   indexRotuter,
+  loginRotuter,
 ];
 
 const router = new VueRouter({
