@@ -42,7 +42,8 @@ router.post("/token", async function (req, res, next) {
 
 //登录
 router.post("/login", async function (req, res, next) {
-  // console.log("next", next);
+  console.log("post login");
+
   let { username, phone, password } = req.body;
   let queryConditions = {};
   if (username) {

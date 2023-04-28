@@ -33,6 +33,11 @@ app.use(function (req, res, next) {
 
 console.log("NODE_ENV:", process.env.NODE_ENV);
 
+// Cors Middleware
+const cors = require("cors");
+app.use(cors());
+app.options("*", cors());
+
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development

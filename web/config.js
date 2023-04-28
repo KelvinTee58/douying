@@ -5,19 +5,19 @@ console.log("当前环境：", NODE_ENV == "localhost" ? "本地开发环境" : 
 const tempConfig = {
   // localFileUrl: "http://localhost:8080",
   imageUrl: "http://localhost:3000",
-  requestUrl: "http://localhost:3000",
+  requestUrl: "http://127.0.0.1:3000",
   // useSdcard: false,
 };
 const devConfig = {
   // localFileUrl: "http://localhost:8080",
   imageUrl: "http://localhost:3000",
-  requestUrl: "http://localhost:3000",
+  requestUrl: "http://127.0.0.1:3000",
   // useSdcard: true,
 };
 const prodConfig = {
   // localFileUrl: "http://localhost:8080",
   imageUrl: "http://localhost:3000",
-  requestUrl: "http://localhost:3000",
+  requestUrl: "http://127.0.0.1:3000",
   // useSdcard: true,
 };
 

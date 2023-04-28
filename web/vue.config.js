@@ -18,35 +18,46 @@ module.exports = {
   /* 代码保存时进行eslint检测 */
   lintOnSave: true,
   /* webpack-dev-server 相关配置 */
-
-  configureWebpack: {
-    module: {
-      rules: [
-        {
-          test: /\.ts$|\.js$|\.vue$/,
-          use: [
-            {
-              loader: "./serverLoader.js",
-            },
-          ],
+  // configureWebpack: {
+  //   module: {
+  //     rules: [
+  //       {
+  //         test: /\.ts$|\.js$|\.vue$/,
+  //         use: [
+  //           {
+  //             loader: "./serverLoader.js",
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   //entry: ["babel-polyfill", "./src/main.js"]
+  //   amd: {
+  //     toUrlUndefined: true,
+  //   },
+  //   node: {
+  //     // Resolve node module use of fs
+  //     fs: "empty",
+  //   },
+  //   plugins: [
+  //     new webpack.DefinePlugin({
+  //       CESIUM_BASE_URL: JSON.stringify("./"),
+  //     }),
+  //     new webpack.DefinePlugin({
+  //       BUILDTIME: JSON.stringify(buildTime),
+  //     }),
+  //   ],
+  // },
+  devServer: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:3000", // 需要代理的后端接口
+        changeOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求
+        pathRewrite: {
+          //重写匹配的字段，如果不需要在请求路径上，重写为""
+          "/api": "",
         },
-      ],
+      },
     },
-    //entry: ["babel-polyfill", "./src/main.js"]
-    amd: {
-      toUrlUndefined: true,
-    },
-    node: {
-      // Resolve node module use of fs
-      fs: "empty",
-    },
-    plugins: [
-      new webpack.DefinePlugin({
-        CESIUM_BASE_URL: JSON.stringify("./"),
-      }),
-      new webpack.DefinePlugin({
-        BUILDTIME: JSON.stringify(buildTime),
-      }),
-    ],
   },
 };

@@ -1,9 +1,11 @@
 import axios from "axios";
 import store from "@/store/index";
-import { config } from "localforage";
+import qs from "qs";
+
+// import { config } from "localforage";
 const requestTimeout = 60; // 设定超时时间
 
-axios.defaults.baseURL = "reqUrl";
+// axios.defaults.baseURL = "reqUrl";
 // 设置请求超时
 // 通过axios.defaults.timeout设置默认的请求超时时间。例如超过了60s，就会告知用户当前请求超时，请刷新等。
 axios.defaults.timeout = 1000 * requestTimeout;
@@ -11,14 +13,19 @@ axios.defaults.timeout = 1000 * requestTimeout;
 // 请求拦截器
 axios.interceptors.request.use(
   (config) => {
+    // 兼容 post 跨域问题
+    if (config.method === "post") {
+      // config.data = qs.stringify(config.data);
+    }
     // 每次发送请求之前判断vuex中是否存在token
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
     const token = store.state.token;
-    token && (config.headers.Authorization = token);
+    config.headers.Authorization = token;
     return config;
   },
   (error) => {
+    ``;
     return Promise.error(error);
   }
 );
@@ -72,7 +79,7 @@ function errorHandler(error, pure = false) {
       // 清除本地token和清空vuex中token对象
       // 跳转登录页面
       case 403:
-        this.$cooToast({
+        window.$cooToast({
           message: "登录过期，请重新登录",
           duration: 1000,
           type: "fail",
@@ -93,7 +100,7 @@ function errorHandler(error, pure = false) {
 
       // 404请求不存在
       case 404:
-        this.$cooToast({
+        window.$cooToast({
           message: "网络请求不存在",
           duration: 1000,
           type: "fail",
@@ -101,7 +108,7 @@ function errorHandler(error, pure = false) {
         break;
       // 其他错误，直接抛出错误提示
       default:
-        this.$cooToast({
+        window.$cooToast({
           message: error.response.data.message,
           duration: 1500,
           type: "fail",
@@ -112,9 +119,10 @@ function errorHandler(error, pure = false) {
 
 // 是否开启全局loading
 function globalLoading(loading = true) {
+  console.log("globalLoading", this, loading);
   if (loading) {
     // 全局loadding
-    this.$cooToast({
+    window.$cooToast({
       // id: 'tempToast',
       content: "加载中",
       type: "loading",
@@ -127,7 +135,8 @@ function getRequestUrl(url, fullUrl = false) {
   if (fullUrl) {
     return url;
   } else {
-    return "reqUrl" + url;
+    // return "reqUrl" + url;
+    return "/api" + url;
   }
 }
 
@@ -149,20 +158,21 @@ export function get(
     fullUrl: false,
   }
 ) {
+  let that = this;
   return new Promise((resolve, reject) => {
-    globalLoading(option.loading); // 开启loading
+    globalLoading.apply(that, [option.loading]); // 开启loading
     axios
-      .get(getRequestUrl(url, config.fullUrl), {
+      .get(getRequestUrl(url, option.fullUrl), {
         params: params,
       })
       .then((res) => {
         resolve(res.data);
-        this.$cooToastHide(); // 结束关闭loading
+        window.$cooToastHide(); // 结束关闭loading
       })
       .catch((err) => {
         errorHandler(err, option.pure);
         reject(err.data);
-        this.$cooToastHide(); // 结束关闭loading
+        window.$cooToastHide(); // 结束关闭loading
       });
   });
 }
@@ -184,18 +194,24 @@ export function post(
     fullUrl: false,
   }
 ) {
+  let that = this;
+
   return new Promise((resolve, reject) => {
-    globalLoading(option.loading); // 开启loading
+    globalLoading.apply(that, [option.loading]); // 开启loading
     axios
-      .post(getRequestUrl(url, config.fullUrl), JSON.stringify(params))
+      .post(getRequestUrl(url, option.fullUrl), params, {
+        headers: {
+          "content-type": "application/json",
+        },
+      })
       .then((res) => {
         resolve(res.data);
-        this.$cooToastHide(); // 结束关闭loading
+        window.$cooToastHide(); // 结束关闭loading
       })
       .catch((err) => {
         errorHandler(err, option.pure);
         reject(err.data);
-        this.$cooToastHide(); // 结束关闭loading
+        window.$cooToastHide(); // 结束关闭loading
       });
   });
 }
