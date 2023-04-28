@@ -1,8 +1,4 @@
-// const CopyWebpackPlugin = require('copy-webpack-plugin')
-const webpack = require("webpack");
-// const path = require('path')
-
-let buildTime = new Date();
+const config = require("./config");
 
 module.exports = {
   /* 部署生产环境和开发环境下的URL：可对当前环境进行区分，baseUrl 从 Vue CLI 3.3 起已弃用，要使用publicPath */
@@ -51,11 +47,19 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:3000", // 需要代理的后端接口
+        target: config.requestUrl, // 需要代理的后端接口
         changeOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求
         pathRewrite: {
           //重写匹配的字段，如果不需要在请求路径上，重写为""
           "/api": "",
+        },
+      },
+      "/image": {
+        target: config.imageUrl, // 需要代理的后端接口
+        changeOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求
+        pathRewrite: {
+          //重写匹配的字段，如果不需要在请求路径上，重写为""
+          "/image": "",
         },
       },
     },

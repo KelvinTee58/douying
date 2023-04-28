@@ -50,7 +50,8 @@ export default {
         password: password,
       };
       console.log("password", params);
-      let a = await this.$post("/users/login", params);
+      // let a = await this.$post("/users/login", params);
+      let a = await this.$post("/api/users/login", params, { fullUrl: true });
       console.log("a", a);
     },
   },

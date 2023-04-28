@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "@/store/index";
-import qs from "qs";
+// import qs from "qs";
 
 // import { config } from "localforage";
 const requestTimeout = 60; // 设定超时时间
@@ -136,7 +136,8 @@ function getRequestUrl(url, fullUrl = false) {
     return url;
   } else {
     // return "reqUrl" + url;
-    return "/api" + url;
+    // return "/api" + url;
+    return url;
   }
 }
 
