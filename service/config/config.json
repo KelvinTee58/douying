@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": "root",
+    "password": "19960508",
+    "database": "douying_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "19960508",
+    "database": "douying_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
