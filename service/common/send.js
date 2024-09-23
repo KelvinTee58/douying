@@ -41,7 +41,7 @@ send.error = (req, res, sendOption) => {
   if (isRefresh) {
     params.refresh = isRefresh;
   }
-  sendOption.status = 1;
+  if (!sendOption.status) sendOption.status = 1;
   if (!sendOption.message) {
     sendOption.message = "请求失败";
   }

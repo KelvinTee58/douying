@@ -13,6 +13,7 @@
       </div>
       <div class="input__wrapper__item button__wrapper">
         <coo-button type="primary" round @click="login">登录</coo-button>
+        <coo-button type="primary" round @click="login2">登录2</coo-button>
         <!-- <van-button type="primary">主要按钮</van-button> -->
         <!-- <van-button type="info">信息按钮</van-button> -->
         <!-- <van-button type="primary">登录</van-button> -->
@@ -23,6 +24,7 @@
 
 <script>
 import { encryptBase64 } from "@/utils/AESPasswordEncryption.js";
+import { mapActions } from "vuex";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -43,16 +45,40 @@ export default {
   mounted() {},
   //方法集合
   methods: {
+    ...mapActions("user", ["initUserInfo"]),
     async login() {
       let password = encryptBase64(this.password);
       let params = {
         phone: this.phone,
         password: password,
       };
-      console.log("password", params);
-      // let a = await this.$post("/users/login", params);
-      let a = await this.$post("/api/users/login", params, { fullUrl: true });
-      console.log("a", a);
+      try {
+        let logininfo = await this.$post("/api/users/login", params);
+        this.initUserInfo(logininfo.data);
+        let name = logininfo.data.user.name || "用户";
+        this.$cooToast({
+          content: "欢迎您，" + name,
+          duration: 2000,
+          type: "success",
+        });
+        // console.log("logininfo.data", logininfo.data);
+        this.$router.replace({ path: "/index" });
+      } catch (error) {
+        this.initUserInfo({});
+      }
+    },
+    async login2() {
+      let password = encryptBase64(this.password);
+      let params = {
+        phone: this.phone,
+        password: password,
+      };
+      try {
+        await this.$post("/api/users", params);
+        // this.initUserInfo(logininfo.data);
+      } catch (error) {
+        // this.initUserInfo({});
+      }
     },
   },
 };

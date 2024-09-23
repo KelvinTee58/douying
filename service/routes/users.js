@@ -6,6 +6,15 @@ const models = require("../models");
 const send = require("../common/send");
 
 /* GET users listing. */
+router.post("/", function (req, res, next) {
+  console.log("/users", req.body);
+  // send.success(req, res, {}, "密码错误");
+  send.error(req, res, {
+    status: 401,
+    message: "密码错误",
+  });
+});
+
 router.get("/", function (req, res, next) {
   console.log("/users", req.body);
   // send.success(req, res, {}, "密码错误");
@@ -18,24 +27,46 @@ router.get("/", function (req, res, next) {
 // 重刷token
 router.post("/token", async function (req, res, next) {
   let { refreshToken } = req.body;
+  if (!refreshToken) {
+    // res.status(403);
+    send.error(req, res, {
+      status: 1,
+      message: "refreshToken 无效",
+    });
+  }
   console.log("refreshToken", refreshToken);
-  let isVerify = verifyToken(res, refreshToken);
-  let { isValidity } = checkToken(res, refreshToken, false);
-  console.log("isVerify", isValidity, isVerify);
-  if (isVerify && isValidity) {
-    let tokenContent = decryptToken(res, refreshToken);
-    let userParams = { uid: tokenContent.uid, type: "access" };
-    let expiresIn = "2h";
-    if (process.env.NODE_ENV && process.env.NODE_ENV === "development") {
-      expiresIn = "48h";
+  try {
+    let isVerify = verifyToken(res, refreshToken);
+    let { isValidity } = checkToken(res, refreshToken, false);
+    // console.log("isVerify", isValidity, isVerify);
+    if (isVerify && isValidity) {
+      let tokenContent = decryptToken(res, refreshToken);
+      let userParams = { uid: tokenContent.uid, type: "access" };
+      let expiresIn = "2h";
+      if (process.env.NODE_ENV && process.env.NODE_ENV === "development") {
+        expiresIn = "48h";
+      } else {
+        expiresIn = "2h";
+      }
+      let accessToken = getToken(req, userParams, expiresIn);
+      send.success(req, res, {
+        data: {
+          accessToken: `${accessToken}`,
+        },
+      });
     } else {
-      expiresIn = "2h";
+      // res.status(403);
+      send.error(req, res, {
+        status: 403,
+        message: "refreshToken 失效",
+      });
     }
-    let accessToken = getToken(req, userParams, expiresIn);
-    send.success(req, res, {
-      data: {
-        accessToken: `${accessToken}`,
-      },
+  } catch (error) {
+    // console.log(error);
+    // res.status(403);
+    send.error(req, res, {
+      status: 403,
+      message: "refreshToken 失效",
     });
   }
 });

@@ -44,6 +44,33 @@ module.exports = {
   //     }),
   //   ],
   // },
+  css: {
+    loaderOptions: {
+      scss: {
+        // 全局sass变量
+        //sass-loader 8.0.0以前版本 , v8 - prependData, v10+ - additionalData
+        // additionalData: `@import "~@/style/index.scss";`,
+        prependData: `@import "~@/style/index.scss";`,
+      },
+      sass: {
+        // 全局sass变量
+        //sass-loader 8.0.0以前版本 , v8 - prependData, v10+ - additionalData
+        // additionalData: `@import "~@/style/index.scss";`,
+        prependData: `@import "~@/style/index.scss";`,
+      },
+    },
+  },
+  // css: {
+  //   extract: false,
+  //   loaderOptions: {
+  //     scss: {
+  //       // 全局引入变量和 mixin
+  //       additionalData: `
+  //         @import "@/style/index.scss";
+  //       `,
+  //     },
+  //   },
+  // },
   devServer: {
     proxy: {
       "/api": {

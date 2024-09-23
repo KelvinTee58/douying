@@ -9,10 +9,6 @@ module.exports = tokenMiddleware = (req, res, next) => {
     // console.log("req.headers", req.headers.authorization);
     if (req.headers.authorization) {
       let tokenList = req.headers.authorization.split("Bearer ");
-      // console.log("tokenList", tokenList);
-      // let v1 = verifyToken(res, tokenList[1]);
-      // let v2 = decryptToken(res, tokenList[1]);
-      // console.log("refresh:", req.headers.authorization, "---", tokenList[1]);
       try {
         let isVerify = verifyToken(res, tokenList[1]);
         console.log("isVerify:", isVerify);
@@ -32,13 +28,18 @@ module.exports = tokenMiddleware = (req, res, next) => {
           });
         }
       } catch (error) {
-        console.error("error:", error);
+        // console.error("error:", error);
+        res.status(403);
+        send.error(req, res, {
+          status: 1,
+          message: "token失效",
+        });
       }
     } else {
       res.status(401);
       send.error(req, res, {
         status: 1,
-        message: "token无效",
+        message: "需要token令牌",
       });
     }
     // next();
