@@ -1,0 +1,30 @@
+{
+  "warehouses": [
+    {
+      "wName": "仓库A",
+      "wContacts": "联系人A"
+    },
+    {
+      "wName": "仓库B",
+      "wContacts": "联系人B"
+    }
+  ],
+  "customers": [
+    {
+      "cCompany": "客户A",
+      "cContacts": "联系人A",
+      "cAddress": "地址A"
+    },
+    {
+      "cCompany": "客户B",
+      "cContacts": "联系人B",
+      "cAddress": "地址B"
+    }
+  ],
+  "trade": [
+    {
+      "tName": "速冻菠萝丁12",
+      "tSpecifications": "10kg/箱"
+    }
+  ]
+}
