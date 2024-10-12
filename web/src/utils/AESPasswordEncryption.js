@@ -5,6 +5,7 @@
 import CryptoJS from "crypto-js";
 
 const AES_KEY = "douying_aes"; // 密文（密钥）
+const AES_VI = "douying_aes_VIVI"; // 密文（密钥）
 const keySize = 128; // 设置数据块长度
 
 /**

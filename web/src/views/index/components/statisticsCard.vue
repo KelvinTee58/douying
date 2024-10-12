@@ -25,70 +25,70 @@
 export default {
   props: {
     title: {
-      default: "",
-      type: String,
+      default: '',
+      type: String
     },
     trend: {
-      default: "",
-      type: String,
+      default: '',
+      type: String
     },
     statistics: {
-      default: "",
-      type: String,
+      default: '',
+      type: String
     },
     unit: {
-      default: "",
-      type: String,
+      default: '',
+      type: String
     },
     trendStatus: {
-      default: "",
-      type: String,
-    },
+      default: '',
+      type: String
+    }
   },
   //局部过滤器
   filters: {
     million(value) {
       //过万处理
-      let num;
+      let num
       if (value > 9999 && value <= 99999999) {
         //大于9999显示x.xx万
-        num = Math.floor(value / 1000) / 10 + "万";
+        num = Math.floor(value / 1000) / 10 + '万'
       } else if (value > 99999999) {
-        num = Math.floor(value / 10000000) / 10 + "亿";
+        num = Math.floor(value / 10000000) / 10 + '亿'
       } else if (value < 9999 && value > -9999) {
-        num = value;
+        num = value
       } else if (value < -9999 && value >= -99999999) {
         //小于-9999显示-x.xx万
-        num = -(Math.floor(Math.abs(value) / 1000) / 10) + "万";
+        num = -(Math.floor(Math.abs(value) / 1000) / 10) + '万'
       } else if (value < -99999999) {
         //小于-99999999-x.xx万
-        num = -(Math.floor(Math.abs(value) / 10000000) / 10) + "亿";
+        num = -(Math.floor(Math.abs(value) / 10000000) / 10) + '亿'
       }
-      return num;
-    },
+      return num
+    }
   },
   //监听属性 类似于data概念
   computed: {
     trendIcon() {
-      if (this.trendStatus == "up") {
-        return "arrow-up-line";
-      } else if (this.trendStatus == "down") {
-        return "arrow-down-line";
+      if (this.trendStatus == 'up') {
+        return 'arrow-up-line'
+      } else if (this.trendStatus == 'down') {
+        return 'arrow-down-line'
       } else {
-        return "subtract-line";
+        return 'subtract-line'
       }
     },
     trendClass() {
-      if (this.trendStatus == "up") {
+      if (this.trendStatus == 'up') {
         // return " background-color: rgb(255, 51, 0);border-color: rgb(255, 51, 0);";
-        return "trend-wrapper__up";
-      } else if (this.trendStatus == "down") {
+        return 'trend-wrapper__up'
+      } else if (this.trendStatus == 'down') {
         // return "{ background-color: rgb(10, 171, 98), border-color: rgb(10, 171, 98)}";
-        return "trend-wrapper__down";
+        return 'trend-wrapper__down'
       } else {
-        return "";
+        return ''
       }
-    },
+    }
   },
   //监控data中的数据变化
   watch: {},
@@ -97,8 +97,8 @@ export default {
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   //方法集合
-  methods: {},
-};
+  methods: {}
+}
 </script>
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
@@ -106,7 +106,8 @@ export default {
   display: inline-block;
   color: #fff;
   .card-wrapper {
-    background: $primary;
+    // background: $primary;
+    background: #000000;
     width: 15rem;
     border-radius: 1rem;
     padding: 1rem;

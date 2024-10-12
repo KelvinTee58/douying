@@ -1,25 +1,23 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import indexRotuter from "./modules/index";
-import loginRotuter from "./modules/login";
-import productListRotuter from "./modules/productList";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import indexRotuter from './modules/index'
+import loginRotuter from './modules/login'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/",
-    redirect: "/index",
+    path: '/',
+    redirect: '/index'
   },
   indexRotuter,
-  loginRotuter,
-  productListRotuter,
-];
+  loginRotuter
+]
 
 const router = new VueRouter({
-  mode: "hash",
+  mode: 'hash',
   base: process.env.BASE_URL,
-  routes,
-});
+  routes
+})
 
-export default router;
+export default router

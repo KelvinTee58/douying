@@ -17,19 +17,16 @@ module.exports = {
       [
         {
           roleName: "管理员",
-          level: "1",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           roleName: "记录员",
-          level: "10",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           roleName: "值班班长",
-          level: "11",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

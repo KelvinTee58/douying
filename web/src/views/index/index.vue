@@ -1,12 +1,46 @@
 <template>
   <div class="index-page">
-    <coo-navbar leftIcon="menu-2-line" rightIcon="none" title="主页" customClass="navbarCustomClass"> </coo-navbar>
+    <vant-navbar
+      leftIcon="menu-2-line"
+      rightIcon="none"
+      title="主页"
+      customClass="navbarCustomClass"
+    >
+    </vant-navbar>
     <!-- <h1>indexpage</h1> -->
     <div class="top-statistics-card-wrapper">
-      <statistics-card title="总量" trend="3.4" trendStatus="up" statistics="123456789" :unit="'KG'"> </statistics-card>
-      <statistics-card title="芒果" trend="3.4" trendStatus="up" statistics="44" :unit="'KG'"> </statistics-card>
-      <statistics-card title="木瓜" trend="3.4" trendStatus="none" statistics="5999" :unit="'KG'"> </statistics-card>
-      <statistics-card title="菠萝" trend="3.4" trendStatus="down" statistics="22" :unit="'KG'"> </statistics-card>
+      <statistics-card
+        title="总量"
+        trend="3.4"
+        trendStatus="up"
+        statistics="123456789"
+        :unit="'KG'"
+      >
+      </statistics-card>
+      <statistics-card
+        title="芒果"
+        trend="3.4"
+        trendStatus="up"
+        statistics="44"
+        :unit="'KG'"
+      >
+      </statistics-card>
+      <statistics-card
+        title="木瓜"
+        trend="3.4"
+        trendStatus="none"
+        statistics="5999"
+        :unit="'KG'"
+      >
+      </statistics-card>
+      <statistics-card
+        title="菠萝"
+        trend="3.4"
+        trendStatus="down"
+        statistics="22"
+        :unit="'KG'"
+      >
+      </statistics-card>
 
       <div class="find-more" @click="findMore">查看更多</div>
     </div>
@@ -14,16 +48,16 @@
 </template>
 
 <script>
-import statisticsCard from "./components/statisticsCard.vue";
+import statisticsCard from './components/statisticsCard.vue'
 
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
-    statisticsCard,
+    statisticsCard
   },
   data() {
     //这里存放数据
-    return {};
+    return {}
   },
   //监听属性 类似于data概念
   computed: {},
@@ -36,8 +70,8 @@ export default {
   //方法集合
   methods: {
     findMore() {
-      this.$router.push("/prodList");
-    },
+      this.$router.push('/prodList')
+    }
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
@@ -45,8 +79,8 @@ export default {
   updated() {}, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
-  activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
-};
+  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+}
 </script>
 <style lang="scss" scoped>
 .index-page {

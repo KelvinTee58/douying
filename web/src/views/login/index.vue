@@ -9,10 +9,15 @@
       </div>
       <div class="input__wrapper__item">
         <p class="input__wrapper__item--label">密码：</p>
-        <input name="password" v-model="password" type="password" placeholder="" />
+        <input
+          name="password"
+          v-model="password"
+          type="password"
+          placeholder=""
+        />
       </div>
       <div class="input__wrapper__item button__wrapper">
-        <coo-button type="primary" round @click="login">登录</coo-button>
+        <coo-button type="primary" round @click="login"> 登录 </coo-button>
         <coo-button type="primary" round @click="login2">登录2</coo-button>
         <!-- <van-button type="primary">主要按钮</van-button> -->
         <!-- <van-button type="info">信息按钮</van-button> -->
@@ -23,17 +28,18 @@
 </template>
 
 <script>
-import { encryptBase64 } from "@/utils/AESPasswordEncryption.js";
-import { mapActions } from "vuex";
+import { encryptBase64 } from '@/utils/AESPasswordEncryption.js'
+import { mapActions } from 'vuex'
 export default {
+  name: 'indexPages',
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
-      phone: "15816081222",
-      password: "root",
-    };
+      phone: '15816081222',
+      password: 'root'
+    }
   },
   //监听属性 类似于data概念
   computed: {},
@@ -45,43 +51,43 @@ export default {
   mounted() {},
   //方法集合
   methods: {
-    ...mapActions("user", ["initUserInfo"]),
+    ...mapActions('user', ['initUserInfo']),
     async login() {
-      let password = encryptBase64(this.password);
+      let password = encryptBase64(this.password)
       let params = {
         phone: this.phone,
-        password: password,
-      };
+        password: password
+      }
       try {
-        let logininfo = await this.$post("/api/users/login", params);
-        this.initUserInfo(logininfo.data);
-        let name = logininfo.data.user.name || "用户";
+        let logininfo = await this.$post('/api/users/login', params)
+        this.initUserInfo(logininfo.data)
+        let name = logininfo.data.user.name || '用户'
         this.$cooToast({
-          content: "欢迎您，" + name,
+          content: '欢迎您，' + name,
           duration: 2000,
-          type: "success",
-        });
+          type: 'success'
+        })
         // console.log("logininfo.data", logininfo.data);
-        this.$router.replace({ path: "/index" });
+        this.$router.replace({ path: '/index' })
       } catch (error) {
-        this.initUserInfo({});
+        this.initUserInfo({})
       }
     },
     async login2() {
-      let password = encryptBase64(this.password);
+      let password = encryptBase64(this.password)
       let params = {
         phone: this.phone,
-        password: password,
-      };
+        password: password
+      }
       try {
-        await this.$post("/api/users", params);
+        await this.$post('/api/users', params)
         // this.initUserInfo(logininfo.data);
       } catch (error) {
         // this.initUserInfo({});
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .login-page {
@@ -89,13 +95,15 @@ export default {
   width: 100vw;
   min-height: 100vh;
 
-  background: url("~@/assets/images/login/login-background.png");
+  background: url('~@/assets/images/login/login-background.png');
   background-repeat: no-repeat;
   background-size: cover;
+
   h1 {
     margin-top: -2rem;
     margin-bottom: 4rem;
   }
+
   .input__wrapper {
     position: absolute;
     left: 50%;
@@ -103,14 +111,17 @@ export default {
     transform: translate(-50%, -50%);
     width: 20rem;
     font-size: 1.2rem;
+
     &__item {
       width: 100%;
       margin-bottom: 2rem;
+
       &--label {
         margin-bottom: 0.4rem;
         font-size: 1rem;
         color: #333;
       }
+
       input {
         height: 4rem;
         border-width: 0.1rem;
@@ -122,16 +133,19 @@ export default {
 
         background-color: rgba(0, 0, 0, 0);
       }
-      /deep/.coo-button {
+
+      ::v-deep :button {
         width: 20rem;
         height: 4rem;
         font-size: 1.2rem;
       }
     }
   }
+
   .button__wrapper {
     margin-top: 6rem;
   }
 }
+
 //@import url(); 引入公共css类
 </style>

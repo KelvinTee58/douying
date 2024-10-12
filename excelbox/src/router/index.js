@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import home from "../views/home.vue";
 import deliveryNotice from "../views/deliveryNotice.vue";
 import deliveryNotice_electron from "../views/deliveryNotice_electron.vue";
+import saveFileTest from "../views/saveFileTest.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/deliveryNotice2",
     name: "deliveryNotice2",
     component: deliveryNotice_electron,
+  },
+  {
+    path: "/saveFileTest",
+    name: "saveFileTest",
+    component: saveFileTest,
   },
   // {
   //   path: '/about',

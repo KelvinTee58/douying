@@ -7,6 +7,7 @@ const tokenMiddleware = require("./middleware/token");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var companyRouter = require("./routes/companys");
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use(tokenMiddleware);
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/companies", companyRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
