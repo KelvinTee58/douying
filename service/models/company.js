@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Company',
+    timestamps: true, // 自动更新数据库的时间戳
   });
   return Company;
 };

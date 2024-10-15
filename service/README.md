@@ -24,7 +24,7 @@
 | 字段名             | 数据类型   | 描述             |
 | ------------------ | ---------- | ---------------- |
 | `id`               | `INT`      | 唯一标识符       |
-| `uid`              | `VARCHAR`  | 用户 ID          |
+| `userId`              | `VARCHAR`  | 用户 ID          |
 | `originalPassword` | `VARCHAR`  | 原始密码         |
 | `password`         | `VARCHAR`  | 密码（加密存储） |
 | `created_at`       | `DATETIME` | 密码创建时间     |

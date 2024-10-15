@@ -15,7 +15,6 @@ const PASSWORD = crypto_secretkey;
 const key = crypto.scryptSync(PASSWORD, "douying", 24);
 // 使用 `crypto.randomBytes()` 生成随机的 iv 而不是此处显示的静态的 iv。
 const iv = Buffer.alloc(16, 16); // 初始化向量。
-
 /**
  * token生成
  * @param <Object | String> userInfo - 用户信息
@@ -27,17 +26,16 @@ exports.getToken = (ctx, userInfo, time) => {
     const obj = this.decryptRSAToken("", userInfo);
     userInfo = {
       name: obj.name,
-      uid: obj.uid,
+      userId: obj.userId,
     };
   }
   // 创建token并导出
   const token = jwt.sign(userInfo, secret, { expiresIn: time }); // 60, "2 days", "10h", "7d".
   const data = {
     token,
-    useruid: userInfo.uid,
+    useruid: userInfo.userId,
   };
   // models.onlineToken.create(data);
-
   // token加密
   const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
   let encrypted = cipher.update(token, "utf8", "hex");
@@ -51,6 +49,7 @@ exports.getToken = (ctx, userInfo, time) => {
  * @return String 三点式token
  */
 exports.decryptToken = (ctx, tokens) => {
+  console.log('tokens :>> ', tokens);
   // 解密
   try {
     const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);

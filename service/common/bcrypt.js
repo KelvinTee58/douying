@@ -30,6 +30,8 @@ const verifyPassword = async (password, hash) => {
   }
 };
 
+
+
 module.exports = {
   hashPassword,
   verifyPassword,

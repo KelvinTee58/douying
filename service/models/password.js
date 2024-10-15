@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Password.belongsTo(models.User, {
         onDelete: "NULL",
         foreignKey: {
+          name: 'userId', // 外键名称与 User 模型中的字段名一致
           allowNull: false,
         },
       });
@@ -27,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Password",
+      timestamps: true, // 自动更新数据库的时间戳
     }
   );
   return Password;

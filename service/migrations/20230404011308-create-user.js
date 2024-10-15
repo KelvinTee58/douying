@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      // uid: {
+      // userId: {
       //   allowNull: false,
       //   type: Sequelize.UUID,
       // },
@@ -21,6 +21,7 @@ module.exports = {
           model: "Roles", // name of Target model
           key: "id", // key in Target model that we're referencing
         },
+        defaultValue: 99,
       },
       name: {
         type: Sequelize.STRING,

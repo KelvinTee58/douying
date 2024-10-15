@@ -17,8 +17,8 @@
         />
       </div>
       <div class="input__wrapper__item button__wrapper">
-        <coo-button type="primary" round @click="login"> 登录 </coo-button>
-        <coo-button type="primary" round @click="login2">登录2</coo-button>
+        <button @click="login">登录</button>
+        <button type="primary" round @click="login2">登录2</button>
         <!-- <van-button type="primary">主要按钮</van-button> -->
         <!-- <van-button type="info">信息按钮</van-button> -->
         <!-- <van-button type="primary">登录</van-button> -->
@@ -58,15 +58,16 @@ export default {
         phone: this.phone,
         password: password
       }
+      console.log('params :>> ', params);
       try {
         let logininfo = await this.$post('/api/users/login', params)
         this.initUserInfo(logininfo.data)
-        let name = logininfo.data.user.name || '用户'
-        this.$cooToast({
-          content: '欢迎您，' + name,
-          duration: 2000,
-          type: 'success'
-        })
+        // let name = logininfo.data.user.name || '用户'
+        // this.$cooToast({
+        //   content: '欢迎您，' + name,
+        //   duration: 2000,
+        //   type: 'success'
+        // })
         // console.log("logininfo.data", logininfo.data);
         this.$router.replace({ path: '/index' })
       } catch (error) {

@@ -1,17 +1,17 @@
-import axios from "axios";
-import store from "@/store/index";
+import axios from 'axios'
+import store from '@/store/index'
 
-let refreshTime = 3;
-console.log("store", store);
+let refreshTime = 3
+console.log('store', store)
 
 // 正在进行中的请求列表
 // let reqList = [];
 
 // import { config } from "localforage";
-const requestTimeout = 60; // 设定超时时间
+const requestTimeout = 60 // 设定超时时间
 // 设置请求超时
 // 通过axios.defaults.timeout设置默认的请求超时时间。例如超过了60s，就会告知用户当前请求超时，请刷新等。
-axios.defaults.timeout = 1000 * requestTimeout;
+axios.defaults.timeout = 1000 * requestTimeout
 
 // 是否开启全局loading
 function globalLoading(loading = true) {
@@ -20,21 +20,21 @@ function globalLoading(loading = true) {
     // 全局loadding
     window.$cooToast({
       // id: 'tempToast',
-      content: "加载中",
-      type: "loading",
-      duration: 1000 * requestTimeout,
-    });
+      content: '加载中',
+      type: 'loading',
+      duration: 1000 * requestTimeout
+    })
   }
 }
 
 // 获取请求地址前缀
 function getRequestUrl(url, fullUrl = false) {
   if (fullUrl) {
-    return url;
+    return url
   } else {
     // return "reqUrl" + url;
     // return "/api" + url;
-    return url;
+    return url
   }
 }
 
@@ -43,30 +43,30 @@ function refreshAccessToken() {
   // 刷新次数超过三次退出
   if (refreshTime <= 0) {
     window.$cooToast({
-      content: "获取用户令牌失败",
+      content: '获取用户令牌失败',
       duration: 2000,
-      type: "fail",
-    });
-    refreshTime = 3;
-    store.dispatch("user/loginout");
-    return;
+      type: 'fail'
+    })
+    refreshTime = 3
+    store.dispatch('user/loginout')
+    return
   }
-  refreshTime--;
-  let refreshToken = store.getters["user/getRefreshToken"];
-  console.log("refreshToken refreshToken", refreshToken);
+  refreshTime--
+  let refreshToken = store.getters['user/getRefreshToken']
+  console.log('refreshToken refreshToken', refreshToken)
   try {
     // 重刷token
     axios
-      .post("/api/users/token", { refreshToken: refreshToken })
+      .post('/api/users/token', { refreshToken: refreshToken })
       .then((response) => {
-        let resData2 = response.data;
-        console.log("refresh token response", resData2.data.accessToken);
+        let resData2 = response.data
+        console.log('refresh token response', resData2.data.accessToken)
         if (response.status == 200 && resData2.status == 0) {
           // 成功刷新token
-          store.dispatch("user/updateAccessToken", resData2.data.accessToken);
+          store.dispatch('user/updateAccessToken', resData2.data.accessToken)
         } else {
           // 不成功刷新token
-          store.dispatch("user/updateAccessToken", null);
+          store.dispatch('user/updateAccessToken', null)
         }
         // refreshTime = 3;
       })
@@ -77,21 +77,21 @@ function refreshAccessToken() {
         // 否则可以刷新3次
         if (error.data.status == 403) {
           window.$cooToast({
-            content: "登录过期，请重新登录",
+            content: '登录过期，请重新登录',
             duration: 1000,
-            type: "fail",
-          });
-          refreshTime = 3;
-          store.dispatch("user/loginout");
+            type: 'fail'
+          })
+          refreshTime = 3
+          store.dispatch('user/loginout')
         } else {
-          refreshAccessToken();
+          refreshAccessToken()
         }
-      });
+      })
   } catch (error) {
-    console.log("refreshtoken error", error);
-    store.dispatch("user/loginout");
+    console.log('refreshtoken error', error)
+    store.dispatch('user/loginout')
     // 不成功刷新token
-    refreshTime = 3;
+    refreshTime = 3
   }
 }
 
@@ -101,41 +101,41 @@ axios.interceptors.request.use(
     // 每次发送请求之前判断vuex中是否存在token
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
-    let token = store.getters["user/getAccessToken"];
-    if (token) config.headers.Authorization = "Bearer " + token;
-    return config;
+    let token = store.getters['user/getAccessToken']
+    if (token) config.headers.Authorization = 'Bearer ' + token
+    return config
   },
   (error) => {
-    return Promise.error(error);
+    return Promise.error(error)
   }
-);
+)
 // 响应拦截器
 axios.interceptors.response.use(
   (response) => {
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
-    let resData = response.data;
-    if (response.status === 200 && resData.status == "0") {
+    let resData = response.data
+    if (response.status === 200 && resData.status == '0') {
       // const { data } = response;
-      return Promise.resolve(response);
+      return Promise.resolve(response)
     } else {
-      return Promise.reject(response);
+      return Promise.reject(response)
     }
   },
   (error) => {
-    let resData = error.response;
+    let resData = error.response
     // 拦截token 失效为401
     if (resData.status == 403 || resData.status == 401) {
       // console.log("refreshToken");
-      refreshAccessToken();
+      refreshAccessToken()
     }
     if (!resData.data.message) {
-      resData.data.message = `status:${resData.status};message:${error.message}`;
+      resData.data.message = `status:${resData.status};message:${error.message}`
     }
-    console.log("interceptors.response error", resData);
-    return Promise.reject(resData);
+    console.log('interceptors.response error', resData)
+    return Promise.reject(resData)
   }
-);
+)
 
 /**
  * 错误处理
@@ -146,7 +146,7 @@ axios.interceptors.response.use(
  */
 function errorHandler(error, pure = false) {
   if (pure) {
-    return;
+    return
   }
   // 服务器状态码不是2开头的的情况
   // 这里可以跟你们的后台开发人员协商好统一的错误状态码
@@ -160,22 +160,22 @@ function errorHandler(error, pure = false) {
       // 在登录成功后返回当前页面，这一步需要在登录页操作。
       case 401:
         this.$router.replace({
-          path: "/login",
+          path: '/login',
           query: {
-            redirect: this.$router.currentRoute.fullPath,
-          },
-        });
-        break;
+            redirect: this.$router.currentRoute.fullPath
+          }
+        })
+        break
       // 403 token过期
       // 登录过期对用户进行提示
       // 清除本地token和清空vuex中token对象
       // 跳转登录页面
       case 403:
         window.$cooToast({
-          content: "登录过期，请重新登录",
+          content: '登录过期，请重新登录',
           duration: 1000,
-          type: "fail",
-        });
+          type: 'fail'
+        })
         // 清除token
         // localStorage.removeItem('token')
         // store.commit('loginSuccess', null)
@@ -188,23 +188,23 @@ function errorHandler(error, pure = false) {
         //     }
         //   })
         // }, 1000)
-        break;
+        break
       // 404请求不存在
       case 404:
         window.$cooToast({
-          content: "网络请求不存在",
+          content: '网络请求不存在',
           duration: 2000,
-          type: "fail",
-        });
-        break;
+          type: 'fail'
+        })
+        break
       // 其他错误，直接抛出错误提示
       default:
-        console.log("cooToast", error.data.message);
+        console.log('cooToast', error.data.message)
         window.$cooToast({
           content: error.data.message,
           duration: 2000,
-          type: "fail",
-        });
+          type: 'fail'
+        })
     }
   }
 }
@@ -224,27 +224,27 @@ export function get(
   option = {
     pure: false,
     loading: true,
-    fullUrl: false,
+    fullUrl: false
   }
 ) {
-  let that = this;
+  let that = this
   return new Promise((resolve, reject) => {
-    globalLoading.apply(that, [option.loading]); // 开启loading
+    globalLoading.apply(that, [option.loading]) // 开启loading
     axios
       .get(getRequestUrl(url, option.fullUrl), {
-        params: params,
+        params: params
       })
       .then((res) => {
         // errorHandler(res, option.pure);
-        window.$cooToastHide(); // 结束关闭loading
-        resolve(res.data);
+        window.$cooToastHide() // 结束关闭loading
+        resolve(res.data)
       })
       .catch((err) => {
-        window.$cooToastHide(); // 结束关闭loading
-        errorHandler.apply(that, [err, option.pure]);
-        reject(err.data);
-      });
-  });
+        window.$cooToastHide() // 结束关闭loading
+        errorHandler.apply(that, [err, option.pure])
+        reject(err.data)
+      })
+  })
 }
 /**
  * post方法，对应post请求
@@ -261,27 +261,27 @@ export function post(
   option = {
     pure: false,
     loading: true,
-    fullUrl: false,
+    fullUrl: false
   }
 ) {
-  let that = this;
+  let that = this
 
   return new Promise((resolve, reject) => {
-    globalLoading.apply(that, [option.loading]); // 开启loading
+    globalLoading.apply(that, [option.loading]) // 开启loading
     axios
       .post(getRequestUrl(url, option.fullUrl), params, {
         headers: {
-          "content-type": "application/json",
-        },
+          'content-type': 'application/json'
+        }
       })
       .then((res) => {
-        window.$cooToastHide(); // 结束关闭loading
-        resolve(res.data);
+        window.$cooToastHide() // 结束关闭loading
+        resolve(res.data)
       })
       .catch((err) => {
-        window.$cooToastHide(); // 结束关闭loading
-        errorHandler.apply(that, [err, option.pure]);
-        reject(err.data);
-      });
-  });
+        window.$cooToastHide() // 结束关闭loading
+        errorHandler.apply(that, [err, option.pure])
+        reject(err.data)
+      })
+  })
 }

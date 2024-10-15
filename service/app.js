@@ -9,6 +9,8 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var companyRouter = require("./routes/companys");
 
+const fs = require('fs');
+
 var app = express();
 
 // view engine setup
@@ -33,6 +35,13 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
+// 根据当前的环境加载不同的 .env 文件
+const env = process.env.NODE_ENV || 'production';  // 默认是 development
+const envFilePath = path.resolve(__dirname, 'env', `.env.${env}`);
+
+if (fs.existsSync(envFilePath)) {
+  require('dotenv').config({ path: envFilePath });
+}
 console.log("NODE_ENV:", process.env.NODE_ENV);
 
 // Cors Middleware

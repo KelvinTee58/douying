@@ -23,10 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       phone: DataTypes.STRING,
+      username: DataTypes.STRING,
+      loginAttempts: DataTypes.INTEGER,
+      lockUntil: DataTypes.DATE,
     },
     {
       sequelize,
       modelName: "User",
+      timestamps: true, // 自动更新数据库的时间戳
     }
   );
   return User;

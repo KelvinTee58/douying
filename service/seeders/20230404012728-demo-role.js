@@ -16,17 +16,26 @@ module.exports = {
       "Roles",
       [
         {
+          id: 1,
           roleName: "管理员",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          id: 2,
           roleName: "记录员",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          id: 3,
           roleName: "值班班长",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 99,
+          roleName: "未知",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

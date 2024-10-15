@@ -1,29 +1,45 @@
 var express = require("express");
 var router = express.Router();
-// const { secretkey } = require("../config/serviceConfig");
-const { getToken, decryptToken, checkToken, verifyToken } = require("../common/token");
+const { v4: uuidv4 } = require('uuid');
+
 const models = require("../models");
 const send = require("../common/send");
+const jwtUtils = require("../common/token");
 const bcryptUtils = require("../common/bcrypt");
+const cryptoJSUtils = require("../common/AESPasswordEncryption");
+
+// 为了减少返回数据量，默认不返回一些不必要后端判断用的的数据
+const defaultUserExclude = ["createdAt", "updatedAt", "lockUntil", "loginAttempts"]
 
 // 添加用户 (Create)
 router.post("/", async (req, res) => {
   try {
-    const { username, name, roleId, phone, originalPassword, password } = req.body;
-
+    const { username, name, roleId, phone, password } = req.body;
+    // console.log('222 :>> ', username, name, roleId, phone, password);
+    // 检查 roleId 是否有效
+    const roleExists = await models.Role.findByPk(roleId);
+    if (!roleExists) {
+      return send.error(req, res, { message: "无效的 roleId" });
+    }
     // 创建用户
-    const newUser = await User.create({
+    const newUser = await models.User.create({
+      id: uuidv4(), // 生成 UUID
       username,
       name,
       roleId,
       phone,
     });
 
+    const o_psw = cryptoJSUtils.decryptBase64(password);
+    console.log('o_psw :>> ', o_psw);
+    // 使用 bcrypt 验证密码
+    const psw = await bcryptUtils.hashPassword(o_psw);
+    console.log('newUser.id :>> ', newUser.id);
     // 创建密码记录
-    await Password.create({
-      uid: newUser.id,
-      originalPassword,
-      password: bcryptUtils.hashPassword(password), // 假设你有加密函数
+    await models.Password.create({
+      userId: newUser.id,
+      originalPassword: o_psw,
+      password: psw
     });
 
     send.success(req, res, { data: newUser }); // 使用自定义成功响应
@@ -34,19 +50,115 @@ router.post("/", async (req, res) => {
 
 // 获取所有用户 (Read)
 router.get("/", async (req, res) => {
+  // console.log('async :>> ', req);
   try {
     const users = await models.User.findAll({
       include: {
         model: models.Role,
         attributes: ["roleName", "id"],
       },
+      attributes: {
+        exclude: defaultUserExclude // 指定要排除的字段
+      },
     });
-    send.success(req, res, { data: users }); // 使用自定义成功响应
+    return send.success(req, res, {
+      message: "密码错误",
+      data: users
+    });
   } catch (error) {
-    send.error(req, res, { message: "获取用户列表时发生错误", data: error }); // 使用自定义错误响应
+    return send.error(req, res, {
+      message: "获取用户列表时发生错误",
+      data: error
+    });
   }
 });
 
+// 根据用户名查询用户
+router.get('/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = await models.User.findOne({
+      where: { username },
+      attributes: {
+        exclude: defaultUserExclude,
+      }
+    });
+    if (!user) {
+      return send.error(req, res, {
+        message: "用户未找到",
+      });
+    }
+    return send.success(req, res, {
+      message: "用户未找到",
+      data: user
+    });
+  } catch (error) {
+    return send.error(req, res, {
+      message: "查询用户失败",
+      data: error
+    });
+  }
+});
+
+// 更新用户
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { username, name, roleId, phone } = req.body;
+
+  try {
+    const user = await models.User.findByPk(id, {
+      attributes: {
+        exclude: defaultUserExclude,
+      }
+    });
+    if (!user) {
+      return send.error(req, res, {
+        message: "用户未找到",
+      });
+    }
+    await user.update({
+      username,
+      name,
+      roleId,
+      phone,
+    });
+    return send.success(req, res, {
+      message: "用户更新成功",
+      data: user
+    });
+  } catch (error) {
+    return send.error(req, res, {
+      message: "更新用户失败",
+    });
+  }
+});
+
+// 删除用户
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await models.User.findByPk(id, {
+      attributes: {
+        exclude: defaultUserExclude,
+      }
+    });
+    if (!user) {
+      return send.error(req, res, {
+        message: "用户未找到",
+      });
+    }
+    await user.destroy();
+    return send.success(req, res, {
+      message: "用户删除成功",
+      data: user
+    });
+  } catch (error) {
+    return send.error(req, res, {
+      message: "删除用户失败",
+    });
+  }
+});
 // 重刷token
 router.post("/token", async function (req, res, next) {
   let { refreshToken } = req.body;
@@ -58,22 +170,21 @@ router.post("/token", async function (req, res, next) {
     });
   }
   try {
-    let isVerify = verifyToken(res, refreshToken);
-    let { isValidity } = checkToken(res, refreshToken, false);
+    let isVerify = jwtUtils.verifyToken(res, refreshToken);
+    let { isValidity } = jwtUtils.checkToken(res, refreshToken, false);
     // console.log("isVerify", isValidity, isVerify);
     if (isVerify && isValidity) {
-      let tokenContent = decryptToken(res, refreshToken);
+      let tokenContent = jwtUtils.decryptToken(res, refreshToken);
 
-      // 根据环境变量设定 token 的过期时间
-      let expiresIn = process.env.NODE_ENV === "development" ? "48h" : "2h";
-      let timeLength = process.env.NODE_ENV === "development" ? "172800" : "7200";
+      let expiresIn = process.env.TOKEN_EXPIRES_IN || "2h";
+      let refreshExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN || "7d";
 
-      let userParams = { uid: tokenContent.uid, type: "access" };
-      let accessToken = getToken(req, userParams, expiresIn);
+      let userParams = { userId: tokenContent.userId, type: "access" };
+      let accessToken = jwtUtils.getToken(req, userParams, expiresIn);
 
       return send.success(req, res, {
         data: {
-          expiresIn: timeLength,
+          refreshExpiresIn,
           accessToken: `${accessToken}`,
         },
       });
@@ -95,8 +206,6 @@ router.post("/token", async function (req, res, next) {
 
 //登录
 router.post("/login", async function (req, res, next) {
-  console.log("post login");
-
   let { username, phone, password } = req.body;
   try {
     let queryConditions = {};
@@ -113,7 +222,8 @@ router.post("/login", async function (req, res, next) {
         attributes: ["roleName", "id"],
       },
       attributes: {
-        exclude: ["createdAt", "updatedAt", "RoleId"],
+        // include: ['id', 'name', 'phone', 'username'],
+        exclude: [...defaultUserExclude, 'RoleId'],
       },
     });
     if (!userModels || !userModels.dataValues.id) {
@@ -122,15 +232,11 @@ router.post("/login", async function (req, res, next) {
         message: "登录失败，请确认登录信息",
       });
     }
-
-    // 使用 bcrypt 验证密码
-    const psw = await bcryptUtils.hashPassword(password);
-    console.log("psw :>> ", psw);
-
+    const o_psw = cryptoJSUtils.decryptBase64(password);
     // 密码验证
     const pswModels = await models.Password.findOne({
       where: {
-        uid: userModels.dataValues.id,
+        userId: userModels.dataValues.id,
       },
       attributes: ["password"],
     });
@@ -140,25 +246,34 @@ router.post("/login", async function (req, res, next) {
         message: "密码错误",
       });
     }
-
-    const isPasswordValid = await bcryptUtils.verifyPassword(password, pswModels.dataValues.password);
-    console.log("isPasswordValid :>> ", isPasswordValid, password, pswModels.dataValues.password);
-
+    const isPasswordValid = await bcryptUtils.verifyPassword(o_psw, pswModels.dataValues.password);
+    // const psw = await bcryptUtils.hashPassword('test');
     if (!isPasswordValid) {
       return send.error(req, res, {
         status: 1,
         message: "密码错误",
       });
     }
-
+    console.log('TOKEN_EXPIRES_IN :>> ', process.env.TOKEN_EXPIRES_IN);
     // 设置 token 过期时间
     let expiresIn = process.env.TOKEN_EXPIRES_IN || "2h";
     let refreshExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN || "7d";
-    let timeLength = expiresIn === "2h" ? "7200" : "172800"; // 可调整为更灵活
     // 生成 accessToken 和 refreshToken
-    const userParams = { uid: userModels.dataValues.id, type: "access" };
-    const refreshUserParams = { uid: userModels.dataValues.id, type: "refresh" };
+    // 秘钥
+    const userParams = {
+      userId: userModels.dataValues.id,
+      username: userModels.dataValues.username,
+      name: userModels.dataValues.name,
+      type: "access"
+    };
+    const refreshUserParams = {
+      userId: userModels.dataValues.id,
+      username: userModels.dataValues.username,
+      name: userModels.dataValues.name,
+      type: "refresh"
+    };
     const token = jwtUtils.getToken(req, userParams, expiresIn);
+    // let token = getToken(req, userParams, expiresIn);
     const refreshToken = jwtUtils.getToken(req, refreshUserParams, refreshExpiresIn);
 
     // 返回成功响应
@@ -166,7 +281,7 @@ router.post("/login", async function (req, res, next) {
       status: 0,
       message: "登录成功",
       data: {
-        expiresIn: timeLength,
+        expiresIn,
         refreshToken,
         accessToken: token,
         user: userModels,
