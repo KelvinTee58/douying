@@ -10,10 +10,11 @@
       </slot>
 
       <slot name="trend">
-        <div class="trend-wrapper" :class="trendClass">
+        <div class="trend-wrapper">
           <div class="card-trend">
             <span>{{ trend }}</span>
-            <coo-icon :name="trendIcon"></coo-icon>
+            <!-- <coo-icon :name="trendIcon"></coo-icon> -->
+            <i :class="trendIcon"></i>
           </div>
         </div>
       </slot>
@@ -49,44 +50,33 @@ export default {
   filters: {
     million(value) {
       //过万处理
-      let num
+      let num;
       if (value > 9999 && value <= 99999999) {
         //大于9999显示x.xx万
-        num = Math.floor(value / 1000) / 10 + '万'
+        num = Math.floor(value / 1000) / 10 + '万';
       } else if (value > 99999999) {
-        num = Math.floor(value / 10000000) / 10 + '亿'
+        num = Math.floor(value / 10000000) / 10 + '亿';
       } else if (value < 9999 && value > -9999) {
-        num = value
+        num = value;
       } else if (value < -9999 && value >= -99999999) {
         //小于-9999显示-x.xx万
-        num = -(Math.floor(Math.abs(value) / 1000) / 10) + '万'
+        num = -(Math.floor(Math.abs(value) / 1000) / 10) + '万';
       } else if (value < -99999999) {
         //小于-99999999-x.xx万
-        num = -(Math.floor(Math.abs(value) / 10000000) / 10) + '亿'
+        num = -(Math.floor(Math.abs(value) / 10000000) / 10) + '亿';
       }
-      return num
+      return num;
     }
   },
   //监听属性 类似于data概念
   computed: {
     trendIcon() {
       if (this.trendStatus == 'up') {
-        return 'arrow-up-line'
+        return 'ri-arrow-right-up-line';
       } else if (this.trendStatus == 'down') {
-        return 'arrow-down-line'
+        return 'ri-arrow-right-down-line';
       } else {
-        return 'subtract-line'
-      }
-    },
-    trendClass() {
-      if (this.trendStatus == 'up') {
-        // return " background-color: rgb(255, 51, 0);border-color: rgb(255, 51, 0);";
-        return 'trend-wrapper__up'
-      } else if (this.trendStatus == 'down') {
-        // return "{ background-color: rgb(10, 171, 98), border-color: rgb(10, 171, 98)}";
-        return 'trend-wrapper__down'
-      } else {
-        return ''
+        return 'ri-pulse-line';
       }
     }
   },
@@ -98,7 +88,7 @@ export default {
   mounted() {},
   //方法集合
   methods: {}
-}
+};
 </script>
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
@@ -108,7 +98,7 @@ export default {
   .card-wrapper {
     // background: $primary;
     background: #000000;
-    width: 15rem;
+    width: 350px;
     border-radius: 1rem;
     padding: 1rem;
     .card-title {

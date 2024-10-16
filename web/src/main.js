@@ -1,16 +1,19 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import requestUtils from '@/utils/request';
+import storageUtils from '@/utils/storage';
 
-// import Vant from "vant";
-// import "vant/lib/index.css";
-// Vue.use(Vant);
+import 'remixicon/fonts/remixicon.css';
+
+Vue.prototype.$request = requestUtils;
+Vue.prototype.$storage = storageUtils;
 
 Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
-  render: (h) => h(App),
-}).$mount("#app");
+  render: (h) => h(App)
+}).$mount('#app');

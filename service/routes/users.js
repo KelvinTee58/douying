@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const models = require("../models");
 const send = require("../common/send");
+const { parseExpireTime } = require("../common/common");
 const jwtUtils = require("../common/token");
 const bcryptUtils = require("../common/bcrypt");
 const cryptoJSUtils = require("../common/AESPasswordEncryption");
@@ -159,6 +160,8 @@ router.delete('/:id', async (req, res) => {
     });
   }
 });
+
+// TODO 待完善 重刷token
 // 重刷token
 router.post("/token", async function (req, res, next) {
   let { refreshToken } = req.body;
@@ -223,7 +226,7 @@ router.post("/login", async function (req, res, next) {
       },
       attributes: {
         // include: ['id', 'name', 'phone', 'username'],
-        exclude: [...defaultUserExclude, 'RoleId'],
+        exclude: [...defaultUserExclude],
       },
     });
     if (!userModels || !userModels.dataValues.id) {
@@ -258,16 +261,20 @@ router.post("/login", async function (req, res, next) {
     // 设置 token 过期时间
     let expiresIn = process.env.TOKEN_EXPIRES_IN || "2h";
     let refreshExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN || "7d";
+    let expiresInMilliseconds = parseExpireTime(expiresIn)
+    let refreshExpiresInMilliseconds = parseExpireTime(refreshExpiresIn)
     // 生成 accessToken 和 refreshToken
     // 秘钥
     const userParams = {
       userId: userModels.dataValues.id,
       username: userModels.dataValues.username,
+      roleId: userModels.dataValues.RoleId,
       name: userModels.dataValues.name,
       type: "access"
     };
     const refreshUserParams = {
       userId: userModels.dataValues.id,
+      roleId: userModels.dataValues.RoleId,
       username: userModels.dataValues.username,
       name: userModels.dataValues.name,
       type: "refresh"
@@ -275,21 +282,19 @@ router.post("/login", async function (req, res, next) {
     const token = jwtUtils.getToken(req, userParams, expiresIn);
     // let token = getToken(req, userParams, expiresIn);
     const refreshToken = jwtUtils.getToken(req, refreshUserParams, refreshExpiresIn);
-
     // 返回成功响应
-    send.success(req, res, {
+    return send.success(req, res, {
       status: 0,
       message: "登录成功",
       data: {
-        expiresIn,
-        refreshToken,
-        accessToken: token,
+        refreshToken: { expiresIn: refreshExpiresInMilliseconds, token: refreshToken },
+        accessToken: { expiresIn: expiresInMilliseconds, token: token },
         user: userModels,
       },
     });
   } catch (error) {
     console.error("登录时发生错误：", error);
-    send.error(req, res, {
+    return send.error(req, res, {
       status: 1,
       message: "登录失败，服务器发生错误",
     });

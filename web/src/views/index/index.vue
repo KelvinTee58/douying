@@ -1,12 +1,5 @@
 <template>
   <div class="index-page">
-    <vant-navbar
-      leftIcon="menu-2-line"
-      rightIcon="none"
-      title="主页"
-      customClass="navbarCustomClass"
-    >
-    </vant-navbar>
     <!-- <h1>indexpage</h1> -->
     <div class="top-statistics-card-wrapper">
       <statistics-card
@@ -48,7 +41,7 @@
 </template>
 
 <script>
-import statisticsCard from './components/statisticsCard.vue'
+import statisticsCard from './components/statisticsCard.vue';
 
 export default {
   //import引入的组件需要注入到对象中才能使用
@@ -57,7 +50,7 @@ export default {
   },
   data() {
     //这里存放数据
-    return {}
+    return {};
   },
   //监听属性 类似于data概念
   computed: {},
@@ -70,7 +63,7 @@ export default {
   //方法集合
   methods: {
     findMore() {
-      this.$router.push('/prodList')
+      this.$router.push('/prodList');
     }
   },
   beforeCreate() {}, //生命周期 - 创建之前
@@ -80,7 +73,7 @@ export default {
   beforeDestroy() {}, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
   activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
-}
+};
 </script>
 <style lang="scss" scoped>
 .index-page {

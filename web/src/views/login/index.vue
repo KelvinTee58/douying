@@ -1,152 +1,203 @@
 <template>
-  <div class="login-page">
-    <!-- <img src="@/assets/images/login/login-background.png" /> -->
-    <div class="input__wrapper">
-      <h1>您好，请登录</h1>
-      <div class="input__wrapper__item">
-        <p class="input__wrapper__item--label">手机号：</p>
-        <input name="phone" v-model="phone" type="text" placeholder="" />
-      </div>
-      <div class="input__wrapper__item">
-        <p class="input__wrapper__item--label">密码：</p>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Douying 湛江都赢</h2>
+      <p class="welcome-text">欢迎!重新登录.</p>
+
+      <!-- Email Input -->
+      <div class="input-group">
         <input
-          name="password"
+          v-model="loginAccount"
+          type="text"
+          placeholder="用户名称/手机号"
+          @focus="focusedAccount = true"
+          @blur="focusedAccount = false"
+        />
+        <span
+          class="underline"
+          :class="{ active: focusedAccount || loginAccount }"
+        ></span>
+      </div>
+
+      <!-- Password Input -->
+      <div class="input-group">
+        <input
           v-model="password"
           type="password"
-          placeholder=""
+          placeholder="密码"
+          @focus="focusedPassword = true"
+          @blur="focusedPassword = false"
         />
+        <span
+          class="underline"
+          :class="{ active: focusedPassword || password }"
+        ></span>
       </div>
-      <div class="input__wrapper__item button__wrapper">
-        <button @click="login">登录</button>
-        <button type="primary" round @click="login2">登录2</button>
-        <!-- <van-button type="primary">主要按钮</van-button> -->
-        <!-- <van-button type="info">信息按钮</van-button> -->
-        <!-- <van-button type="primary">登录</van-button> -->
-      </div>
+
+      <!-- Login Button -->
+      <button class="login-btn" @click="login">登录</button>
+      <p class="sign-up"><a href="#">忘记密码</a></p>
     </div>
   </div>
 </template>
 
 <script>
-import { encryptBase64 } from '@/utils/AESPasswordEncryption.js'
-import { mapActions } from 'vuex'
+import { encryptBase64 } from '@/utils/AESPasswordEncryption.js';
+import { mapActions } from 'vuex';
+import { Toast } from 'vant';
+
 export default {
   name: 'indexPages',
-  //import引入的组件需要注入到对象中才能使用
-  components: {},
   data() {
-    //这里存放数据
     return {
-      phone: '15816081222',
-      password: 'root'
-    }
+      loginAccount: '',
+      password: '',
+      focusedAccount: false,
+      focusedPassword: false
+    };
   },
-  //监听属性 类似于data概念
-  computed: {},
-  //监控data中的数据变化
-  watch: {},
-  //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  //方法集合
   methods: {
     ...mapActions('user', ['initUserInfo']),
     async login() {
-      let password = encryptBase64(this.password)
+      let password = encryptBase64(this.password);
       let params = {
-        phone: this.phone,
-        password: password
-      }
-      console.log('params :>> ', params);
+        username: this.loginAccount,
+        phone: this.loginAccount,
+        password
+      };
       try {
-        let logininfo = await this.$post('/api/users/login', params)
-        this.initUserInfo(logininfo.data)
-        // let name = logininfo.data.user.name || '用户'
-        // this.$cooToast({
-        //   content: '欢迎您，' + name,
-        //   duration: 2000,
-        //   type: 'success'
-        // })
-        // console.log("logininfo.data", logininfo.data);
-        this.$router.replace({ path: '/index' })
+        let logininfo = await this.$request.post('/api/users/login', params);
+        console.log('logininfo :>> ', logininfo);
+        this.initUserInfo(logininfo.data);
+
+        Toast.success({
+          message: '欢迎您，' + logininfo.data.user.name,
+          duration: 2000
+        });
+        setInterval(() => {
+          // this.$router.replace({ path: '/index' })
+        }, 2000);
       } catch (error) {
-        this.initUserInfo({})
-      }
-    },
-    async login2() {
-      let password = encryptBase64(this.password)
-      let params = {
-        phone: this.phone,
-        password: password
-      }
-      try {
-        await this.$post('/api/users', params)
-        // this.initUserInfo(logininfo.data);
-      } catch (error) {
-        // this.initUserInfo({});
+        this.initUserInfo({});
       }
     }
   }
-}
+};
 </script>
-<style lang="scss" scoped>
-.login-page {
-  position: relative;
-  width: 100vw;
-  min-height: 100vh;
 
-  background: url('~@/assets/images/login/login-background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-
-  h1 {
-    margin-top: -2rem;
-    margin-bottom: 4rem;
-  }
-
-  .input__wrapper {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 20rem;
-    font-size: 1.2rem;
-
-    &__item {
-      width: 100%;
-      margin-bottom: 2rem;
-
-      &--label {
-        margin-bottom: 0.4rem;
-        font-size: 1rem;
-        color: #333;
-      }
-
-      input {
-        height: 4rem;
-        border-width: 0.1rem;
-        border-radius: 2rem;
-        border-color: #333;
-        width: 100%;
-        text-align: center;
-        font-size: 1.2rem;
-
-        background-color: rgba(0, 0, 0, 0);
-      }
-
-      ::v-deep :button {
-        width: 20rem;
-        height: 4rem;
-        font-size: 1.2rem;
-      }
-    }
-  }
-
-  .button__wrapper {
-    margin-top: 6rem;
-  }
+<style scoped>
+/* Container styles */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #fff;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-//@import url(); 引入公共css类
+.login-box {
+  width: 360px;
+  padding: 50px 40px;
+
+  border-radius: 12px;
+  text-align: left;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+  text-align: left;
+}
+
+.welcome-text {
+  color: #888;
+  font-size: 16px;
+  line-height: 1.7;
+  /* margin-bottom: 35px; */
+  letter-spacing: 0.5px;
+  margin-bottom: 3rem;
+}
+
+/* Input Group Styles */
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+input {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  outline: none;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  transition: border-bottom-color 0.3s;
+}
+
+input::placeholder {
+  color: #bbb;
+  font-size: 16px;
+}
+
+input:focus {
+  border-bottom-color: #007bff;
+}
+
+/* Underline Animation */
+.underline {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #007bff;
+  transition: width 0.5s ease;
+}
+
+.underline.active {
+  width: 100%;
+}
+
+/* Login Button Styles */
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  /* margin-top: 25px; */
+  margin-top: 3rem;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Sign-up link */
+.sign-up {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.sign-up a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.sign-up a:hover {
+  text-decoration: underline;
+}
 </style>
