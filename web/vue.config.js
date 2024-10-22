@@ -1,5 +1,6 @@
-const { defineConfig } = require('@vue/cli-service')
-const config = require('./config')
+const { defineConfig } = require('@vue/cli-service');
+const config = require('./config');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -33,5 +34,23 @@ module.exports = defineConfig({
         }
       }
     }
+  },
+  configureWebpack: (config) => {
+    if (process.env.NODE_ENV === 'production') {
+      // 只在生产环境中生效
+      config.optimization.minimizer = [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              // 删除 console 语句
+              drop_console: true,
+              // 删除 debugger 语句
+              drop_debugger: true
+            }
+          },
+          parallel: true // 启用多进程并行运行，提升构建速度
+        })
+      ];
+    }
   }
-})
+});

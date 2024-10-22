@@ -3,7 +3,7 @@ const send = require("../common/send");
 
 module.exports = tokenMiddleware = (req, res, next) => {
   // 登录不验证token
-  if (req.url == "/users/login" || req.url == "/users/token") {
+  if (req.url == "/users/login" || req.url == "/users/refreshToken") {
     next();
   } else {
     if (req.headers.authorization) {

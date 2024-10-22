@@ -9,6 +9,7 @@ import 'remixicon/fonts/remixicon.css';
 
 Vue.prototype.$request = requestUtils;
 Vue.prototype.$storage = storageUtils;
+// Vue.prototype.$store = store;
 
 Vue.config.productionTip = false;
 

@@ -50,7 +50,7 @@ router.post("/", async (req, res) => {
 });
 
 // 获取所有用户 (Read)
-router.get("/", async (req, res) => {
+router.get("/list", async (req, res) => {
   // console.log('async :>> ', req);
   try {
     const users = await models.User.findAll({
@@ -163,8 +163,10 @@ router.delete('/:id', async (req, res) => {
 
 // TODO 待完善 重刷token
 // 重刷token
-router.post("/token", async function (req, res, next) {
+router.post("/refreshToken", async function (req, res, next) {
+
   let { refreshToken } = req.body;
+  console.log('refreshToken :>> ', refreshToken);
   if (!refreshToken) {
     // res.status(403);
     return send.error(req, res, {
@@ -175,20 +177,24 @@ router.post("/token", async function (req, res, next) {
   try {
     let isVerify = jwtUtils.verifyToken(res, refreshToken);
     let { isValidity } = jwtUtils.checkToken(res, refreshToken, false);
-    // console.log("isVerify", isValidity, isVerify);
+    console.log("isVerify", isValidity, isVerify);
     if (isVerify && isValidity) {
-      let tokenContent = jwtUtils.decryptToken(res, refreshToken);
+      let tokenContent = jwtUtils.decryptRSAToken(res, refreshToken);
 
       let expiresIn = process.env.TOKEN_EXPIRES_IN || "2h";
-      let refreshExpiresIn = process.env.REFRESH_TOKEN_EXPIRES_IN || "7d";
+      let expiresInMilliseconds = parseExpireTime(expiresIn)
 
-      let userParams = { userId: tokenContent.userId, type: "access" };
+      let userParams = {
+        userId: tokenContent.userId,
+        username: tokenContent.username,
+        roleId: tokenContent.roleId,
+        name: tokenContent.name,
+        type: "access"
+      };
       let accessToken = jwtUtils.getToken(req, userParams, expiresIn);
-
       return send.success(req, res, {
         data: {
-          refreshExpiresIn,
-          accessToken: `${accessToken}`,
+          accessToken: { expiresIn: expiresInMilliseconds, token: accessToken },
         },
       });
     } else {
@@ -297,6 +303,43 @@ router.post("/login", async function (req, res, next) {
     return send.error(req, res, {
       status: 1,
       message: "登录失败，服务器发生错误",
+    });
+  }
+});
+
+// 根据token获取当前登录的用户的信息 
+router.get("/", async (req, res) => {
+  let { userId } = req.user;
+  try {
+    if (userId) {
+      let queryConditions = {
+        id: userId
+      };
+      // 用户信息
+      const userModels = await models.User.findOne({
+        where: queryConditions,
+        include: {
+          model: models.Role,
+          attributes: ["roleName", "id"],
+        },
+        attributes: {
+          // include: ['id', 'name', 'phone', 'username'],
+          exclude: [...defaultUserExclude],
+        },
+      });
+      // 返回成功响应
+      return send.success(req, res, {
+        status: 0,
+        message: "获取用户信息成功",
+        data: {
+          user: userModels,
+        },
+      });
+    }
+  } catch (error) {
+    return send.error(req, res, {
+      status: 1,
+      message: "获取用户信息失败，服务器发生错误，重新登录",
     });
   }
 });

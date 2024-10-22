@@ -1,13 +1,13 @@
 import axios from 'axios';
 import store from '@/store/index';
+import storageUtils from '@/utils/storage';
 
 import { Toast } from 'vant';
 
 let refreshTime = 3;
-console.log('store', store);
 
-// 正在进行中的请求列表
-// let reqList = [];
+// 请求队列，存储未完成的请求
+let requestQueue = [];
 
 // import { config } from "localforage";
 const requestTimeout = 60; // 设定超时时间
@@ -47,33 +47,52 @@ function getRequestUrl(url, fullUrl = false) {
 
 // 重刷token
 function refreshAccessToken() {
+  console.log('refreshAccessToken :>> ');
   // 刷新次数超过三次退出
   if (refreshTime <= 0) {
-    window.$cooToast({
-      content: '获取用户令牌失败',
+    // window.$cooToast({
+    //   content: '获取用户令牌失败',
+    //   duration: 2000,
+    //   type: 'fail'
+    // });
+    Toast({
+      message: '获取用户令牌失败',
+      closeOnClickOverlay: true,
+      closeOnClick: true,
       duration: 2000,
-      type: 'fail'
+      icon: 'cross'
     });
     refreshTime = 3;
     store.dispatch('user/loginout');
     return;
   }
   refreshTime--;
-  let refreshToken = store.getters['user/getRefreshToken'];
+  // let refreshToken = store.getters['user/getRefreshToken'];
+  let refreshToken = storageUtils.get('refreshToken');
   console.log('refreshToken refreshToken', refreshToken);
   try {
     // 重刷token
     axios
-      .post('/api/users/token', { refreshToken: refreshToken })
+      .post('/api/users/refreshToken', { refreshToken: refreshToken })
       .then((response) => {
         let resData2 = response.data;
         console.log('refresh token response', resData2.data.accessToken);
         if (response.status == 200 && resData2.status == 0) {
           // 成功刷新token
-          store.dispatch('user/updateAccessToken', resData2.data.accessToken);
+          storageUtils.set('accessToken', resData2.data.accessToken);
+          console.log('requestQueue :>> ', requestQueue);
+          // 重新执行队列中的请求
+          requestQueue.forEach(({ resolve, config }) => {
+            config.headers.Authorization =
+              'Bearer ' + resData2.data.accessToken;
+            axios(config).then(resolve);
+          });
+
+          // 清空请求队列
+          requestQueue = [];
         } else {
           // 不成功刷新token
-          store.dispatch('user/updateAccessToken', null);
+          storageUtils.set('accessToken', {});
         }
         // refreshTime = 3;
       })
@@ -97,7 +116,7 @@ function refreshAccessToken() {
             icon: 'cross'
           });
 
-          refreshTime = 3;
+          // refreshTime = 3;
           store.dispatch('user/loginout');
         } else {
           refreshAccessToken();
@@ -107,7 +126,7 @@ function refreshAccessToken() {
     console.log('refreshtoken error', error);
     store.dispatch('user/loginout');
     // 不成功刷新token
-    refreshTime = 3;
+    // refreshTime = 3;
   }
 }
 
@@ -117,11 +136,14 @@ axios.interceptors.request.use(
     // 每次发送请求之前判断vuex中是否存在token
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
-    let token = store.getters['user/getAccessToken'];
+    // let token = store.getters['user/getAccessToken'];
+    let { token } = storageUtils.get('accessToken') || {};
     if (token) config.headers.Authorization = 'Bearer ' + token;
+    console.log('config :>> ', config);
     return config;
   },
   (error) => {
+    console.log('request error :>> ', error);
     return Promise.error(error);
   }
 );
@@ -139,11 +161,17 @@ axios.interceptors.response.use(
     }
   },
   (error) => {
+    console.log('response error :>> ', error);
     let resData = error.response;
     // 拦截token 失效为401
     if (resData.status == 403 || resData.status == 401) {
       // console.log("refreshToken");
-      refreshAccessToken();
+      // refreshAccessToken();
+      // 将未完成的请求加入队列
+      return new Promise((resolve) => {
+        requestQueue.push({ resolve, config: error.config });
+        refreshAccessToken();
+      });
     }
     if (!resData.data.message) {
       resData.data.message = `status:${resData.status};message:${error.message}`;
@@ -279,6 +307,7 @@ function get(
       .catch((err) => {
         Toast.clear(); // 结束关闭loading
         errorHandler.apply(that, [err, option.pure]);
+        console.error('err :>> ', err);
         reject(err.data);
       });
   });
@@ -302,6 +331,7 @@ function post(
   }
 ) {
   let that = this;
+  console.log('post :>> ');
   return new Promise((resolve, reject) => {
     globalLoading.apply(that, [option.loading]); // 开启loading
     axios
@@ -312,7 +342,6 @@ function post(
       })
       .then((res) => {
         Toast.clear(); // 结束关闭loading
-        console.log('res :>> ', res);
         resolve(res.data);
       })
       .catch((err) => {
@@ -389,4 +418,4 @@ function del(
   });
 }
 
-export default { del, put, post, get };
+export default { del, put, post, get, refreshAccessToken };

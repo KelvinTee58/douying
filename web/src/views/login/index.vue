@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <h2>Douying 湛江都赢</h2>
+      <h2>Douying 都赢</h2>
       <p class="welcome-text">欢迎!重新登录.</p>
 
       <!-- Email Input -->
@@ -57,7 +57,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('user', ['initUserInfo']),
+    ...mapActions('user', ['loginIn']),
     async login() {
       let password = encryptBase64(this.password);
       let params = {
@@ -66,27 +66,25 @@ export default {
         password
       };
       try {
+        console.log('logininfo :>> ');
         let logininfo = await this.$request.post('/api/users/login', params);
-        console.log('logininfo :>> ', logininfo);
-        this.initUserInfo(logininfo.data);
-
+        console.log('logininfo :>> ', params, logininfo);
+        this.loginIn(logininfo.data);
         Toast.success({
           message: '欢迎您，' + logininfo.data.user.name,
           duration: 2000
         });
-        setInterval(() => {
-          // this.$router.replace({ path: '/index' })
-        }, 2000);
+        this.$router.replace({ path: '/index' });
       } catch (error) {
-        this.initUserInfo({});
+        // this.loginIn({});
       }
     }
   }
 };
 </script>
 
-<style scoped>
-/* Container styles */
+<style scoped lang="scss">
+// /* Container styles */
 .login-container {
   display: flex;
   justify-content: center;
@@ -97,51 +95,47 @@ export default {
 }
 
 .login-box {
-  width: 360px;
-  padding: 50px 40px;
-
-  border-radius: 12px;
+  width: 20rem;
+  padding: 1.5rem 3rem;
   text-align: left;
 }
 
 h2 {
-  font-size: 30px;
+  font-size: 2.2rem; // 30px / 37.5
   font-weight: 600;
-  margin-bottom: 12px;
-  letter-spacing: 1px;
+  margin-bottom: 0.5rem; // 12px / 37.5
+  // letter-spacing: 0.1rem; // 1px / 37.5
   text-align: left;
 }
 
 .welcome-text {
   color: #888;
-  font-size: 16px;
+  font-size: 1rem; // 16px / 37.5
   line-height: 1.7;
-  /* margin-bottom: 35px; */
-  letter-spacing: 0.5px;
+  letter-spacing: 0.1rem; // 0.5px / 37.5
   margin-bottom: 3rem;
 }
 
 /* Input Group Styles */
 .input-group {
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 0.2rem; // 25px / 37.5
 }
 
 input {
   width: 100%;
-  padding: 10px 0;
+  padding: 0.8rem 0; // 10px / 37.5
   border: none;
   border-bottom: 1px solid #ddd;
   outline: none;
-  font-size: 18px;
-  letter-spacing: 0.5px;
+  font-size: 1.5rem; // 18px / 37.5
   text-align: left;
   transition: border-bottom-color 0.3s;
 }
 
 input::placeholder {
   color: #bbb;
-  font-size: 16px;
+  font-size: 1rem; // 16px / 37.5
 }
 
 input:focus {
@@ -154,7 +148,7 @@ input:focus {
   bottom: -2px;
   left: 0;
   width: 0;
-  height: 2px;
+  height: 0.1rem; // 2px / 37.5
   background-color: #007bff;
   transition: width 0.5s ease;
 }
@@ -166,16 +160,15 @@ input:focus {
 /* Login Button Styles */
 .login-btn {
   width: 100%;
-  padding: 14px;
+  padding: 1rem; // 14px / 37.5
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 0.4rem; // 6px / 37.5
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem; // 16px / 37.5
   font-weight: 500;
-  letter-spacing: 0.5px;
-  /* margin-top: 25px; */
+  letter-spacing: 0.13rem; // 0.5px / 37.5
   margin-top: 3rem;
   transition: background-color 0.3s ease;
 }
@@ -186,10 +179,10 @@ input:focus {
 
 /* Sign-up link */
 .sign-up {
-  margin-top: 20px;
-  font-size: 14px;
+  margin-top: 0.5rem; // 20px / 37.5
+  font-size: 0.8rem; // 14px / 37.5
   color: #888;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.013rem; // 0.5px / 37.5
 }
 
 .sign-up a {

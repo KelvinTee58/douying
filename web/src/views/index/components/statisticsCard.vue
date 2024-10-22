@@ -97,7 +97,7 @@ export default {
   color: #fff;
   .card-wrapper {
     // background: $primary;
-    background: #000000;
+    background: #1989fa;
     width: 350px;
     border-radius: 1rem;
     padding: 1rem;
