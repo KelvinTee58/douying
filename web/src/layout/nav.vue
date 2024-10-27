@@ -5,6 +5,7 @@
       left-arrow
       left-text="返回"
       @click-left="onClickLeft"
+      safe-area-inset-top
     >
     </van-nav-bar>
     <router-view></router-view>

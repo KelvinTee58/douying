@@ -1,0 +1,15 @@
+{
+  "short_name": "都赢",
+  "name": "湛江都赢App",
+  "icons": [
+    {
+      "src": "mobileIcon/icon-463x463.png",
+      "sizes": "463x463",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}

@@ -6,7 +6,7 @@ const indexRotuter = {
   component: navLayer,
   children: [
     {
-      path: '/',
+      path: '',
       component: indexComponent,
       meta: { title: '首页' } // 添加meta字段，定义标题
     }

@@ -40,6 +40,9 @@ router.beforeEach((to, from, next) => {
 });
 
 router.beforeEach(async (to, from, next) => {
+  if (to.path === from.path) {
+    next(false); // 阻止重复导航
+  }
   const requiresAuth = to.meta.requiresAuth !== false; // 默认需要登录，除非明确标识不需要
   // 判断是否需要登录访问
   if (requiresAuth) {
@@ -67,6 +70,14 @@ router.beforeEach(async (to, from, next) => {
   } else {
     // 不需要登录权限的页面，直接跳转
     next();
+  }
+});
+
+router.onError((error) => {
+  if (error.name === 'NavigationDuplicated') {
+    console.warn('Avoided redundant navigation to current location.');
+  } else {
+    console.error(error);
   }
 });
 
