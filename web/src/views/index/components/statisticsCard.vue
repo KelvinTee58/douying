@@ -98,7 +98,8 @@ export default {
   .card-wrapper {
     // background: $primary;
     background: #1989fa;
-    width: 350px;
+    width: 35vw;
+    max-width: 9rem;
     border-radius: 1rem;
     padding: 1rem;
     .card-title {
@@ -113,6 +114,9 @@ export default {
       .unit {
         display: inline-block;
         padding-left: 0.4rem;
+        font-weight: lighter;
+        font-size: 1.2rem;
+        line-height: 1.2rem;
       }
     }
     .trend-wrapper {

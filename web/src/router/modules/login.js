@@ -6,7 +6,7 @@ const loginRotuter = {
   component: defaultLayer,
   children: [
     {
-      path: '/',
+      path: '',
       component: loginComponent,
       meta: { requiresAuth: false } // 不需要登录
     }

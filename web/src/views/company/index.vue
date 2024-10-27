@@ -5,9 +5,12 @@
       left-arrow
       left-text="返回"
       @click-left="onClickLeft"
-      >s
+      fixed
+      border
+      z-index="100"
+      safe-area-inset-top
+    >
       <template #right>
-        <van-icon name="plus" size="18" class="search-icon" />
         <van-icon
           name="search"
           size="18"
@@ -22,43 +25,57 @@
         />
       </template>
     </van-nav-bar>
-    <form action="/" v-show="isShowSearch">
-      <van-search
-        v-model="searchKeyWord"
-        show-action
-        placeholder="请输入搜索关键词"
-        @search="onSearch"
-        @input="onSearch"
-        s
-        @cancel="onCancel"
-      />
-    </form>
-    <div class="cardList">
-      <!-- <companyCard :companyInfo="testCompanyCardData"></companyCard> -->
-
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        :error.sync="error"
-        error-text="请求失败，点击重新加载"
-        @load="onLoad"
-      >
-        <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
-        <companyCard
-          :companyInfo="testCompanyCardData"
-          v-for="item in list"
-          :key="item"
-          :title="item"
-        ></companyCard>
-      </van-list>
+    <div class="searchBar">
+      <transition name="slide-fade">
+        <form action="/" v-show="isShowSearch">
+          <van-search
+            v-model="searchKeyWord"
+            show-action
+            placeholder="请输入搜索关键词"
+            @search="onSearch"
+            @input="onSearch"
+            @cancel="onCancel"
+          />
+        </form>
+      </transition>
     </div>
+    <div class="cardList" :class="{ 'search-margin': isShowSearch }">
+      <van-pull-refresh v-model="listStatus.refreshing" @refresh="onRefresh">
+        <van-list
+          v-model="listStatus.loading"
+          :finished="listStatus.finished"
+          finished-text="没有更多了"
+          :error.sync="listStatus.error"
+          error-text="请求失败，点击重新加载"
+          @load="onLoad"
+          offset="100"
+        >
+          <div
+            :key="item.id"
+            v-for="(item, index) in companies"
+            @click="showActionSheet(item, index)"
+          >
+            <companyCard :companyInfo="item" :title="item"></companyCard>
+          </div>
+        </van-list>
+      </van-pull-refresh>
+    </div>
+    <van-action-sheet
+      v-model="isShowActionSheet"
+      :actions="actions"
+      @select="onSelectAction"
+      cancel-text="取消"
+      close-on-click-action
+      @cancel="onCancelAction"
+    />
   </div>
 </template>
 
 <script>
-import { NavBar, Icon, Search, List } from 'vant';
+import { NavBar, Icon, Search, List, PullRefresh, ActionSheet } from 'vant';
 import companyCard from './components/companyCard.vue';
+import _ from 'lodash';
+
 export default {
   name: 'view-company-index',
   //import引入的组件需要注入到对象中才能使用
@@ -67,19 +84,25 @@ export default {
     'van-icon': Icon,
     'van-search': Search,
     'van-list': List,
+    'van-pull-refresh': PullRefresh,
+    'van-action-sheet': ActionSheet,
     companyCard
   },
   data() {
     //这里存放数据
     return {
       isShowSearch: false,
-      searchKeyWord: '',
+      isShowActionSheet: false,
+      actions: [
+        { name: '新增', type: 'create' },
+        { name: '修改', type: 'edit' },
+        { name: '删除', type: 'delete', color: '#ee0a24' }
+      ],
 
-      list: [],
-      loading: false,
-      finished: false,
-      error: false,
-      refreshing: false,
+      searchKeyWord: '',
+      companies: [],
+      selecctCompany: {},
+      selecctCompanyIndex: -1,
 
       listStatus: {
         loading: false,
@@ -105,11 +128,18 @@ export default {
   },
   mounted() {
     //生命周期 - 创建完成（可以访问当前this实例）
-    this.onCancel();
+    // this.onCancel();
     // this.onLoad();
   },
   methods: {
     onRefresh() {
+      this.listStatus.refreshing = true;
+      this.pagesEvent = {
+        ...this.pagesEvent,
+        totalItems: 0, // 总数据量
+        currentPage: 1, // 当前页数
+        totalPages: 1 // 总页数
+      };
       // 清空列表数据
       this.listStatus.finished = false;
       this.listStatus.error = false;
@@ -120,36 +150,41 @@ export default {
       this.onLoad();
     },
     async onLoad() {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      // setTimeout(() => {
-      //   for (let i = 0; i < 10; i++) {
-      //     this.list.push(this.list.length + 1);
-      //   }
-      //   // 加载状态结束
-      //   this.loading = false;
-
-      //   // 数据全部加载完成
-      //   if (this.list.length >= 40) {
-      //     this.finished = true;
-      //   }
-      // }, 1000);
+      console.log('onLoad :>> ');
+      // 刷新逻辑
+      if (this.listStatus.refreshing) {
+        this.companies = [];
+        this.listStatus.refreshing = false;
+      }
       let params = {
         page: this.pagesEvent.currentPage,
-        limit: this.pagesEvent.limit
+        limit: this.pagesEvent.limit,
+        keyword: this.searchKeyWord
       };
       try {
-        let companies = await this.$request.get('/api/companies', params);
-        console.log('companies :>> ', companies);
-        // this.loginIn(logininfo.data);
-
-        // Toast.success({
-        //   message: '欢迎您，' + logininfo.data.user.name,
-        //   duration: 2000
-        // });
-        setInterval(() => {
-          this.$router.replace({ path: '/index' });
-        }, 2000);
+        let {
+          data: companies,
+          meta: { currentPage, totalItems, totalPages }
+        } = await this.$request.get('/api/companies', params, {
+          loading: false
+        });
+        this.companies = [...this.companies, ...companies];
+        this.pagesEvent = {
+          ...this.pagesEvent,
+          currentPage,
+          totalItems,
+          totalPages
+        };
+        if (
+          currentPage == totalPages ||
+          totalPages == 0 ||
+          currentPage >= totalPages
+        ) {
+          this.listStatus.finished = true;
+        } else {
+          this.pagesEvent.currentPage += 1;
+        }
+        this.listStatus.loading = false;
       } catch (error) {
         this.listStatus.error = true;
       }
@@ -158,14 +193,63 @@ export default {
       this.$router.go(-1); // 返回上一页
     },
 
-    onSearch(val) {
-      // Toast(val);
-      console.log('val :>> ', val);
+    onSearch: _.debounce(
+      function () {
+        this.onRefresh();
+      },
+      1000,
+      {
+        leading: true,
+        trailing: false
+      }
+    ),
+    onCancel: _.debounce(
+      function () {
+        this.isShowSearch = false;
+        this.searchKeyWord = '';
+        // this.onRefresh();
+      },
+      1000,
+      {
+        leading: true,
+        trailing: false
+      }
+    ),
+    showActionSheet(company, index) {
+      this.isShowActionSheet = true;
+      this.selecctCompany = company;
+      this.selecctCompanyIndex = index;
     },
-    onCancel() {
-      // Toast('取消');
-      this.isShowSearch = false;
-      this.searchKeyWord = '';
+    onSelectAction(item) {
+      this.isShowActionSheet = false;
+      console.log('点击选项 ' + item.name);
+      if (item.type == 'create') {
+        this.$router.push('/company/create');
+      } else if (item.type == 'edit') {
+        this.$router.push({
+          path: '/company/create',
+          query: {
+            id: this.selecctCompany.id
+          }
+        });
+      } else {
+        // 删除
+        this.$request
+          .del('/api/companies/delete/' + this.selecctCompany.id)
+          .then(() => {
+            // this.$toast.success({});
+            // console.log('删除成功');
+            this.$toast.success('删除成功');
+            if (this.selecctCompanyIndex !== -1) {
+              this.companies.splice(this.selecctCompanyIndex, 1); // 根据索引删除
+            }
+          });
+      }
+    },
+    onCancelAction() {
+      this.isShowActionSheet = false;
+      this.selecctCompany = {};
+      this.selecctCompanyIndex = -1;
     }
   },
   //监控data中的数据变化
@@ -175,8 +259,37 @@ export default {
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
 .view-company-index-pages {
+  padding-top: 3rem; // 确保内容整体从 navBar 下开始
   .search-icon {
     margin-right: 30px;
+  }
+  // .searchBar {
+  //   position: sticky;
+  //   margin-top: 3rem;
+  // }
+  .searchBar {
+    position: fixed;
+    top: 2.8rem; // 紧贴 navbar 之下
+    left: 0;
+    width: 100%;
+    z-index: 99;
+  }
+
+  .cardList {
+    margin-top: 0rem; // 避免内容直接顶到 searchBar 或 navBar
+  }
+  .search-margin {
+    margin-top: 2.8rem; // 紧贴 navbar 之下;
+  }
+
+  // 添加渐隐过渡效果
+  .slide-fade-enter-active,
+  .slide-fade-leave-active {
+    transition: all 0.3s ease;
+  }
+  .slide-fade-enter, .slide-fade-leave-to /* .slide-fade-leave-active in <2.1.8 */ {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 }
 </style>
