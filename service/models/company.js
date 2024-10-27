@@ -18,7 +18,13 @@ module.exports = (sequelize, DataTypes) => {
     contactPerson: DataTypes.STRING,
     contactPhone: DataTypes.STRING,
     address: DataTypes.STRING,
-    detailedAddress: DataTypes.STRING
+    detailedAddress: DataTypes.STRING,
+    areaCode: DataTypes.STRING, // 添加 areaCode 字段
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false, // 默认值为 false
+    },
+    deletedAt: DataTypes.DATE // 添加 deletedAt 字段，用于软删除
   }, {
     sequelize,
     modelName: 'Company',
