@@ -1,0 +1,33 @@
+# deploy-web.yml
+name: Deploy Web
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-web:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 117.72.122.27 >> ~/.ssh/known_hosts
+
+    - name: Build Web Project
+      run: |
+        cd web
+        yarn install  # 改为使用 yarn
+        yarn build
+
+    - name: Deploy Web to Server
+      run: |
+        scp -r web/dist/* deployer@your_server_ip:/www/wwwroot
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
