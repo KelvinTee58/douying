@@ -21,7 +21,7 @@ jobs:
 
     - name: Deploy Service to Server
       run: |
-        scp -r service/* deployer@117.72.122.27:/www/wwwroot/default/service
-        ssh deployer@117.72.122.27 "cd /www/wwwroot/default/service && yarn install && pm2 restart service"
+        scp -v -r service/* deployer@117.72.122.27:/www/wwwroot/default/service
+        ssh -v deployer@117.72.122.27 "cd /www/wwwroot/default/service && yarn install && pm2 restart service"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
