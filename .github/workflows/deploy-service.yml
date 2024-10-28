@@ -18,10 +18,17 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 117.72.122.27 >> ~/.ssh/known_hosts
+        # 输出私钥文件行数检查是否成功写入
+        wc -l ~/.ssh/id_rsa
+
+    - name: Test SSH Connection
+      run: |
+        ssh -v deployer@117.72.122.27 "echo 'SSH Connection Successful!'"
+      # 捕捉连接成功或失败的提示信息
+      continue-on-error: true
 
     - name: Deploy Service to Server
+      if: ${{ success() }}
       run: |
         scp -v -r service/* deployer@117.72.122.27:/www/wwwroot/default/service
         ssh -v deployer@117.72.122.27 "cd /www/wwwroot/default/service && yarn install && pm2 restart service"
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
