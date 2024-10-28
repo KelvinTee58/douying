@@ -23,11 +23,11 @@ jobs:
     - name: Build Web Project
       run: |
         cd web
-        yarn install  # 改为使用 yarn
-        yarn build
+        yarn install  # 使用 yarn 安装依赖
+        yarn build    # 构建项目
 
     - name: Deploy Web to Server
       run: |
-        scp -r web/dist/* deployer@your_server_ip:/www/wwwroot
+        scp -r web/dist/* deployer@117.72.122.27:/www/wwwroot/default
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
