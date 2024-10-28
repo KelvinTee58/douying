@@ -9,25 +9,30 @@ on:
 jobs:
   deploy-web:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H 117.72.122.27 >> ~/.ssh/known_hosts
+      # Setup SSH
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 117.72.122.27 >> ~/.ssh/known_hosts
 
-    - name: Build Web Project
-      run: |
-        cd web
-        yarn install  # 使用 yarn 安装依赖
-        yarn build    # 构建项目
+      # Build Web Project
+      - name: Build Web Project
+        run: |
+          cd web
+          yarn install  # 使用 yarn 安装依赖
+          yarn build    # 构建项目
 
-    - name: Deploy Web to Server
-      run: |
-        scp -r web/dist/* deployer@117.72.122.27:/www/wwwroot/default
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      # Deploy Web to Server
+      - name: Deploy Web to Server
+        run: |
+          scp -r web/dist/* deployer@117.72.122.27:/www/wwwroot/default/web  # 修改目标路径
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
