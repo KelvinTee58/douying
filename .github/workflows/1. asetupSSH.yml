@@ -1,6 +1,21 @@
-name: Setup SSH
-  run: 
-    mkdir -p ~/.ssh
-    echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-    chmod 600 ~/.ssh/id_rsa
-    ssh-keyscan -H 117.72.122.27 >> ~/.ssh/known_hosts
+
+
+name: asetupSSH
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-service:
+    runs-on: ubuntu-latest
+    steps:
+       
+        
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 117.72.122.27 >> ~/.ssh/known_hosts
