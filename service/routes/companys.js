@@ -111,10 +111,9 @@ router.put("/update/:id", async (req, res) => {
       {
         where: { id: companyId },
         returning: true, // 返回更新后的记录
-        plain: true
       }
     );
-
+    console.log('updatedCompany :>> ', companyId, updatedCompany);
     if (updatedCompany[1]) {
       send.success(req, res, {
         data: updatedCompany[1].dataValues, // 更新后的公司数据

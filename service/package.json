@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=development nodemon ./bin/www ",
     "serve": "cross-env NODE_ENV=development nodemon ./bin/www ",
     "start": "cross-env NODE_ENV=development nodemon ./bin/www ",
-    "run": "cross-env NODE_ENV=production node ./bin/www"
+    "pro": "cross-env NODE_ENV=production node ./bin/www"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

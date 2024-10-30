@@ -4,14 +4,18 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const tokenMiddleware = require("./middleware/token");
-
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var companyRouter = require("./routes/companys");
-
 const fs = require('fs');
 
 var app = express();
+
+
+// 路由文件导入
+var indexRouter = require("./routes/index");
+var usersRouter = require("./routes/users");
+var companyRouter = require("./routes/companys");
+var employeeRouter = require("./routes/employees");
+var rawMaterialRouter = require("./routes/rawMaterials");
+
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -22,13 +26,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
 // 中间件
 app.use(tokenMiddleware);
 
+// 加入路由
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/companies", companyRouter);
+app.use("/employees", employeeRouter);
+app.use("/rawMaterials", rawMaterialRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
