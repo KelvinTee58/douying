@@ -235,8 +235,9 @@ export default {
         });
       } else {
         // 删除
+
         this.$request
-          .del('/api/rawMaterial/delete/' + this.selecctEmployee.id)
+          .del('/api/rawMaterials/delete/' + this.selecctEmployee.id)
           .then(() => {
             // this.$toast.success({});
             // console.log('删除成功');
@@ -244,6 +245,9 @@ export default {
             if (this.selecctEmployeeIndex !== -1) {
               this.rawMaterials.splice(this.selecctEmployeeIndex, 1); // 根据索引删除
             }
+          })
+          .catch((error) => {
+            console.log('error :>> ', error);
           });
       }
     },

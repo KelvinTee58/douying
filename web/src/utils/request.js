@@ -172,6 +172,16 @@ axios.interceptors.response.use(
         requestQueue.push({ resolve, config: error.config });
         refreshAccessToken();
       });
+    } else {
+      Toast.clear();
+      console.log('request error :>> ', error);
+      Toast({
+        message: resData.data.message || error.message || '未知错误',
+        closeOnClickOverlay: true,
+        closeOnClick: true,
+        duration: 2000,
+        icon: 'cross'
+      });
     }
     if (!resData.data.message) {
       resData.data.message = `status:${resData.status};message:${error.message}`;
@@ -305,7 +315,7 @@ function get(
         resolve(res.data);
       })
       .catch((err) => {
-        Toast.clear(); // 结束关闭loading
+        // Toast.clear(); // 结束关闭loading
         errorHandler.apply(that, [err, option.pure]);
         console.error('err :>> ', err);
         reject(err.data);
@@ -345,7 +355,7 @@ function post(
         resolve(res.data);
       })
       .catch((err) => {
-        Toast.clear(); // 结束关闭loading
+        // Toast.clear(); // 结束关闭loading
         errorHandler.apply(that, [err, option.pure]);
         reject(err.data);
       });
@@ -377,7 +387,7 @@ function put(
         resolve(res.data);
       })
       .catch((err) => {
-        Toast.clear(); // 结束关闭loading
+        // Toast.clear(); // 结束关闭loading
         errorHandler.apply(that, [err, option.pure]);
         reject(err.data);
       });
@@ -411,7 +421,7 @@ function del(
         resolve(res.data);
       })
       .catch((err) => {
-        Toast.clear(); // 结束关s闭loading
+        // Toast.clear(); // 结束关s闭loading
         errorHandler.apply(that, [err, option.pure]);
         reject(err.data);
       });
