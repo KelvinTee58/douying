@@ -7,6 +7,9 @@
     <div @click="jumpToNext('/employee')">
       <Inner-card title="员工" icon="ri-user-5-line" iconSource="remixicon" />
     </div>
+    <div @click="jumpToNext('/rawMaterial')">
+      <Inner-card title="原料" icon="ri-leaf-line" iconSource="remixicon" />
+    </div>
   </div>
 </template>
 

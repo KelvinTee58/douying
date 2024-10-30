@@ -1,17 +1,17 @@
 // import searchLayout from '@/layout/search.vue';
 import defaultLayer from '@/layout/default.vue';
 import navLayer from '@/layout/nav.vue';
-import companyComponent from '@/views/company/index';
-import companyEditComponent from '@/views/company/edit.vue';
+import employeeComponent from '@/views/employee/index';
+import employeeEditComponent from '@/views/employee/edit.vue';
 
-const companyRotuter = {
-  path: '/company',
+const employeeRotuter = {
+  path: '/employee',
   component: defaultLayer,
   children: [
     {
       path: '',
-      component: companyComponent,
-      meta: { title: '公司' } // 添加meta字段，定义标题
+      component: employeeComponent,
+      meta: { title: '员工' } // 添加meta字段，定义标题
     },
     {
       path: 'edit',
@@ -19,7 +19,7 @@ const companyRotuter = {
       children: [
         {
           path: '',
-          component: companyEditComponent,
+          component: employeeEditComponent,
           meta: { title: '编辑' } // 添加meta字段，定义标题
         }
       ]
@@ -27,4 +27,4 @@ const companyRotuter = {
   ]
 };
 
-export default companyRotuter;
+export default employeeRotuter;
