@@ -121,7 +121,7 @@ export default {
   },
   computed: {
     isPickerValueEmpty() {
-      return Object.keys(this.pickerValue).length === 0;
+      return !this.pickerValue || Object.keys(this.pickerValue).length === 0;
     },
     cardComponent() {
       const cardComponents = {

@@ -36,6 +36,13 @@
             @input="onSearch"
             @cancel="onCancel"
           />
+          <van-dropdown-menu>
+            <van-dropdown-item
+              v-model="searchStatus"
+              :options="statusOptions"
+              @change="onRefresh"
+            />
+          </van-dropdown-menu>
         </form>
       </transition>
     </div>
@@ -72,9 +79,19 @@
 </template>
 
 <script>
-import { NavBar, Icon, Search, List, PullRefresh, ActionSheet } from 'vant';
+import {
+  NavBar,
+  Icon,
+  Search,
+  List,
+  PullRefresh,
+  ActionSheet,
+  DropdownMenu,
+  DropdownItem
+} from 'vant';
 import rawMaterialCard from '@/components/card/rawMaterialsCard.vue';
 import _ from 'lodash';
+import { transformDictionary } from '@/utils/dictionary';
 
 export default {
   name: 'view-rawMaterial-index',
@@ -86,6 +103,8 @@ export default {
     'van-list': List,
     'van-pull-refresh': PullRefresh,
     'van-action-sheet': ActionSheet,
+    'van-dropdown-menu': DropdownMenu,
+    'van-dropdown-item': DropdownItem,
     rawMaterialCard
   },
   data() {
@@ -98,8 +117,10 @@ export default {
         { name: '修改', type: 'edit' },
         { name: '删除', type: 'delete', color: '#ee0a24' }
       ],
+      statusOptions: [],
 
       searchKeyWord: '',
+      searchStatus: '',
       rawMaterials: [],
       selecctEmployee: {},
       selecctEmployeeIndex: -1,
@@ -130,8 +151,15 @@ export default {
     //生命周期 - 创建完成（可以访问当前this实例）
     // this.onCancel();
     // this.onLoad();
+    this.getStatusOption();
   },
   methods: {
+    getStatusOption() {
+      let options = transformDictionary('rawMaterial.status', 'text', 'value');
+      console.log('options :>> ', options);
+      options.unshift({ text: '全部', value: '' });
+      this.statusOptions = options;
+    },
     onRefresh() {
       this.listStatus.refreshing = true;
       this.pagesEvent = {
@@ -159,7 +187,8 @@ export default {
       let params = {
         page: this.pagesEvent.currentPage,
         limit: this.pagesEvent.limit,
-        keyword: this.searchKeyWord
+        keyword: this.searchKeyWord,
+        status: this.searchStatus
       };
       try {
         let {
@@ -284,7 +313,7 @@ export default {
     margin-top: 0rem; // 避免内容直接顶到 searchBar 或 navBar
   }
   .search-margin {
-    margin-top: 2.8rem; // 紧贴 navbar 之下;
+    margin-top: 6rem; // 紧贴 navbar 之下;
   }
 
   // 添加渐隐过渡效果

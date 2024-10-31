@@ -71,7 +71,51 @@ export const getDictionaryKey = (path, value) => {
   return null; // 如果未找到，返回 null
 };
 
-// 使用示例
-// const keys = getDictionaryToArray('rawMaterial.status'); // 返回 ['in_stock', 'processing', 'completed']
-// const values = getDictionaryToArray('rawMaterial.status', 'value'); // 返回 ['在库', '加工中', '已完成']
-// const key = getDictionaryKey('rawMaterial.status', '在库'); // 返回 'in_stock'
+/**
+ * 转换字典对象为数组格式
+ * @param {string} path - 字典路径
+ * @param {string} labelKey - 指定 label 的字段名 (默认: 'label')
+ * @param {string} valueKey - 指定 value 的字段名 (默认: 'value')
+ * @returns {Array<Object>} - 转换后的数组，包含 label 和 value 键
+ */
+export const transformDictionary = (
+  path,
+  labelKey = 'label',
+  valueKey = 'value'
+) => {
+  const keys = path.split('.');
+  let result = dictionaries;
+
+  for (const key of keys) {
+    if (result[key]) {
+      result = result[key];
+    } else {
+      return []; // 如果路径无效，则返回空数组
+    }
+  }
+
+  // 将字典转换成指定格式的数组
+  return Object.keys(result).map((key) => ({
+    [labelKey]: result[key],
+    [valueKey]: key
+  }));
+};
+
+// 使用 getDictionaryValue 示例
+// const statusValue = getDictionaryValue('rawMaterial.status', 'in_stock', '未知状态');
+// 输出: '在库'
+
+// 使用 getDictionaryToArray 示例
+// const statusKeys = getDictionaryToArray('rawMaterial.status');
+// 输出: ['in_stock', 'processing', 'completed']
+
+// const statusValues = getDictionaryToArray('rawMaterial.status', 'value');
+// 输出: ['在库', '加工中', '已完成']
+
+// 使用 getDictionaryKey 示例
+// const statusKey = getDictionaryKey('rawMaterial.status', '在库');
+// 输出: 'in_stock'
+
+// 使用 transformDictionary 示例
+// const transformedStatus = transformDictionary('rawMaterial.status', 'label', 'code');
+// 输出: [{ label: '在库', code: 'in_stock' }, { label: '加工中', code: 'processing' }, { label: '已完成', code: 'completed' }]
