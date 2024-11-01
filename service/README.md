@@ -95,17 +95,17 @@
 
 ### 原料表 (`rawMaterial`)
 
-| 字段名（Field Name） | 数据类型（Data Type） | 描述（Description）         | 版本（Version） | 是否必填（Is Required） |
-| -------------------- | --------------------- | --------------------------- | --------------- | ----------------------- |
-| `id`                 | `INT`                 | 唯一标识符                  | 0.0.1           | 是                      |
-| `materialName`       | `VARCHAR`             | 原料名称                    | 0.0.1           | 是                      |
-| `companyId`          | `INT`                 | 供应商 ID                   | 0.0.1           |                         |
-| `quantity`           | `FLOAT`               | 库存数量                    | 0.0.1           | 是                      |
-| `unit`               | `VARCHAR`             | 单位 (kg, g, pcs)          | 0.0.2           | 是                      |
+| 字段名（Field Name） | 数据类型（Data Type） | 描述（Description）                        | 版本（Version） | 是否必填（Is Required） |
+| -------------------- | --------------------- | ------------------------------------------ | --------------- | ----------------------- |
+| `id`                 | `INT`                 | 唯一标识符                                 | 0.0.1           | 是                      |
+| `materialName`       | `VARCHAR`             | 原料名称                                   | 0.0.1           | 是                      |
+| `companyId`          | `INT`                 | 供应商 ID                                  | 0.0.1           |                         |
+| `quantity`           | `FLOAT`               | 库存数量                                   | 0.0.1           | 是                      |
+| `unit`               | `VARCHAR`             | 单位 (kg, g, pcs)                          | 0.0.2           | 是                      |
 | `status`             | `ENUM`                | 原料状态 (in_stock, processing, completed) | 0.0.2           | 是                      |
-| `remark`             | `VARCHAR`             | 备注                        | 0.0.2           |                         |
-| `createdAt`          | `DATETIME`            | 创建时间                    | 0.0.1           | 是                      |
-| `updatedAt`          | `DATETIME`            | 最后更新时间                | 0.0.1           | 是                      |
+| `remark`             | `VARCHAR`             | 备注                                       | 0.0.2           |                         |
+| `createdAt`          | `DATETIME`            | 创建时间                                   | 0.0.1           | 是                      |
+| `updatedAt`          | `DATETIME`            | 最后更新时间                               | 0.0.1           | 是                      |
 
 ---
 
@@ -115,8 +115,11 @@
 | -------------------- | --------------------- | ------------------- | --------------- | ----------------------- |
 | `id`                 | `INT`                 | 唯一标识符          | 0.0.1           | 是                      |
 | `warehouseName`      | `VARCHAR`             | 仓库名称            | 0.0.1           | 是                      |
-| `location`           | `VARCHAR`             | 仓库地址            | 0.0.1           |                         |
+| `address`            | `VARCHAR`             | 地址                | 0.0.1           |                         |
+| `detailedAddress`    | `VARCHAR`             | 详细地址            | 0.0.1           |                         |
+| `areaCode`           | `VARCHAR`             | 区域代码            | 0.0.2           |                         |
 | `capacity`           | `FLOAT`               | 仓库容量            | 0.0.1           |                         |
+| `unit`               | `VARCHAR`             | 单位 (kg, g, pcs)   | 0.0.2           | 是                      |
 | `createdAt`          | `DATETIME`            | 创建时间            | 0.0.1           | 是                      |
 | `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
 | `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |

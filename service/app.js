@@ -12,9 +12,10 @@ var app = express();
 // 路由文件导入
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-var companyRouter = require("./routes/companys");
-var employeeRouter = require("./routes/employees");
-var rawMaterialRouter = require("./routes/rawMaterials");
+var companysRouter = require("./routes/companys");
+var employeesRouter = require("./routes/employees");
+var rawMaterialsRouter = require("./routes/rawMaterials");
+var warehousesRouter = require("./routes/warehouses");
 
 
 // view engine setup
@@ -32,9 +33,10 @@ app.use(tokenMiddleware);
 // 加入路由
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/companies", companyRouter);
-app.use("/employees", employeeRouter);
-app.use("/rawMaterials", rawMaterialRouter);
+app.use("/companies", companysRouter);
+app.use("/employees", employeesRouter);
+app.use("/rawMaterials", rawMaterialsRouter);
+app.use("/warehouses", warehousesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
