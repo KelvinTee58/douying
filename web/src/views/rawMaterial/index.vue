@@ -156,7 +156,6 @@ export default {
   methods: {
     getStatusOption() {
       let options = transformDictionary('rawMaterial.status', 'text', 'value');
-      console.log('options :>> ', options);
       options.unshift({ text: '全部', value: '' });
       this.statusOptions = options;
     },
@@ -178,7 +177,6 @@ export default {
       this.onLoad();
     },
     async onLoad() {
-      console.log('onLoad :>> ');
       // 刷新逻辑
       if (this.listStatus.refreshing) {
         this.rawMaterials = [];
@@ -198,7 +196,6 @@ export default {
           loading: false
         });
         this.rawMaterials = [...this.rawMaterials, ...rawMaterials];
-        console.log('this.rawMaterials :>> ', this.rawMaterials);
         this.pagesEvent = {
           ...this.pagesEvent,
           currentPage,

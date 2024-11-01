@@ -1,6 +1,12 @@
 // dictionary.js
 
 const dictionaries = {
+  common: {
+    weight: {
+      kg: '千克', // 重量单位 - 克
+      ton: '吨' // 重量单位 - 克
+    }
+  },
   rawMaterial: {
     status: {
       in_stock: '在库', // 原料状态 - 在库
@@ -8,10 +14,12 @@ const dictionaries = {
       completed: '已完成' // 原料状态 - 已完成
     }
   },
-  // 其他字典可以在这里添加
-  exampleStatus: {
-    active: '活跃', // 示例状态 - 活跃
-    inactive: '非活跃' // 示例状态 - 非活跃
+  employee: {
+    gender: {
+      M: '男', // 性别 - 男
+      F: '女', // 性别 - 女
+      O: '其他'
+    }
   }
 };
 

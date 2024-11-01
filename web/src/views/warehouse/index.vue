@@ -1,5 +1,5 @@
 <template>
-  <div class="view-employee-index-pages container">
+  <div class="view-warehouse-index-pages container">
     <van-nav-bar
       :title="currentTitle"
       left-arrow
@@ -52,10 +52,10 @@
         >
           <div
             :key="item.id"
-            v-for="(item, index) in employees"
+            v-for="(item, index) in warehouses"
             @click="showActionSheet(item, index)"
           >
-            <employeesCard :value="item" :title="item"></employeesCard>
+            <warehouseCard :value="item" :title="item"></warehouseCard>
           </div>
         </van-list>
       </van-pull-refresh>
@@ -73,11 +73,11 @@
 
 <script>
 import { NavBar, Icon, Search, List, PullRefresh, ActionSheet } from 'vant';
-import employeesCard from '@/components/card/employeesCard.vue';
+import warehouseCard from '@/components/card/warehousesCard.vue';
 import _ from 'lodash';
 
 export default {
-  name: 'view-employee-index',
+  name: 'view-warehouse-index',
   //import引入的组件需要注入到对象中才能使用
   components: {
     'van-nav-bar': NavBar,
@@ -86,7 +86,7 @@ export default {
     'van-list': List,
     'van-pull-refresh': PullRefresh,
     'van-action-sheet': ActionSheet,
-    employeesCard
+    warehouseCard
   },
   data() {
     //这里存放数据
@@ -100,9 +100,9 @@ export default {
       ],
 
       searchKeyWord: '',
-      employees: [],
-      selecctEmployee: {},
-      selecctEmployeeIndex: -1,
+      warehouses: [],
+      selecctCompany: {},
+      selecctCompanyIndex: -1,
 
       listStatus: {
         loading: false,
@@ -116,7 +116,7 @@ export default {
         totalPages: 1, // 总页数
         limit: 10 // 每页条数
       },
-      testemployeesCardData: {}
+      testCompanyCardData: {}
     };
   },
   //监听属性 类似于data概念
@@ -152,7 +152,7 @@ export default {
     async onLoad() {
       // 刷新逻辑
       if (this.listStatus.refreshing) {
-        this.employees = [];
+        this.warehouses = [];
         this.listStatus.refreshing = false;
       }
       let params = {
@@ -162,13 +162,12 @@ export default {
       };
       try {
         let {
-          data: employees,
+          data: warehouses,
           meta: { currentPage, totalItems, totalPages }
-        } = await this.$request.get('/api/employees', params, {
+        } = await this.$request.get('/api/warehouses', params, {
           loading: false
         });
-        this.employees = [...this.employees, ...employees];
-        console.log('this.employees :>> ', this.employees);
+        this.warehouses = [...this.warehouses, ...warehouses];
         this.pagesEvent = {
           ...this.pagesEvent,
           currentPage,
@@ -215,41 +214,41 @@ export default {
         trailing: false
       }
     ),
-    showActionSheet(employee, index) {
+    showActionSheet(warehouse, index) {
       this.isShowActionSheet = true;
-      this.selecctEmployee = employee;
-      this.selecctEmployeeIndex = index;
+      this.selecctCompany = warehouse;
+      this.selecctCompanyIndex = index;
     },
     onSelectAction(item) {
       this.isShowActionSheet = false;
       console.log('点击选项 ' + item.name);
       if (item.type == 'create') {
-        this.$router.push('/employee/edit');
+        this.$router.push('/warehouse/edit');
       } else if (item.type == 'edit') {
         this.$router.push({
-          path: '/employee/edit',
+          path: '/warehouse/edit',
           query: {
-            id: this.selecctEmployee.id
+            id: this.selecctCompany.id
           }
         });
       } else {
         // 删除
         this.$request
-          .del('/api/employees/delete/' + this.selecctEmployee.id)
+          .del('/api/warehouses/delete/' + this.selecctCompany.id)
           .then(() => {
             // this.$toast.success({});
             // console.log('删除成功');
             this.$toast.success('删除成功');
-            if (this.selecctEmployeeIndex !== -1) {
-              this.employees.splice(this.selecctEmployeeIndex, 1); // 根据索引删除
+            if (this.selecctCompanyIndex !== -1) {
+              this.warehouses.splice(this.selecctCompanyIndex, 1); // 根据索引删除
             }
           });
       }
     },
     onCancelAction() {
       this.isShowActionSheet = false;
-      this.selecctEmployee = {};
-      this.selecctEmployeeIndex = -1;
+      this.selecctCompany = {};
+      this.selecctCompanyIndex = -1;
     }
   },
   //监控data中的数据变化
@@ -258,7 +257,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
-.view-employee-index-pages {
+.view-warehouse-index-pages {
   padding-top: 3rem; // 确保内容整体从 navBar 下开始
   .search-icon {
     margin-right: 30px;

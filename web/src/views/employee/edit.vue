@@ -62,6 +62,7 @@
 <script>
 import { Field, Form, Button, Popup, Picker } from 'vant';
 import { Toast } from 'vant';
+import { getDictionaryValue } from '@/utils/dictionary';
 
 export default {
   name: 'view-employee-create',
@@ -94,12 +95,7 @@ export default {
   },
   computed: {
     genderValue() {
-      if (!this.formData.gender) return '';
-      return this.formData.gender === 'M'
-        ? '男'
-        : this.formData.gender === 'F'
-        ? '女'
-        : '';
+      return getDictionaryValue('employee.gender', this.formData.gender, '');
     }
   },
   methods: {

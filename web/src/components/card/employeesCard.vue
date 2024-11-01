@@ -30,6 +30,7 @@
 
 <script>
 import { Icon } from 'vant';
+import { getDictionaryValue } from '@/utils/dictionary';
 export default {
   components: {
     'van-icon': Icon
@@ -47,8 +48,7 @@ export default {
   },
   filters: {
     genderFilter(value) {
-      if (!value) return '其他';
-      return value === 'M' ? '男' : value === 'F' ? '女' : '其他';
+      return getDictionaryValue('employee.gender', value, '');
     }
   },
   data() {

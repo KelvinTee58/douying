@@ -150,7 +150,6 @@ export default {
       this.onLoad();
     },
     async onLoad() {
-      console.log('onLoad :>> ');
       // 刷新逻辑
       if (this.listStatus.refreshing) {
         this.companies = [];

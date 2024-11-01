@@ -10,6 +10,9 @@
     <div @click="jumpToNext('/rawMaterial')">
       <Inner-card title="原料" icon="ri-leaf-line" iconSource="remixicon" />
     </div>
+    <div @click="jumpToNext('/warehouse')">
+      <Inner-card title="仓库" icon="ri-home-8-line" iconSource="remixicon" />
+    </div>
   </div>
 </template>
 

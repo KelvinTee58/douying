@@ -1,29 +1,37 @@
 <template>
-  <div class="components-card-rawMaterialsCard">
+  <div class="components-card-companyCard">
     <div class="card" :class="{ selected: isSelected }">
       <div class="card-image">
         <!-- 替换成随机图片 -->
         <!-- <img src="https://picsum.photos/400/400" alt="Random Hotel Image" /> -->
-        <i class="ri-leaf-line remixicon"></i>
+        <i class="ri-home-8-line remixicon"></i>
       </div>
       <div class="card-info">
         <div class="card-footer">
           <span class="card-price">
-            <h2 class="card-title">{{ value.materialName || '原料名称' }}</h2>
+            <h2 class="card-title">{{ value.warehouseName || '员工名称' }}</h2>
           </span>
           <p class="card-location">
-            <van-icon name="points" />
-            {{ value.quantity || 0 }} {{ value.unit | unitFilter }}
+            <van-icon name="friends-o" />
+            {{ value.capacity || 0 }}
+            {{ value.unit | unitFilter }}
           </p>
         </div>
-        <div class="card-footer">
+        <p class="card-location">
+          <van-icon name="location-o" />
+          {{ value.address || '' }}
+          {{ value.detailedAddress || '' }}
+        </p>
+
+        <!-- <div class="card-footer">
           <span class="card-price">
-            {{ value.status | statusFilter }}
+            {{ value.employeeNumber || '未填写' }}
           </span>
-          <span class="card-price">{{ value.remark || '' }}</span>
-        </div>
+          <span class="card-price">{{ value.phone || '暂无电话' }}</span>
+        </div> -->
       </div>
     </div>
+    <van-icon v-if="isSelected" name="success" class="success-icon" />
   </div>
 </template>
 
@@ -34,7 +42,7 @@ export default {
   components: {
     'van-icon': Icon
   },
-  name: 'components-card-rawMaterialsCard',
+  name: 'components-card-companyCard',
   props: {
     value: {
       type: Object,
@@ -46,9 +54,6 @@ export default {
     }
   },
   filters: {
-    statusFilter(value) {
-      return getDictionaryValue('rawMaterial.status', value, '');
-    },
     unitFilter(value) {
       return getDictionaryValue('common.weight', value, '');
     }
@@ -63,7 +68,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
-.components-card-rawMaterialsCard {
+.components-card-companyCard {
   .card {
     display: flex;
     justify-content: space-between;

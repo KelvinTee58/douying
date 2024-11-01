@@ -39,14 +39,26 @@
         @blur="showQuantityKeyBoard = false"
       />
 
+      <!-- 状态选择 -->
       <van-field
         class="input-field"
-        v-model="formData.unit"
+        readonly
+        clickable
         name="unit"
+        :value="unitValue"
         label="单位"
         placeholder="请输入单位"
-        :rules="[{ required: true, message: '单位不能为空' }]"
+        @click="showUnitPicker = true"
       />
+      <van-popup v-model="showUnitPicker" position="bottom">
+        <van-picker
+          value-key="key"
+          show-toolbar
+          :columns="unitColumns"
+          @confirm="onConfirmUnit"
+          @cancel="showUnitPicker = false"
+        />
+      </van-popup>
 
       <!-- 状态选择 -->
       <van-field
@@ -57,15 +69,15 @@
         :value="statusValue"
         label="状态"
         placeholder="请选择原料状态"
-        @click="showPicker = true"
+        @click="showStatusPicker = true"
       />
-      <van-popup v-model="showPicker" position="bottom">
+      <van-popup v-model="showStatusPicker" position="bottom">
         <van-picker
           value-key="key"
           show-toolbar
-          :columns="columns"
-          @confirm="onConfirm"
-          @cancel="showPicker = false"
+          :columns="statusColumns"
+          @confirm="onConfirmStatus"
+          @cancel="showStatusPicker = false"
         />
       </van-popup>
 
@@ -128,8 +140,10 @@ export default {
   data() {
     return {
       isCreate: true,
-      columns: [],
-      showPicker: false,
+      statusColumns: [],
+      unitColumns: [],
+      showStatusPicker: false,
+      showUnitPicker: false,
       showQuantityKeyBoard: false,
 
       formData: {
@@ -148,6 +162,9 @@ export default {
   computed: {
     statusValue() {
       return getDictionaryValue('rawMaterial.status', this.formData.status, '');
+    },
+    unitValue() {
+      return getDictionaryValue('common.weight', this.formData.unit, '');
     }
   },
   watch: {
@@ -161,14 +178,14 @@ export default {
       this.isCreate = false;
       this.getRawMaterialIdData(this.rawMaterialId); // 通过 ID 获取公司数据
     }
-    this.columns = getDictionaryToArray('rawMaterial.status', 'value');
+    this.statusColumns = getDictionaryToArray('rawMaterial.status', 'value');
+    this.unitColumns = getDictionaryToArray('common.weight', 'value');
   },
   methods: {
     validateField() {
       this.$refs.quantityField.validate(); // 假设你在 van-field 上加了 ref="phoneField"
     },
     validatorWeight: (value) => {
-      console.log('ts :>> ', value, !/^\d+(\.\d{1,3})?$/.test(value));
       if (!value) {
         return false;
       }
@@ -194,15 +211,17 @@ export default {
           rawMaterial.companyId = '';
         }
         this.formData = rawMaterial;
-        console.log('this.formData :>> ', this.formData);
       } catch (error) {
         console.log('error :>> ', error);
       }
     },
-    onConfirm(value) {
-      this.showPicker = false;
+    onConfirmStatus(value) {
+      this.showStatusPicker = false;
       this.formData.status = getDictionaryKey('rawMaterial.status', value, '');
-      console.log('this.formData :>> ', this.formData);
+    },
+    onConfirmUnit(value) {
+      this.showUnitPicker = false;
+      this.formData.unit = getDictionaryKey('common.weight', value, '');
     },
     cardPickerInput(value) {
       this.formData.companyId = value.id;

@@ -79,7 +79,11 @@ function refreshAccessToken() {
         console.log('refresh token response', resData2.data.accessToken);
         if (response.status == 200 && resData2.status == 0) {
           // 成功刷新token
-          storageUtils.set('accessToken', resData2.data.accessToken);
+          storageUtils.set(
+            'accessToken',
+            resData2.data.accessToken.token || null,
+            resData2.data.accessToken.expiresIn || null
+          );
           console.log('requestQueue :>> ', requestQueue);
           // 重新执行队列中的请求
           requestQueue.forEach(({ resolve, config }) => {
@@ -137,9 +141,9 @@ axios.interceptors.request.use(
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
     // let token = store.getters['user/getAccessToken'];
-    let { token } = storageUtils.get('accessToken') || {};
+
+    let token = storageUtils.get('accessToken') || {};
     if (token) config.headers.Authorization = 'Bearer ' + token;
-    console.log('config :>> ', config);
     return config;
   },
   (error) => {
