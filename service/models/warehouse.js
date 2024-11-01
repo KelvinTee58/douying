@@ -21,7 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     detailedAddress: DataTypes.STRING,
     areaCode: DataTypes.STRING,
-    capacity: DataTypes.FLOAT,
+    capacity: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
     unit: {
       type: DataTypes.STRING,
       allowNull: false,

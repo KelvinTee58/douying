@@ -10,6 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       companyName: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       contactPerson: {
@@ -20,6 +21,19 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING
+      },
+      detailedAddress: {
+        type: Sequelize.STRING
+      },
+      areaCode: {
+        type: Sequelize.STRING
+      },
+      isDeleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      deletedAt: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

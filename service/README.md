@@ -13,8 +13,8 @@
 | `name`               | `VARCHAR`             | 姓名                | 0.0.1           | 是                      |
 | `roleId`             | `VARCHAR`             | 角色 ID             | 0.0.1           | 是                      |
 | `phone`              | `VARCHAR`             | 手机号码            | 0.0.1           |                         |
-| `createdAt`          | `DATETIME`            | 账户创建时间        | 0.0.1           |                         |
-| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           |                         |
+| `createdAt`          | `DATETIME`            | 账户创建时间        | 0.0.1           | 是                      |
+| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
 | `is_active`          | `BOOLEAN`             | 账户是否激活        | 0.0.1           |                         |
 
 ---
@@ -26,7 +26,7 @@
 | `id`                 | `INT`                 | 唯一标识符          | 0.0.1           | 是                      |
 | `userId`             | `VARCHAR`             | 用户 ID             | 0.0.1           | 是                      |
 | `originalPassword`   | `VARCHAR`             | 原始密码            | 0.0.1           |                         |
-| `password`           | `VARCHAR`             | 密码（加密存储）    | 0.0.1           | 是                      |
+| `password`           | `VARCHAR`             | 密码（加密存储）    | 0.0.1           |                         |
 | `createdAt`          | `DATETIME`            | 密码创建时间        | 0.0.1           | 是                      |
 | `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
 
@@ -38,8 +38,8 @@
 | -------------------- | --------------------- | ------------------- | --------------- | ----------------------- |
 | `id`                 | `INT`                 | 唯一标识符（级别）  | 0.0.1           | 是                      |
 | `roleName`           | `VARCHAR`             | 权限类型            | 0.0.1           | 是                      |
-| `createdAt`          | `DATETIME`            | 账户创建时间        | 0.0.1           |                         |
-| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           |                         |
+| `createdAt`          | `DATETIME`            | 账户创建时间        | 0.0.1           | 是                      |
+| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
 
 ---
 
@@ -56,8 +56,8 @@
 | `areaCode`           | `VARCHAR`             | 区域代码            | 0.0.2           |                         |
 | `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |
 | `deletedAt`          | `DATETIME`            | 删除时间            | 0.0.2           |                         |
-| `createdAt`          | `DATETIME`            | 账户创建时间        | 0.0.1           |                         |
-| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           |                         |
+| `createdAt`          | `DATETIME`            | 账户创建时间        | 0.0.1           | 是                      |
+| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
 
 ---
 
@@ -70,22 +70,6 @@
 | `name`               | `VARCHAR`             | 姓名                | 0.0.1           | 是                      |
 | `gender`             | `ENUM('M', 'F', 'O')` | 性别                | 0.0.1           |                         |
 | `phone`              | `VARCHAR`             | 联系电话            | 0.0.1           |                         |
-| `createdAt`          | `DATETIME`            | 创建时间            | 0.0.1           | 是                      |
-| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
-| `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |
-| `deletedAt`          | `DATETIME`            | 删除时间            | 0.0.2           |                         |
-
----
-
-### 产品表 (`product`)
-
-| 字段名（Field Name） | 数据类型（Data Type） | 描述（Description） | 版本（Version） | 是否必填（Is Required） |
-| -------------------- | --------------------- | ------------------- | --------------- | ----------------------- |
-| `id`                 | `INT`                 | 唯一标识符          | 0.0.1           | 是                      |
-| `productName`        | `VARCHAR`             | 产品名称            | 0.0.1           | 是                      |
-| `companyId`          | `INT`                 | 生产公司 ID         | 0.0.1           | 是                      |
-| `rawMaterialId`      | `INT`                 | 原料 ID             | 0.0.1           |                         |
-| `quantity`           | `FLOAT`               | 库存数量            | 0.0.1           | 是                      |
 | `createdAt`          | `DATETIME`            | 创建时间            | 0.0.1           | 是                      |
 | `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
 | `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |
@@ -118,8 +102,24 @@
 | `address`            | `VARCHAR`             | 地址                | 0.0.1           |                         |
 | `detailedAddress`    | `VARCHAR`             | 详细地址            | 0.0.1           |                         |
 | `areaCode`           | `VARCHAR`             | 区域代码            | 0.0.2           |                         |
-| `capacity`           | `FLOAT`               | 仓库容量            | 0.0.1           |                         |
+| `capacity`           | `FLOAT`               | 仓库容量            | 0.0.1           | 是                      |
 | `unit`               | `VARCHAR`             | 单位 (kg, g, pcs)   | 0.0.2           | 是                      |
+| `createdAt`          | `DATETIME`            | 创建时间            | 0.0.1           | 是                      |
+| `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
+| `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |
+| `deletedAt`          | `DATETIME`            | 删除时间            | 0.0.2           |                         |
+
+---
+
+### 产品表 (`product`)
+
+| 字段名（Field Name） | 数据类型（Data Type） | 描述（Description） | 版本（Version） | 是否必填（Is Required） |
+| -------------------- | --------------------- | ------------------- | --------------- | ----------------------- |
+| `id`                 | `INT`                 | 唯一标识符          | 0.0.1           | 是                      |
+| `productName`        | `VARCHAR`             | 产品名称            | 0.0.1           | 是                      |
+| `companyId`          | `INT`                 | 生产公司 ID         | 0.0.1           | 是                      |
+| `rawMaterialId`      | `INT`                 | 原料 ID             | 0.0.1           |                         |
+| `quantity`           | `FLOAT`               | 库存数量            | 0.0.1           | 是                      |
 | `createdAt`          | `DATETIME`            | 创建时间            | 0.0.1           | 是                      |
 | `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
 | `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |

@@ -12,18 +12,25 @@ module.exports = (sequelize, DataTypes) => {
       // Password.hasOne(models.User);
       // define association here
       Password.belongsTo(models.User, {
-        onDelete: "NULL",
         foreignKey: {
           name: 'userId', // 外键名称与 User 模型中的字段名一致
           allowNull: false,
         },
+        onDelete: "CASCADE", // 用户删除时，自动删除关联的密码
+        onUpdate: "CASCADE", // 用户更新时，自动更新外键
       });
     }
   }
   Password.init(
     {
-      originalPassword: DataTypes.STRING,
-      password: DataTypes.STRING,
+      originalPassword: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       sequelize,

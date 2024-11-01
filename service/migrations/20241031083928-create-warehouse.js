@@ -10,6 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       warehouseName: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       address: {
@@ -22,6 +23,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       capacity: {
+        allowNull: false,
         type: Sequelize.FLOAT
       },
       unit: {

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.belongsTo(models.Role, {
-        onDelete: "NULL",
+        onDelete: "SET NULL",
         foreignKey: {
           allowNull: false,
         },
@@ -21,11 +21,34 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
-      name: DataTypes.STRING,
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        allowNull: false,
+      },
+      roleId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 99,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       phone: DataTypes.STRING,
-      username: DataTypes.STRING,
-      loginAttempts: DataTypes.INTEGER,
-      lockUntil: DataTypes.DATE,
+      loginAttempts: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+      },
+      lockUntil: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize,

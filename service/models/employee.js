@@ -14,15 +14,23 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Employee.init({
-    employeeNumber: DataTypes.STRING,
-    name: DataTypes.STRING,
+    employeeNumber: {
+      type: DataTypes.STRING,
+      allowNull: false, // 必填
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false, // 必填
+    },
     gender: {
       type: DataTypes.ENUM('M', 'F', 'O'), // 定义 ENUM 值
       defaultValue: 'O', // 默认值设置为 'O'
-      allowNull: false, // 必填
     },
     phone: DataTypes.STRING,
-    isDeleted: DataTypes.BOOLEAN,
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false, // 默认值为 false
+    },
     deletedAt: DataTypes.DATE
   }, {
     sequelize,
