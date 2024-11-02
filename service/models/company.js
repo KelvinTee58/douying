@@ -16,13 +16,25 @@ module.exports = (sequelize, DataTypes) => {
   Company.init({
     companyName: {
       allowNull: false,
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
     },
-    contactPerson: DataTypes.STRING,
+    contactPerson: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
     contactPhone: DataTypes.STRING,
-    address: DataTypes.STRING,
-    detailedAddress: DataTypes.STRING,
-    areaCode: DataTypes.STRING, // 添加 areaCode 字段
+    address: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
+    detailedAddress: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
+    areaCode: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false, // 默认值为 false

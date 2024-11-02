@@ -18,9 +18,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false, // 必填
     },
-    address: DataTypes.STRING,
-    detailedAddress: DataTypes.STRING,
-    areaCode: DataTypes.STRING,
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false, // 必填
+    },
+    detailedAddress: {
+      type: DataTypes.STRING,
+      allowNull: false, // 必填
+    },
+    areaCode: {
+      type: DataTypes.STRING,
+      allowNull: false, // 必填
+    },
     capacity: {
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -33,10 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false, // 默认值为 false
     },
-    deletedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+    deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Warehouse',

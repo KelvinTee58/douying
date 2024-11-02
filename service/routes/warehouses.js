@@ -7,10 +7,12 @@ const { Op } = require("sequelize");
 // 添加仓库 (Create)
 router.post("/create", async (req, res) => {
   try {
+    console.log('req.body :>> ', req.body);
     const newWarehouse = await models.Warehouse.create({
       warehouseName: req.body.warehouseName,
       address: req.body.address,
       detailedAddress: req.body.detailedAddress,
+      unit: req.body.unit,
       areaCode: req.body.areaCode, // 添加 areaCode 字段
       capacity: req.body.capacity,
       isDeleted: false, // 默认设置为未删除
@@ -19,6 +21,7 @@ router.post("/create", async (req, res) => {
       data: newWarehouse,
     });
   } catch (error) {
+    console.log('error :>> ', error);
     send.error(req, res, {
       message: "添加仓库时发生错误",
       data: error,
@@ -100,6 +103,7 @@ router.put("/update/:id", async (req, res) => {
         warehouseName: req.body.warehouseName,
         address: req.body.address,
         detailedAddress: req.body.detailedAddress,
+        unit: req.body.unit,
         areaCode: req.body.areaCode, // 支持 areaCode 的更新
         capacity: req.body.capacity,
       },

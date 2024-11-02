@@ -49,11 +49,11 @@
 | -------------------- | --------------------- | ------------------- | --------------- | ----------------------- |
 | `id`                 | `INT`                 | 唯一标识符          | 0.0.1           | 是                      |
 | `companyName`        | `VARCHAR`             | 公司名称            | 0.0.1           | 是                      |
-| `contactPerson`      | `VARCHAR`             | 联系人              | 0.0.1           |                         |
+| `contactPerson`      | `VARCHAR`             | 联系人              | 0.0.1           | 是                      |
 | `contactPhone`       | `VARCHAR`             | 联系人电话          | 0.0.1           |                         |
-| `address`            | `VARCHAR`             | 地址                | 0.0.1           |                         |
-| `detailedAddress`    | `VARCHAR`             | 详细地址            | 0.0.1           |                         |
-| `areaCode`           | `VARCHAR`             | 区域代码            | 0.0.2           |                         |
+| `address`            | `VARCHAR`             | 地址                | 0.0.1           | 是                      |
+| `detailedAddress`    | `VARCHAR`             | 详细地址            | 0.0.1           | 是                      |
+| `areaCode`           | `VARCHAR`             | 区域代码            | 0.0.2           | 是                      |
 | `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |
 | `deletedAt`          | `DATETIME`            | 删除时间            | 0.0.2           |                         |
 | `createdAt`          | `DATETIME`            | 账户创建时间        | 0.0.1           | 是                      |
@@ -99,9 +99,9 @@
 | -------------------- | --------------------- | ------------------- | --------------- | ----------------------- |
 | `id`                 | `INT`                 | 唯一标识符          | 0.0.1           | 是                      |
 | `warehouseName`      | `VARCHAR`             | 仓库名称            | 0.0.1           | 是                      |
-| `address`            | `VARCHAR`             | 地址                | 0.0.1           |                         |
-| `detailedAddress`    | `VARCHAR`             | 详细地址            | 0.0.1           |                         |
-| `areaCode`           | `VARCHAR`             | 区域代码            | 0.0.2           |                         |
+| `address`            | `VARCHAR`             | 地址                | 0.0.1           | 是                      |
+| `detailedAddress`    | `VARCHAR`             | 详细地址            | 0.0.1           | 是                      |
+| `areaCode`           | `VARCHAR`             | 区域代码            | 0.0.2           | 是                      |
 | `capacity`           | `FLOAT`               | 仓库容量            | 0.0.1           | 是                      |
 | `unit`               | `VARCHAR`             | 单位 (kg, g, pcs)   | 0.0.2           | 是                      |
 | `createdAt`          | `DATETIME`            | 创建时间            | 0.0.1           | 是                      |

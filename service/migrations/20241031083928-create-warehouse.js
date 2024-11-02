@@ -14,12 +14,15 @@ module.exports = {
         type: Sequelize.STRING
       },
       address: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       detailedAddress: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       areaCode: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       capacity: {
