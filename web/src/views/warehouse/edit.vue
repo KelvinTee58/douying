@@ -3,6 +3,7 @@
     <van-form @submit="onSubmit">
       <!-- 公司名称 -->
       <van-field
+        required
         v-model="formData.warehouseName"
         name="warehouseName"
         label="仓库名称"
@@ -19,6 +20,7 @@
         label="数量"
         placeholder="请输入仓库容量"
         readonly
+        required
         clickable
         :value="formData.capacity"
         @touchstart.native.stop="showCapacityKeyBoard = true"
@@ -43,11 +45,13 @@
         class="input-field"
         readonly
         clickable
+        required
         name="unit"
         :value="unitValue"
         label="单位"
         placeholder="请输入单位"
         @click="showUnitPicker = true"
+        :rules="[{ required: true, message: '数量单位不能为空' }]"
       />
       <van-popup v-model="showUnitPicker" position="bottom">
         <van-picker
@@ -64,6 +68,7 @@
         readonly
         clickable
         name="area"
+        required
         :value="formData.address"
         label="地区"
         placeholder="点击选择省市区"
@@ -85,6 +90,7 @@
       <van-field
         v-model="formData.detailedAddress"
         name="detailedAddress"
+        required
         label="详细地址"
         placeholder="请输入详细地址"
         :rules="[{ required: true, message: '详细地址不能为空' }]"

@@ -4,6 +4,7 @@
       <!-- 联系人姓名 -->
       <van-field
         v-model="formData.employeeNumber"
+        required
         name="employeeNumber"
         label="员工号"
         placeholder="请输入员工号"
@@ -12,6 +13,7 @@
 
       <van-field
         v-model="formData.name"
+        required
         name="name"
         label="姓名"
         placeholder="请输入姓名"
@@ -24,10 +26,7 @@
         name="phone"
         label="电话"
         placeholder="请输入联系电话"
-        :rules="[
-          { required: true, message: '联系电话不能为空' },
-          { validator: validatePhone, message: '请输入正确的电话号码' }
-        ]"
+        :rules="[{ validator: validatePhone, message: '请输入正确的电话号码' }]"
       />
 
       <!-- 性别选择 -->
@@ -100,6 +99,7 @@ export default {
   },
   methods: {
     validatePhone(value) {
+      if (value === '') return true;
       const phonePattern = /^[1][3-9][0-9]{9}$/;
       return phonePattern.test(value);
     },
@@ -120,7 +120,7 @@ export default {
     },
     async createSubmit() {
       let params = this.formData;
-      if (!['M', 'F'].includes(params.gender)) {
+      if (params.gender && !['M', 'F'].includes(params.gender)) {
         // 验证性别值
         Toast.fail('请选择有效的性别');
         return;
@@ -139,7 +139,7 @@ export default {
     async editSubmit() {
       let id = this.employeeId;
       let params = this.formData;
-      if (!['M', 'F'].includes(params.gender)) {
+      if (params.gender && !['M', 'F'].includes(params.gender)) {
         // 验证性别值
         Toast.fail('请选择有效的性别');
         return;

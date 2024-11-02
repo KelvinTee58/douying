@@ -4,6 +4,7 @@
       <!-- 公司名称 -->
       <van-field
         v-model="formData.companyName"
+        required
         name="companyName"
         label="公司"
         placeholder="请输入公司名称"
@@ -13,6 +14,7 @@
       <!-- 联系人姓名 -->
       <van-field
         v-model="formData.contactPerson"
+        required
         name="contactPerson"
         label="联系人"
         placeholder="请输入联系人姓名"
@@ -25,10 +27,7 @@
         name="contactPhone"
         label="电话"
         placeholder="请输入联系电话"
-        :rules="[
-          { required: true, message: '联系电话不能为空' },
-          { validator: validatePhone, message: '请输入正确的电话号码' }
-        ]"
+        :rules="[{ validator: validatePhone, message: '请输入正确的电话号码' }]"
       />
 
       <!-- 地区选择 -->
@@ -37,6 +36,7 @@
         clickable
         name="area"
         :value="formData.address"
+        required
         label="地区"
         placeholder="点击选择省市区"
         @click="showArea = true"
@@ -56,6 +56,7 @@
       <!-- 详细地址 -->
       <van-field
         v-model="formData.detailedAddress"
+        required
         name="detailedAddress"
         label="详细地址"
         placeholder="请输入详细地址"
@@ -110,6 +111,7 @@ export default {
   },
   methods: {
     validatePhone(value) {
+      if (value === '') return true;
       const phonePattern = /^[1][3-9][0-9]{9}$/;
       return phonePattern.test(value);
     },

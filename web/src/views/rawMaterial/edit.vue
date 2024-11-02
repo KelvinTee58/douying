@@ -3,6 +3,7 @@
     <van-form @submit="onSubmit">
       <!-- 联系人姓名 -->
       <van-field
+        required
         class="input-field"
         v-model="formData.materialName"
         name="materialName"
@@ -13,6 +14,7 @@
 
       <!-- 库存数量 -->
       <van-field
+        required
         class="input-field"
         name="quantity"
         ref="quantityField"
@@ -39,8 +41,9 @@
         @blur="showQuantityKeyBoard = false"
       />
 
-      <!-- 状态选择 -->
+      <!-- 单位选择 -->
       <van-field
+        required
         class="input-field"
         readonly
         clickable
@@ -49,6 +52,7 @@
         label="单位"
         placeholder="请输入单位"
         @click="showUnitPicker = true"
+        :rules="[{ required: true, message: '数量单位不能为空' }]"
       />
       <van-popup v-model="showUnitPicker" position="bottom">
         <van-picker
@@ -65,11 +69,13 @@
         class="input-field"
         readonly
         clickable
+        required
         name="status"
         :value="statusValue"
         label="状态"
         placeholder="请选择原料状态"
         @click="showStatusPicker = true"
+        :rules="[{ required: true, message: '原料状态不能为空' }]"
       />
       <van-popup v-model="showStatusPicker" position="bottom">
         <van-picker
