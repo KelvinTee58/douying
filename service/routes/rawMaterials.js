@@ -14,6 +14,7 @@ router.post("/create", async (req, res) => {
       unit: req.body.unit,
       status: req.body.status,
       remark: req.body.remark,
+      isDeleted: false, // 默认设置为未删除
     });
     send.success(req, res, {
       data: newRawMaterial,
@@ -48,16 +49,21 @@ router.get("/", async (req, res) => {
       where: {
         ...keywordCondition,
         ...statusCondition,
+        isDeleted: false // 只查询未被删除的记录
         // 不需要 isDeleted 字段的过滤
       },
       limit: limitNumber,
       offset: offset,
       include: [{
         model: models.Company,
-        attributes: ['companyName'], // 只选择需要的字段
+        where: { isDeleted: false },
+        attributes: {
+          exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"],
+        },
+        required: false // 如果信息不存在，不影响查询结果
       }],
       attributes: {
-        exclude: ['deletedAt', 'updatedAt', 'createdAt'] // 按需排除字段
+        exclude: ['isDeleted', 'deletedAt', 'updatedAt', 'createdAt'] // 按需排除字段
       },
     });
 
@@ -82,17 +88,20 @@ router.get("/:id", async (req, res) => {
     const rawMaterial = await models.RawMaterial.findOne({
       where: {
         id: req.params.id,
+        isDeleted: false // 只查询未被删除的记录
       },
       include: [{
         model: models.Company,
         where: {
           isDeleted: false // 仅包含未删除的公司
         },
-        attributes: ['address', 'areaCode', 'companyName', 'contactPerson', 'detailedAddress', 'id'],
+        attributes: {
+          exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"],
+        },
         required: false // 如果公司信息不存在，不影响查询结果
       }],
       attributes: {
-        exclude: ['updatedAt', 'createdAt'] // 按需排除字段
+        exclude: ['isDeleted', "deletedAt", "updatedAt", "createdAt"],
       }
     });
 
@@ -142,15 +151,21 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
-// 删除原料
+// 删除原料 (Soft Delete)
 router.delete("/delete/:id", async (req, res) => {
   try {
     const rawMaterialId = req.params.id;
-    const result = await models.RawMaterial.destroy({
-      where: { id: rawMaterialId }
-    });
+    const result = await models.RawMaterial.update(
+      {
+        isDeleted: true, // 标记为已删除
+        deletedAt: new Date() // 设置删除时间
+      },
+      {
+        where: { id: rawMaterialId }
+      }
+    );
 
-    if (result) {
+    if (result[0] > 0) {
       send.success(req, res, {
         message: "原料已成功删除",
       });
@@ -166,5 +181,6 @@ router.delete("/delete/:id", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;

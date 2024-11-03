@@ -2,32 +2,46 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RawMaterials', {
+    await queryInterface.createTable('Products', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      materialName: {
-        type: Sequelize.STRING,
+      productName: {
         allowNull: false,
+        type: Sequelize.STRING
+      },
+      specification: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       companyId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Companies', // 关联公司表
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
+      rawMaterialId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'RawMaterials', // 关联原料表
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       quantity: {
-        type: Sequelize.FLOAT,
         allowNull: false,
+        type: Sequelize.FLOAT
       },
       unit: {
-        type: Sequelize.STRING,
         allowNull: false,
-      },
-      status: {
-        type: Sequelize.ENUM('in_stock', 'processing', 'completed'),
-        allowNull: false,
-        defaultValue: 'in_stock',
+        type: Sequelize.STRING
       },
       remark: {
         type: Sequelize.TEXT
@@ -50,6 +64,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RawMaterials');
+    await queryInterface.dropTable('Products');
   }
 };

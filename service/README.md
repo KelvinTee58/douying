@@ -2,6 +2,19 @@
 
 **都赢公司服务**
 
+```
+// 运行迁移数据库
+// 数据库
+npx sequelize-cli db:migrate
+
+// seeds
+// 指定的seeds
+npx sequelize-cli db:seed --seed 20241102070134-seed-products.js
+
+npx sequelize-cli db:seed:all --seeders-path ./seeds_pro
+
+```
+
 ## 数据库表单
 
 ### 用户表 (`user`)
@@ -90,6 +103,8 @@
 | `remark`             | `VARCHAR`             | 备注                                       | 0.0.2           |                         |
 | `createdAt`          | `DATETIME`            | 创建时间                                   | 0.0.1           | 是                      |
 | `updatedAt`          | `DATETIME`            | 最后更新时间                               | 0.0.1           | 是                      |
+| `isDeleted`          | `BOOLEAN`             | 是否删除                                   | 0.0.2           |                         |
+| `deletedAt`          | `DATETIME`            | 删除时间                                   | 0.0.2           |                         |
 
 ---
 
@@ -117,13 +132,16 @@
 | -------------------- | --------------------- | ------------------- | --------------- | ----------------------- |
 | `id`                 | `INT`                 | 唯一标识符          | 0.0.1           | 是                      |
 | `productName`        | `VARCHAR`             | 产品名称            | 0.0.1           | 是                      |
-| `companyId`          | `INT`                 | 生产公司 ID         | 0.0.1           | 是                      |
+| `specification`      | `VARCHAR`             | 产品规格            | 0.0.1           | 是                      |
+| `companyId`          | `INT`                 | 供货公司 ID         | 0.0.1           |                         |
 | `rawMaterialId`      | `INT`                 | 原料 ID             | 0.0.1           |                         |
 | `quantity`           | `FLOAT`               | 库存数量            | 0.0.1           | 是                      |
+| `unit`               | `VARCHAR`             | 单位 (kg, g, pcs)   | 0.0.1           | 是                      |
+| `remark`             | `VARCHAR`             | 备注                | 0.0.2           |                         |
 | `createdAt`          | `DATETIME`            | 创建时间            | 0.0.1           | 是                      |
 | `updatedAt`          | `DATETIME`            | 最后更新时间        | 0.0.1           | 是                      |
-| `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.2           |                         |
-| `deletedAt`          | `DATETIME`            | 删除时间            | 0.0.2           |                         |
+| `isDeleted`          | `BOOLEAN`             | 是否删除            | 0.0.1           |                         |
+| `deletedAt`          | `DATETIME`            | 删除时间            | 0.0.1           |                         |
 
 ---
 

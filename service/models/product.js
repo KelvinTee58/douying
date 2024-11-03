@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class RawMaterial extends Model {
+  class Product extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,27 +11,34 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      RawMaterial.belongsTo(models.Company, { foreignKey: 'companyId' });
+      Product.belongsTo(models.Company, {
+        foreignKey: "companyId",
+        as: "company",
+      });
+      Product.belongsTo(models.RawMaterial, {
+        foreignKey: "rawMaterialId",
+        as: "rawMaterial",
+      });
     }
   }
-  RawMaterial.init({
-    materialName: {
+  Product.init({
+    productName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
+    },
+    specification: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     companyId: DataTypes.INTEGER,
+    rawMaterialId: DataTypes.INTEGER,
     quantity: {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: false
     },
     unit: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.ENUM('in_stock', 'processing', 'completed'),
-      allowNull: false,
-      defaultValue: 'in_stock',
+      allowNull: false
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
@@ -41,8 +48,8 @@ module.exports = (sequelize, DataTypes) => {
     remark: DataTypes.TEXT
   }, {
     sequelize,
-    modelName: 'RawMaterial',
-    timestamps: true, // 自动更新数据库的时间戳
+    modelName: 'Product',
+    timestamps: true
   });
-  return RawMaterial;
+  return Product;
 };
