@@ -70,6 +70,7 @@ import _ from 'lodash';
 import companiesCard from '../card/companiesCard.vue';
 import employeesCard from '../card/employeesCard.vue';
 import rawMaterialsCard from '../card/rawMaterialsCard.vue';
+import productsCard from '../card/productsCard.vue';
 
 export default {
   name: 'components-form-cardPicker',
@@ -77,6 +78,7 @@ export default {
     companiesCard,
     employeesCard,
     rawMaterialsCard,
+    productsCard,
     'van-cell': Cell,
     'van-popup': Popup,
     'van-list': List,
@@ -155,7 +157,11 @@ export default {
       this.closePopup();
     },
     selectItem(item) {
-      this.tempPickerValue = item;
+      if (this.tempPickerValue.id === item.id) {
+        this.tempPickerValue = {};
+      } else {
+        this.tempPickerValue = item;
+      }
     },
     openCardPicker() {
       this.isShowPopup = true;

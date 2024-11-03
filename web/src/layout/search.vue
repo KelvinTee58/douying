@@ -1,11 +1,6 @@
 <template>
   <div class="view-company-index-pages container">
-    <van-nav-bar
-      :title="currentTitle"
-      left-arrow
-      left-text="返回"
-      @click-left="onClickLeft"
-    >
+    <van-nav-bar :title="currentTitle" left-arrow @click-left="onClickLeft">
       <template #right>
         <van-icon
           name="search"

@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import statisticsCard from './statisticsCard.vue';
+import statisticsCard from '@/components/card/statisticsCard.vue';
 export default {
   name: 'view-index-components-homepages',
   components: {

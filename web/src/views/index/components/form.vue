@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import InnerCard from './InnerCard.vue';
+import InnerCard from '@/components/card/InnerCard.vue';
 export default {
   name: 'view-index-components-homepages',
   components: {

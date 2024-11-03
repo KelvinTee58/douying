@@ -3,7 +3,6 @@
     <van-nav-bar
       :title="currentTitle"
       left-arrow
-      left-text="返回"
       @click-left="onClickLeft"
       fixed
       border

@@ -1,15 +1,15 @@
 <template>
-  <div class="view-rawMaterial-create">
+  <div class="view-product-create">
     <van-form @submit="onSubmit">
       <!-- 联系人姓名 -->
       <van-field
         required
         class="input-field"
-        v-model="formData.materialName"
-        name="materialName"
+        v-model="formData.productName"
+        name="productName"
         label="名称"
-        placeholder="请输入原料名称"
-        :rules="[{ required: true, message: '原料名称不能为空' }]"
+        placeholder="请输入项目名称"
+        :rules="[{ required: true, message: '项目名称不能为空' }]"
       />
 
       <!-- 库存数量 -->
@@ -70,28 +70,46 @@
         readonly
         clickable
         required
-        name="status"
-        :value="statusValue"
-        label="状态"
-        placeholder="请选择原料状态"
-        @click="showStatusPicker = true"
-        :rules="[{ required: true, message: '原料状态不能为空' }]"
+        name="specification"
+        :value="specificationValue"
+        label="规格"
+        placeholder="请选择产品规格"
+        @click="showSpecificationPicker = true"
+        :rules="[{ required: true, message: '产品规格不能为空' }]"
       />
-      <van-popup v-model="showStatusPicker" position="bottom">
+      <van-popup v-model="showSpecificationPicker" position="bottom">
         <van-picker
           value-key="key"
           show-toolbar
-          :columns="statusColumns"
-          @confirm="onConfirmStatus"
-          @cancel="showStatusPicker = false"
+          :columns="specificationColumns"
+          @confirm="onConfirmSpecification"
+          @cancel="showSpecificationPicker = false"
         />
       </van-popup>
+      <van-field
+        v-show="showSpecificationField"
+        required
+        class="input-field"
+        v-model="formData.specification"
+        name="specification"
+        label="其他规格"
+        placeholder="请输入产品其他规格"
+        :rules="[{ required: true, message: '产品其他规格不能为空' }]"
+      />
 
       <cardPicker
         title="公司"
-        :value="formData.Company"
-        @input="cardPickerInput"
-      ></cardPicker>
+        :value="formData.company"
+        @input="cardPickerInput('companyId', $event)"
+        card="Companies"
+      />
+
+      <cardPicker
+        title="原料"
+        :value="formData.rawMaterial"
+        @input="cardPickerInput('rawMaterialId', $event)"
+        card="rawMaterials"
+      />
 
       <van-field
         class="input-field"
@@ -133,7 +151,7 @@ import {
 import cardPicker from '@/components/form/cardPicker.vue';
 
 export default {
-  name: 'view-rawMaterial-create',
+  name: 'view-product-create',
   components: {
     cardPicker,
     'van-field': Field,
@@ -146,29 +164,28 @@ export default {
   data() {
     return {
       isCreate: true,
-      statusColumns: [],
+      specificationColumns: [],
       unitColumns: [],
-      showStatusPicker: false,
+      showSpecificationPicker: false,
+      showSpecificationField: false,
       showUnitPicker: false,
       showQuantityKeyBoard: false,
 
       formData: {
-        materialName: '',
+        productName: '',
         quantity: '',
         unit: '',
-        status: '', // 性别字段
+        specification: '', // 性别字段
         remark: ''
       },
 
       stringQuantity: '0',
+      specificationValue: '',
 
-      rawMaterialId: this.$route.query.id // 获取传入的 id
+      productId: this.$route.query.id // 获取传入的 id
     };
   },
   computed: {
-    statusValue() {
-      return getDictionaryValue('rawMaterial.status', this.formData.status, '');
-    },
     unitValue() {
       return getDictionaryValue('common.weight', this.formData.unit, '');
     }
@@ -180,11 +197,23 @@ export default {
     }
   },
   created() {
-    if (this.rawMaterialId) {
+    if (this.productId) {
       this.isCreate = false;
-      this.getRawMaterialIdData(this.rawMaterialId); // 通过 ID 获取公司数据
+      this.getProductIdData(this.productId); // 通过 ID 获取公司数据
     }
-    this.statusColumns = getDictionaryToArray('rawMaterial.status', 'value');
+    this.specificationColumns = getDictionaryToArray(
+      'product.specification',
+      'value'
+    );
+    this.specificationValue = getDictionaryValue(
+      'product.specification',
+      this.formData.specification,
+      '其他'
+    );
+    this.showSpecificationField =
+      this.specificationValue === '其他' ? true : false;
+
+    this.specificationColumns = [...this.specificationColumns, '其他'];
     this.unitColumns = getDictionaryToArray('common.weight', 'value');
   },
   methods: {
@@ -206,37 +235,53 @@ export default {
         return true;
       }
     },
-    async getRawMaterialIdData(rawMaterialId) {
-      let id = rawMaterialId || '-1';
+    async getProductIdData(productId) {
+      let id = productId || '-1';
       try {
-        let { data: rawMaterial } = await this.$request.get(
-          `/api/rawMaterials/${id}`
-        );
-        this.stringQuantity = String(rawMaterial.quantity) || '0';
-        if (!rawMaterial.Company || !rawMaterial.Company.id) {
-          rawMaterial.companyId = '';
+        let { data: product } = await this.$request.get(`/api/products/${id}`);
+        this.stringQuantity = String(product.quantity) || '0';
+        if (!product.company || !product.company.id) {
+          product.companyId = '';
         }
-        this.formData = rawMaterial;
+        if (!product.rawMaterial || !product.rawMaterial.id) {
+          product.rawMaterialId = '';
+        }
+        this.formData = product;
+        console.log('product :>> ', product);
       } catch (error) {
         console.log('error :>> ', error);
       }
     },
-    onConfirmStatus(value) {
-      this.showStatusPicker = false;
-      this.formData.status = getDictionaryKey('rawMaterial.status', value, '');
+    onConfirmSpecification(value) {
+      console.log('value :>> ', value);
+      this.showSpecificationPicker = false;
+      this.showSpecificationField = value === '其他' ? true : false;
+
+      this.specificationValue = value;
+      this.formData.specification = getDictionaryKey(
+        'product.specification',
+        value,
+        ''
+      );
     },
     onConfirmUnit(value) {
       this.showUnitPicker = false;
       this.formData.unit = getDictionaryKey('common.weight', value, '');
     },
-    cardPickerInput(value) {
-      this.formData.companyId = value.id || null;
-      this.formData.Company = value || {};
+    cardPickerInput(key, value) {
+      this.formData[key] = value.id || null;
+      if (key == 'companyId') {
+        this.formData.company = value || {};
+      } else if (key == 'rawMaterialId') {
+        this.formData.rawMaterial = value || {};
+      }
+      // this.formData.companyId = value.id;
+      //
     },
     async createSubmit() {
       let params = this.formData;
       try {
-        await this.$request.post('/api/rawMaterials/create', params);
+        await this.$request.post('/api/products/create', params);
         Toast.success({
           message: '新增成功',
           duration: 2000
@@ -247,10 +292,10 @@ export default {
       }
     },
     async editSubmit() {
-      let id = this.rawMaterialId;
+      let id = this.productId;
       let params = this.formData;
       try {
-        await this.$request.put(`/api/rawMaterials/update/${id}`, params);
+        await this.$request.put(`/api/products/update/${id}`, params);
         Toast.success({
           message: '修改成功',
           duration: 2000
@@ -272,7 +317,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.view-rawMaterial-create {
+.view-product-create {
   padding: 1rem;
   font-size: $font-size-base;
   .form-button {

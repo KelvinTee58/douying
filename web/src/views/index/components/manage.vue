@@ -13,11 +13,14 @@
     <div @click="jumpToNext('/warehouse')">
       <Inner-card title="仓库" icon="ri-home-8-line" iconSource="remixicon" />
     </div>
+    <div @click="jumpToNext('/product')">
+      <Inner-card title="产品" icon="ri-box-3-line" iconSource="remixicon" />
+    </div>
   </div>
 </template>
 
 <script>
-import InnerCard from './InnerCard.vue';
+import InnerCard from '@/components/card/InnerCard.vue';
 export default {
   name: 'view-index-components-homepages',
   components: {

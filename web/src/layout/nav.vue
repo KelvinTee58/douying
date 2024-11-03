@@ -2,8 +2,7 @@
   <div>
     <van-nav-bar
       :title="currentTitle"
-      left-arrow
-      left-text="返回"
+      :left-arrow="isBack"
       @click-left="onClickLeft"
       safe-area-inset-top
     >
@@ -27,11 +26,14 @@ export default {
     currentTitle() {
       // 从路由信息中获取标题
       return this.$route.meta.title || ''; // 如果没有设置meta.title，则使用默认标题
+    },
+    isBack() {
+      return this.$route.meta.isBack || true;
     }
   },
   methods: {
     onClickLeft() {
-      this.$router.go(-1); // 返回上一页
+      if (this.isBack) this.$router.go(-1); // 返回上一页
     }
   }
 };

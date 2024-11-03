@@ -8,7 +8,7 @@ const indexRotuter = {
     {
       path: '',
       component: indexComponent,
-      meta: { title: '首页' } // 添加meta字段，定义标题
+      meta: { title: '首页', isBack: false } // 添加meta字段，定义标题
     }
   ]
 };

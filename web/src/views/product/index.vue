@@ -1,5 +1,5 @@
 <template>
-  <div class="view-company-index-pages container">
+  <div class="view-product-index-pages container">
     <van-nav-bar
       :title="currentTitle"
       left-arrow
@@ -51,10 +51,10 @@
         >
           <div
             :key="item.id"
-            v-for="(item, index) in companies"
+            v-for="(item, index) in products"
             @click="showActionSheet(item, index)"
           >
-            <companyCard :value="item" :title="item"></companyCard>
+            <productsCard :value="item" :title="item"></productsCard>
           </div>
         </van-list>
       </van-pull-refresh>
@@ -72,11 +72,11 @@
 
 <script>
 import { NavBar, Icon, Search, List, PullRefresh, ActionSheet } from 'vant';
-import companyCard from '@/components/card/companiesCard.vue';
+import productsCard from '@/components/card/productsCard.vue';
 import _ from 'lodash';
 
 export default {
-  name: 'view-company-index',
+  name: 'view-product-index',
   //import引入的组件需要注入到对象中才能使用
   components: {
     'van-nav-bar': NavBar,
@@ -85,7 +85,7 @@ export default {
     'van-list': List,
     'van-pull-refresh': PullRefresh,
     'van-action-sheet': ActionSheet,
-    companyCard
+    productsCard
   },
   data() {
     //这里存放数据
@@ -99,9 +99,9 @@ export default {
       ],
 
       searchKeyWord: '',
-      companies: [],
-      selecctCompany: {},
-      selecctCompanyIndex: -1,
+      products: [],
+      selecctEmployee: {},
+      selecctEmployeeIndex: -1,
 
       listStatus: {
         loading: false,
@@ -115,7 +115,7 @@ export default {
         totalPages: 1, // 总页数
         limit: 10 // 每页条数
       },
-      testCompanyCardData: {}
+      testemployeeCardData: {}
     };
   },
   //监听属性 类似于data概念
@@ -151,7 +151,7 @@ export default {
     async onLoad() {
       // 刷新逻辑
       if (this.listStatus.refreshing) {
-        this.companies = [];
+        this.products = [];
         this.listStatus.refreshing = false;
       }
       let params = {
@@ -161,12 +161,12 @@ export default {
       };
       try {
         let {
-          data: companies,
+          data: products,
           meta: { currentPage, totalItems, totalPages }
-        } = await this.$request.get('/api/companies', params, {
+        } = await this.$request.get('/api/products', params, {
           loading: false
         });
-        this.companies = [...this.companies, ...companies];
+        this.products = [...this.products, ...products];
         this.pagesEvent = {
           ...this.pagesEvent,
           currentPage,
@@ -213,41 +213,45 @@ export default {
         trailing: false
       }
     ),
-    showActionSheet(company, index) {
+    showActionSheet(product, index) {
       this.isShowActionSheet = true;
-      this.selecctCompany = company;
-      this.selecctCompanyIndex = index;
+      this.selecctEmployee = product;
+      this.selecctEmployeeIndex = index;
     },
     onSelectAction(item) {
       this.isShowActionSheet = false;
       console.log('点击选项 ' + item.name);
       if (item.type == 'create') {
-        this.$router.push('/company/edit');
+        this.$router.push('/product/edit');
       } else if (item.type == 'edit') {
         this.$router.push({
-          path: '/company/edit',
+          path: '/product/edit',
           query: {
-            id: this.selecctCompany.id
+            id: this.selecctEmployee.id
           }
         });
       } else {
         // 删除
+
         this.$request
-          .del('/api/companies/delete/' + this.selecctCompany.id)
+          .del('/api/products/delete/' + this.selecctEmployee.id)
           .then(() => {
             // this.$toast.success({});
             // console.log('删除成功');
             this.$toast.success('删除成功');
-            if (this.selecctCompanyIndex !== -1) {
-              this.companies.splice(this.selecctCompanyIndex, 1); // 根据索引删除
+            if (this.selecctEmployeeIndex !== -1) {
+              this.products.splice(this.selecctEmployeeIndex, 1); // 根据索引删除
             }
+          })
+          .catch((error) => {
+            console.log('error :>> ', error);
           });
       }
     },
     onCancelAction() {
       this.isShowActionSheet = false;
-      this.selecctCompany = {};
-      this.selecctCompanyIndex = -1;
+      this.selecctEmployee = {};
+      this.selecctEmployeeIndex = -1;
     }
   },
   //监控data中的数据变化
@@ -256,7 +260,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
-.view-company-index-pages {
+.view-product-index-pages {
   padding-top: 3rem; // 确保内容整体从 navBar 下开始
   .search-icon {
     margin-right: 30px;
@@ -277,7 +281,7 @@ export default {
     margin-top: 0rem; // 避免内容直接顶到 searchBar 或 navBar
   }
   .search-margin {
-    margin-top: 2.8rem; // 紧贴 navbar 之下;
+    margin-top: 3rem; // 紧贴 navbar 之下;
   }
 
   // 添加渐隐过渡效果

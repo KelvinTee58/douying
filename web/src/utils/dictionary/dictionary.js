@@ -14,6 +14,17 @@ const dictionaries = {
       completed: '已完成' // 原料状态 - 已完成
     }
   },
+  product: {
+    //规格
+    specification: {
+      '8X8mm': '8X8mm',
+      '10X10mm': '10X10mm',
+      '12X12mm': '12X12mm',
+      '15X15mm': '12X12mm',
+      碎丁: '碎丁',
+      块: '块'
+    }
+  },
   employee: {
     gender: {
       M: '男', // 性别 - 男

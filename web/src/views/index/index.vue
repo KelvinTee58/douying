@@ -1,6 +1,5 @@
 <template>
   <div class="index-page">
-    <!-- <h1>indexpage</h1> -->
     <div class="homepages" v-if="activeTabbar == 0">
       <homepages></homepages>
     </div>
@@ -21,8 +20,8 @@
 
 <script>
 import homepages from './components/homepages.vue';
-import formInner from './components/formInner.vue';
-import formManage from './components/formManage.vue';
+import formInner from './components/form.vue';
+import formManage from './components/manage.vue';
 import { Tabbar, TabbarItem } from 'vant';
 
 export default {
