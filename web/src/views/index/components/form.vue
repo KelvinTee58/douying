@@ -1,39 +1,13 @@
 <!--  -->
 <template>
   <div class="view-index-components-homepages">
-    <Inner-card
-      title="2总量"
-      trend="3.4"
-      trendStatus="up"
-      Inner="123456789"
-      :unit="'KG'"
-    >
-    </Inner-card>
-    <Inner-card
-      title="芒果"
-      trend="3.4"
-      trendStatus="up"
-      Inner="44"
-      :unit="'KG'"
-    >
-    </Inner-card>
-    <Inner-card
-      title="木瓜"
-      trend="3.4"
-      trendStatus="none"
-      Inner="5999"
-      :unit="'KG'"
-    >
-    </Inner-card>
-    <Inner-card
-      title="菠萝"
-      trend="3.4"
-      trendStatus="down"
-      Inner="22"
-      :unit="'KG'"
-    >
-    </Inner-card>
-    <!-- <div class="find-more" @click="findMore">查看更多</div> -->
+    <div @click="jumpToNext('/company')">
+      <Inner-card
+        title="入料记录"
+        icon="ri-file-list-line"
+        iconSource="remixicon"
+      />
+    </div>
   </div>
 </template>
 
@@ -45,12 +19,12 @@ export default {
     InnerCard
   },
   props: {},
-  data() {
-    //这里存放数据
-    return {};
-  },
-  //监听属性 类似于data概念
-  computed: {}
+  methods: {
+    jumpToNext(path) {
+      console.log('path :>> ', path);
+      this.$router.push(path);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

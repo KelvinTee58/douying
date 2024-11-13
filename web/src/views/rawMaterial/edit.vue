@@ -88,7 +88,7 @@
       </van-popup>
 
       <cardPicker
-        title="公司"
+        title="供应商"
         :value="formData.Company"
         @input="cardPickerInput"
       ></cardPicker>

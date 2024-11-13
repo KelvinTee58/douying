@@ -20,18 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     companyId: DataTypes.INTEGER,
-    quantity: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
     unit: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    status: {
-      type: DataTypes.ENUM('in_stock', 'processing', 'completed'),
+    computeUnit: {
+      type: DataTypes.FLOAT,
       allowNull: false,
-      defaultValue: 'in_stock',
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,

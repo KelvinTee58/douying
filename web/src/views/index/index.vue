@@ -12,7 +12,7 @@
     <van-tabbar v-model="activeTabbar">
       <van-tabbar-item icon="home-o">主页</van-tabbar-item>
       <van-tabbar-item icon="orders-o">表单</van-tabbar-item>
-      <van-tabbar-item icon="list-switch">管理</van-tabbar-item>
+      <van-tabbar-item icon="list-switch">信息</van-tabbar-item>
       <van-tabbar-item icon="contact-o">我</van-tabbar-item>
     </van-tabbar>
   </div>
@@ -36,7 +36,7 @@ export default {
   data() {
     //这里存放数据
     return {
-      activeTabbar: 2
+      activeTabbar: 1
     };
   },
   //监听属性 类似于data概念

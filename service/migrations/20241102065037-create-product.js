@@ -26,22 +26,13 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      rawMaterialId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'RawMaterials', // 关联原料表
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-      },
-      quantity: {
-        allowNull: false,
-        type: Sequelize.FLOAT
-      },
       unit: {
         allowNull: false,
         type: Sequelize.STRING
+      },
+      computeUnit: {
+        allowNull: false,
+        type: Sequelize.FLOAT
       },
       remark: {
         type: Sequelize.TEXT

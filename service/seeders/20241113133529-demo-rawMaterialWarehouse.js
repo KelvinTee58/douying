@@ -3,24 +3,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Products', [
+    await queryInterface.bulkInsert('RawMaterialWarehouses', [
       {
-        productName: 'Product A',
-        specification: 'Spec A',
-        companyId: 1,
+        warehouseId: 1,
         rawMaterialId: 1,
         quantity: 100,
-        unit: 'kg',
+        unit: 'KG',
+        computeUnit: 1,
+        isDeleted: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        productName: 'Product B',
-        specification: 'Spec B',
-        companyId: 2,
+        warehouseId: 2,
         rawMaterialId: 2,
         quantity: 200,
-        unit: 'pcs',
+        unit: 'ton',
+        computeUnit: 1000,
+        isDeleted: false,
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -28,6 +28,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Products', null, {});
+    await queryInterface.bulkDelete('RawMaterialWarehouses', null, {});
   }
 };

@@ -34,3 +34,55 @@ exports.parseExpireTime = (timeString) => {
 
   return expireAt; // 返回到期的毫秒级时间戳
 }
+
+
+const crypto = require('crypto');
+/**
+ * 生成唯一批次号，避免重复，并保证可逆
+ * @param {string} dateString - 日期部分（格式为 "YYYYMMDD"）
+ * @param {string} sequence - 批次号部分（例如 "1"）
+ * @returns {Promise<string>} 生成的批次号
+ */
+exports.generateBatchNumber = async (dateString, sequence) => {
+  const { default: base32Encode } = await import('base32-encode');
+
+  // 生成4字节的随机数部分，以增强唯一性
+  const randomPart = crypto.randomBytes(4).toString('hex');
+
+  // 拼接日期 + 批次号 + 随机数
+  const data = `${dateString}-${sequence}-${randomPart}`;
+
+  // 将拼接后的数据进行Base32编码并转换为大写
+  const buffer = Buffer.from(data, 'utf-8');
+  const encoded = base32Encode(buffer, 'Crockford').toUpperCase();
+
+  // 去除Base32中的等号（=）
+  return encoded.replace(/=/g, '');
+};
+
+/**
+ * 解码批次号，获取原始的日期和批次号
+ * @param {string} batchNumber - 生成的批次号
+ * @returns {Promise<object|null>} 返回解码后的数据 { date, sequence } 或错误信息
+ */
+exports.decodeBatchNumber = async (batchNumber) => {
+  try {
+    const { default: base32Decode } = await import('base32-decode');
+
+    // 解码Base32编码
+    const decodedBuffer = base32Decode(batchNumber, 'Crockford');
+    const decodedString = Buffer.from(decodedBuffer).toString('utf-8');
+
+    // 分割解码数据，得到原始日期、批次号和随机数
+    const [date, sequence] = decodedString.split('-');
+
+    if (!date || !sequence) {
+      throw new Error('Invalid batch number format.');
+    }
+
+    return { date, sequence };
+  } catch (error) {
+    console.error('Failed to decode batch number:', error);
+    return null;  // 返回null表示解码失败
+  }
+};

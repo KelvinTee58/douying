@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Product extends Model {
+  class RawMaterialWarehouse extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,27 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Product.belongsTo(models.Company, {
-        foreignKey: "companyId",
-        as: "company",
-      });
-      Product.belongsTo(models.RawMaterial, {
-        foreignKey: "rawMaterialId",
-        as: "rawMaterial",
-      });
+      RawMaterialWarehouse.belongsTo(models.Warehouse, { foreignKey: 'warehouseId', as: 'warehouse' });
+      RawMaterialWarehouse.belongsTo(models.RawMaterial, { foreignKey: 'rawMaterialId', as: 'rawMaterial' });
     }
   }
-  Product.init({
-    productName: {
-      type: DataTypes.STRING,
+  RawMaterialWarehouse.init({
+    warehouseId: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    specification: {
-      type: DataTypes.STRING,
+    rawMaterialId: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    companyId: DataTypes.INTEGER,
-    computeUnit: {
+    quantity: {
       type: DataTypes.FLOAT,
       allowNull: false
     },
@@ -39,16 +32,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    computeUnit: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    deletedAt: DataTypes.DATE,
-    remark: DataTypes.TEXT
+    deletedAt: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'Product',
+    modelName: 'RawMaterialWarehouse',
     timestamps: true
   });
-  return Product;
+  return RawMaterialWarehouse;
 };

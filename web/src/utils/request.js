@@ -19,12 +19,6 @@ axios.defaults.timeout = 1000 * requestTimeout;
 function globalLoading(loading = true) {
   if (loading) {
     // 全局loadding
-    // window.$cooToast({
-    //   // id: 'tempToast',
-    //   content: '加载中',
-    //   type: 'loading',
-    //   duration: 1000 * requestTimeout
-    // })
     Toast.loading({
       message: '加载中...',
       forbidClick: true,
@@ -50,11 +44,6 @@ function refreshAccessToken() {
   console.log('refreshAccessToken :>> ');
   // 刷新次数超过三次退出
   if (refreshTime <= 0) {
-    // window.$cooToast({
-    //   content: '获取用户令牌失败',
-    //   duration: 2000,
-    //   type: 'fail'
-    // });
     Toast({
       message: '获取用户令牌失败',
       closeOnClickOverlay: true,
@@ -67,7 +56,6 @@ function refreshAccessToken() {
     return;
   }
   refreshTime--;
-  // let refreshToken = store.getters['user/getRefreshToken'];
   let refreshToken = storageUtils.get('refreshToken');
   console.log('refreshToken refreshToken', refreshToken);
   try {
@@ -106,12 +94,6 @@ function refreshAccessToken() {
         // 报错后退出登录
         // 否则可以刷新3次
         if (error.data.status == 403) {
-          // window.$cooToast({
-          //   content: '登录过期，请重新登录',
-          //   duration: 2000,
-          //   type: 'fail'
-          // })
-
           Toast({
             message: '登录过期，请重新登录',
             closeOnClickOverlay: true,
@@ -229,11 +211,6 @@ function errorHandler(error, pure = false) {
       // 清除本地token和清空vuex中token对象
       // 跳转登录页面
       case 403:
-        // window.$cooToast({
-        //   content: '登录过期，请重新登录',
-        //   duration: 2000,
-        //   type: 'fail'
-        // })
         Toast({
           message: '登录过期，请重新登录',
           closeOnClickOverlay: true,
@@ -256,11 +233,6 @@ function errorHandler(error, pure = false) {
         break;
       // 404请求不存在
       case 404:
-        // window.$cooToast({
-        //   content: '网络请求不存在',
-        //   duration: 2000,
-        //   type: 'fail'
-        // })
         Toast({
           message: '网络请求不存在',
           closeOnClickOverlay: true,
@@ -271,12 +243,7 @@ function errorHandler(error, pure = false) {
         break;
       // 其他错误，直接抛出错误提示
       default:
-        console.log('cooToast', error.data.message);
-        // window.$cooToast({
-        //   content: error.data.message,
-        //   duration: 2000,
-        //   type: 'fail'
-        // })
+        console.log('error', error.data.message);
         Toast({
           message: error.data.message,
           closeOnClickOverlay: true,

@@ -2,30 +2,44 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RawMaterials', {
+    await queryInterface.createTable('ProductWarehouses', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      materialName: {
-        type: Sequelize.STRING,
+      productId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'Products', // 关联产品表
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      companyId: {
-        type: Sequelize.INTEGER
+      warehouseId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Warehouses', // 关联仓库表
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      quantity: {
+        type: Sequelize.FLOAT,
+        allowNull: false
       },
       unit: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       computeUnit: {
         type: Sequelize.FLOAT,
-        allowNull: false,
-      },
-      remark: {
-        type: Sequelize.TEXT
+        allowNull: false
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,
@@ -45,6 +59,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RawMaterials');
+    await queryInterface.dropTable('ProductWarehouses');
   }
 };

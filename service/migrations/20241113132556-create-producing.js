@@ -2,47 +2,39 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Warehouses', {
+    await queryInterface.createTable('Producings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      warehouseName: {
+      productionBatch: {
+        type: Sequelize.STRING
+      },
+      type: {
+        allowNull: false,
+        type: Sequelize.ENUM('PREPARING', 'PROCESSING', 'COMPLETED', 'RESTART', 'O')
+      },
+      operator: {
+        allowNull: false,
+        type: Sequelize.UUID,
+        references: {
+          model: 'Users', // 假设 Users 表存在
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
+      operatorName: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      address: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      detailedAddress: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      areaCode: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      warehouseType: {
-        type: Sequelize.ENUM('P', 'R', 'O'),
-        defaultValue: 'O', // 默认值为O
-      },
-      capacity: {
-        allowNull: false,
-        type: Sequelize.FLOAT,
-        defaultValue: 999999
-      },
-      unit: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      isDeleted: {
-        type: Sequelize.BOOLEAN
-      },
-      deletedAt: {
+      completionTime: {
         type: Sequelize.DATE
+      },
+      remarks: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -55,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Warehouses');
+    await queryInterface.dropTable('Producings');
   }
 };
