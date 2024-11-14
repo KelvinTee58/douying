@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false, // 必填
     },
-    warehouseType: {
+    type: {
       type: DataTypes.ENUM('P', 'R', 'O'), // 定义 ENUM 值
       defaultValue: 'O', // 默认值设置为 'O'
     },

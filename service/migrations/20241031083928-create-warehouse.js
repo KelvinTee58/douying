@@ -25,7 +25,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      warehouseType: {
+      type: {
         type: Sequelize.ENUM('P', 'R', 'O'),
         defaultValue: 'O', // 默认值为O
       },

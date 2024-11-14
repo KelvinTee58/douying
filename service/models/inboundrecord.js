@@ -32,6 +32,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: false
     },
+    cost: DataTypes.FLOAT,
+    dock: DataTypes.FLOAT,
     unit: {
       type: DataTypes.STRING,
       allowNull: false
@@ -40,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: false
     },
-    changeType: {
+    type: {
       type: DataTypes.ENUM('IN', 'OUT', 'COMPLETED', 'SUPPLEMENT', 'WITHDRAWAL', 'O'),
       allowNull: false
     },

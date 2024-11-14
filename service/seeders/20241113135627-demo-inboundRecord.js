@@ -9,7 +9,7 @@ module.exports = {
         quantity: 500,
         unit: 'kg',
         computeUnit: 1,
-        changeType: 'IN',
+        type: 'IN',
         operator: 'e737832d-5e73-8aa5-9fdf-84a677dd098a', // 填写用户 UUID
         operatorName: 'John Doe',
         remark: 'Received batch A',
@@ -21,7 +21,7 @@ module.exports = {
         quantity: 2,
         unit: 'ton',
         computeUnit: 1000,
-        changeType: 'OUT',
+        type: 'OUT',
         operator: 'e737832d-5e73-8aa5-9fdf-84a677dd098a', // 填写用户 UUID
         operatorName: 'Jane Smith',
         remark: 'Removed batch B',
