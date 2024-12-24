@@ -47,7 +47,7 @@ import { mapActions } from 'vuex';
 import { Toast } from 'vant';
 
 export default {
-  name: 'indexPages',
+  name: 'login-indexPages',
   data() {
     return {
       loginAccount: '',

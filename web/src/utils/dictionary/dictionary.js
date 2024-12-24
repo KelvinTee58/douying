@@ -3,8 +3,18 @@
 const dictionaries = {
   common: {
     weight: {
-      kg: '千克', // 重量单位 - 克
-      ton: '吨' // 重量单位 - 克
+      KG: '千克', // 重量单位 - 克
+      TON: '吨' // 重量单位 - 克
+    },
+    computeWeight: {
+      KG: 1, // 重量单位 - 克
+      TON: 1000 // 重量单位 - 克
+    }
+  },
+  warehouse: {
+    type: {
+      P: '产品', // 仓库类型 - 仓库
+      R: '原料' // 仓库类型 - 仓储
     }
   },
   rawMaterial: {

@@ -37,7 +37,7 @@ export default {
 <style lang="scss" scoped>
 //@import url(); 引入公共css类
 .view-index-components-homepages {
-  margin: 1rem;
+  padding: 1rem;
   // overflow-x: scroll;
   display: flex;
   flex-wrap: wrap;

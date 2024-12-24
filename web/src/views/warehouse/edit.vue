@@ -17,18 +17,14 @@
         name="capacity"
         ref="capacityField"
         type="number"
-        label="数量"
+        label="容量"
         placeholder="请输入仓库容量"
         readonly
         required
         clickable
         :value="formData.capacity"
         @touchstart.native.stop="showCapacityKeyBoard = true"
-        :rules="[
-          { required: true, message: '仓库容量不能为空' },
-          { type: 'number', message: '仓库容量必须是数字' },
-          { validator: validatorWeight, message: '库存格式不正确' }
-        ]"
+        :rules="[{ type: 'number', message: '仓库容量必须是数字' }]"
       />
       <van-number-keyboard
         v-model="stringCapacity"
@@ -46,10 +42,33 @@
         readonly
         clickable
         required
+        name="type"
+        :value="typeValue"
+        label="类型"
+        placeholder="请选择类型"
+        @click="showTypePicker = true"
+        :rules="[{ required: true, message: '类型不能为空' }]"
+      />
+      <van-popup v-model="showTypePicker" position="bottom">
+        <van-picker
+          value-key="key"
+          show-toolbar
+          :columns="typeColumns"
+          @confirm="onConfirmType"
+          @cancel="showTypePicker = false"
+        />
+      </van-popup>
+
+      <!-- 状态选择 -->
+      <van-field
+        class="input-field"
+        readonly
+        clickable
+        required
         name="unit"
         :value="unitValue"
         label="单位"
-        placeholder="请输入单位"
+        placeholder="请选择单位"
         @click="showUnitPicker = true"
         :rules="[{ required: true, message: '数量单位不能为空' }]"
       />
@@ -132,7 +151,9 @@ export default {
       warehouseId: this.$route.query.id, // 获取传入的 id
 
       unitColumns: [],
+      typeColumns: [],
       showUnitPicker: false,
+      showTypePicker: false,
       showCapacityKeyBoard: false,
 
       formData: {
@@ -156,6 +177,7 @@ export default {
       this.getCompanyData(this.warehouseId); // 通过 ID 获取公司数据
     }
     this.unitColumns = getDictionaryToArray('common.weight', 'value');
+    this.typeColumns = getDictionaryToArray('warehouse.type', 'value');
   },
   watch: {
     stringCapacity(val) {
@@ -166,6 +188,9 @@ export default {
   computed: {
     unitValue() {
       return getDictionaryValue('common.weight', this.formData.unit, '');
+    },
+    typeValue() {
+      return getDictionaryValue('warehouse.type', this.formData.type, '');
     }
   },
   methods: {
@@ -199,6 +224,10 @@ export default {
     onConfirmUnit(value) {
       this.showUnitPicker = false;
       this.formData.unit = getDictionaryKey('common.weight', value, '');
+    },
+    onConfirmType(value) {
+      this.showTypePicker = false;
+      this.formData.type = getDictionaryKey('warehouse.type', value, '');
     },
     async getCompanyData(warehouseId) {
       let id = warehouseId || '-1';

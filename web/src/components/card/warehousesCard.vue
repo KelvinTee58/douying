@@ -4,7 +4,8 @@
       <div class="card-image">
         <!-- 替换成随机图片 -->
         <!-- <img src="https://picsum.photos/400/400" alt="Random Hotel Image" /> -->
-        <i class="ri-home-8-line remixicon"></i>
+        <i class="ri-tent-line remixicon" v-if="value.type == 'R'"></i>
+        <i class="ri-home-8-line remixicon" v-else></i>
       </div>
       <div class="card-info">
         <div class="card-footer">

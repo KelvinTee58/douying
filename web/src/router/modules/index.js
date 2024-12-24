@@ -1,9 +1,11 @@
-import navLayer from '@/layout/nav.vue';
+// import navLayer from '@/layout/nav.vue';
+import defaultLayer from '@/layout/default.vue';
 import indexComponent from '@/views/index/index';
 
 const indexRotuter = {
   path: '/index',
-  component: navLayer,
+  // component: navLayer,
+  component: defaultLayer,
   children: [
     {
       path: '',

@@ -13,7 +13,7 @@
       />
 
       <!-- 库存数量 -->
-      <van-field
+      <!-- <van-field
         required
         class="input-field"
         name="quantity"
@@ -39,7 +39,7 @@
         theme="custom"
         @input="validateField"
         @blur="showQuantityKeyBoard = false"
-      />
+      /> -->
 
       <!-- 单位选择 -->
       <van-field
@@ -65,7 +65,7 @@
       </van-popup>
 
       <!-- 状态选择 -->
-      <van-field
+      <!-- <van-field
         class="input-field"
         readonly
         clickable
@@ -85,7 +85,7 @@
           @confirm="onConfirmStatus"
           @cancel="showStatusPicker = false"
         />
-      </van-popup>
+      </van-popup> -->
 
       <cardPicker
         title="供应商"
@@ -107,7 +107,13 @@
 
       <!-- 提交按钮 -->
       <div class="form-button">
-        <van-button round block type="info" native-type="submit">
+        <van-button
+          round
+          block
+          type="info"
+          native-type="submit"
+          :disabled="isModified"
+        >
           {{ isCreate ? '新建' : '修改' }}
         </van-button>
       </div>
@@ -122,7 +128,7 @@ import {
   Button,
   Popup,
   Picker,
-  NumberKeyboard,
+  // NumberKeyboard,
   Toast
 } from 'vant';
 import {
@@ -131,6 +137,7 @@ import {
   getDictionaryValue
 } from '@/utils/dictionary';
 import cardPicker from '@/components/form/cardPicker.vue';
+import _ from 'lodash';
 
 export default {
   name: 'view-rawMaterial-create',
@@ -140,8 +147,8 @@ export default {
     'van-form': Form,
     'van-button': Button,
     'van-popup': Popup,
-    'van-picker': Picker,
-    'van-number-keyboard': NumberKeyboard
+    'van-picker': Picker
+    // 'van-number-keyboard': NumberKeyboard
   },
   data() {
     return {
@@ -151,7 +158,7 @@ export default {
       showStatusPicker: false,
       showUnitPicker: false,
       showQuantityKeyBoard: false,
-
+      sourceData: {},
       formData: {
         materialName: '',
         quantity: '',
@@ -171,6 +178,14 @@ export default {
     },
     unitValue() {
       return getDictionaryValue('common.weight', this.formData.unit, '');
+    },
+    // 动态判断是否被修改
+    isModified() {
+      // console.log('isEqual :>> ', _.isEqual(this.formData, this.sourceData));
+      // console.log(JSON.stringify(this.formData));
+      // console.log(JSON.stringify(this.sourceData));
+      // this.logDifferences();
+      return _.isEqual(this.formData, this.sourceData);
     }
   },
   watch: {
@@ -188,6 +203,17 @@ export default {
     this.unitColumns = getDictionaryToArray('common.weight', 'value');
   },
   methods: {
+    // logDifferences() {
+    //   const differences = Object.keys(this.formData).filter((key) => {
+    //     return !_.isEqual(this.formData[key], this.sourceData[key]);
+    //   });
+    //   console.log('Differences in keys:', differences);
+    //   differences.forEach((key) => {
+    //     console.log(
+    //       `Key: ${key}, formData: ${this.formData[key]}, sourceData: ${this.sourceData[key]}`
+    //     );
+    //   });
+    // },
     validateField() {
       this.$refs.quantityField.validate(); // 假设你在 van-field 上加了 ref="phoneField"
     },
@@ -212,11 +238,12 @@ export default {
         let { data: rawMaterial } = await this.$request.get(
           `/api/rawMaterials/${id}`
         );
-        this.stringQuantity = String(rawMaterial.quantity) || '0';
+        // this.stringQuantity = String(rawMaterial.quantity) || '0';
         if (!rawMaterial.Company || !rawMaterial.Company.id) {
           rawMaterial.companyId = '';
         }
         this.formData = rawMaterial;
+        this.sourceData = _.cloneDeep(rawMaterial);
       } catch (error) {
         console.log('error :>> ', error);
       }
@@ -228,6 +255,11 @@ export default {
     onConfirmUnit(value) {
       this.showUnitPicker = false;
       this.formData.unit = getDictionaryKey('common.weight', value, '');
+      this.formData.computeUnit = getDictionaryValue(
+        'common.computeWeight',
+        this.formData.unit,
+        ''
+      );
     },
     cardPickerInput(value) {
       this.formData.companyId = value.id || null;
