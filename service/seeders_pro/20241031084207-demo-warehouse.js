@@ -10,7 +10,7 @@ module.exports = {
         areaCode: "440882",
         detailedAddress: "东里镇西塘西村（村西边）",
         capacity: 1000.0,
-        unit: 'ton',
+        unit: 'TON',
         isDeleted: false,
         createdAt: new Date(),
         updatedAt: new Date(),

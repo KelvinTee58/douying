@@ -18,8 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       });
       // 关联到 User
       InboundRecord.belongsTo(models.User, {
-        foreignKey: 'operator',
-        as: 'operatorUser'
+        foreignKey: {
+          name: 'operator', // 外键名称与 User 模型中的字段名一致
+          allowNull: false,
+        },
+        as: 'operatorUser',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
     }
   }

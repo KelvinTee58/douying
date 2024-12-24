@@ -18,8 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       });
       // 定义与 User 表的关联
       ProductInventoryRecord.belongsTo(models.User, {
-        foreignKey: 'operator',
+        foreignKey: {
+          name: 'operator', // 外键名称与 User 模型中的字段名一致
+          allowNull: false,
+        },
         as: 'operatorDetails',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
     }
   }

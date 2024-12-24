@@ -125,6 +125,7 @@ npx sequelize-cli db:seed:all --seeders-path ./seeds_pro
 | -------------------- | ------------------------------- | ------------------------------------- | --------------- | ----------------------- |
 | `id`                 | `INT`                           | 生产记录的唯一标识符                  | 0.0.1           | 是                      |
 | `productionBatch`    | `VARCHAR`                       | 生产批次编号，用于标识生产批次        | 0.0.1           | 是                      |
+| `batchSequence`      | `INT`                           | 生产批次号，用于第几批次              | 0.0.1           | 是                      |
 | `type`               | `ENUM`：[表末](#producing_type) | 详情：[生产类型枚举](#producing_type) | 0.0.1           | 是                      |
 | `operator`           | `UUID`                          | 操作人员（外键，关联 `User` 表）      | 0.0.1           | 是                      |
 | `operatorName`       | `VARCHAR`                       | 操作人员名称                          | 0.0.1           | 是                      |
@@ -133,11 +134,13 @@ npx sequelize-cli db:seed:all --seeders-path ./seeds_pro
 | `createdAt`          | `DATETIME`                      | 记录创建时间                          | 0.0.1           | 是                      |
 | `updatedAt`          | `DATETIME`                      | 记录最后更新时间                      | 0.0.1           | 是                      |
 
-- <a id="producing_type"></a> `type` 字段的 ENUM 值：`ENUM('PREPARING', 'PROCESSING', 'COMPLETED','RESTART', 'O')`
+- <a id="producing_type"></a> `type` 字段的 ENUM 值：`ENUM('PREPARING', 'PROCESSING', 'COMPLETED','RESTART','CLOSE','DELETE','O')`
   - `PREPARING`: 预备
   - `PROCESSING`: 生产中
   - `COMPLETED`: 已完成
   - `RESTART`: 重启
+  - `CLOSE`: 关闭
+  - `DELETE`: 删除
   - `O`: 其他
 
 ---
@@ -149,7 +152,7 @@ npx sequelize-cli db:seed:all --seeders-path ./seeds_pro
 | `id`                 | `INT`                 | 唯一标识符                  | 0.0.1           | 是                      |
 | `materialName`       | `VARCHAR`             | 原料名称                    | 0.0.1           | 是                      |
 | `companyId`          | `INT`                 | 供应商 ID                   | 0.0.1           |                         |
-| `unit`               | `VARCHAR`             | 单位 (KG, ton)              | 0.0.1           | 是                      |
+| `unit`               | `VARCHAR`             | 单位 (KG, TON)              | 0.0.1           | 是                      |
 | `computeUnit`        | `FLOAT`               | 计算单位 (KG=>1，ton=>1000) | 0.0.1           | 是                      |
 | `remark`             | `VARCHAR`             | 备注                        | 0.0.1           |                         |
 | `createdAt`          | `DATETIME`            | 创建时间                    | 0.0.1           | 是                      |
@@ -178,21 +181,21 @@ npx sequelize-cli db:seed:all --seeders-path ./seeds_pro
 
 ### 出入原料库记录表 (`inboundRecord`) ✅
 
-| 字段名（Field Name）     | 数据类型（Data Type）         | 描述（Description）                                 | 版本（Version） | 是否必填（Is Required） |
-| ------------------------ | ----------------------------- | --------------------------------------------------- | --------------- | ----------------------- |
-| `id`                     | `INT`                         | 唯一标识符                                          | 0.0.1           | 是                      |
-| `rawMaterialWarehouseId` | `INT`                         | 原料仓库 ID（外键，关联 `rawMaterialWarehouse` 表） | 0.0.1           | 是                      |
-| `quantity`               | `FLOAT`                       | 存储的原料数量                                      | 0.0.1           | 是                      |
-| `cost`                   | `FLOAT`                       | 存储的原料成本                                      | 0.0.1           |                         |
-| `dock`                   | `FLOAT`                       | 存储的原料扣成                                      | 0.0.1           |                         |
-| `unit`                   | `VARCHAR`                     | 单位（KG, ton）                                     | 0.0.1           | 是                      |
-| `computeUnit`            | `FLOAT`                       | 计算单位 (KG=>1，ton=>1000)                         | 0.0.1           | 是                      |
-| `type`                   | `ENUM`：[表末](#inbound_type) | 详情：[变更类型枚举](#inbound_type)                 | 0.0.1           | 是                      |
-| `operator`               | `UUID`                        | 操作人员（外键，关联 `User` 表）                    | 0.0.1           | 是                      |
-| `operatorName`           | `VARCHAR`                     | 操作人员名称                                        | 0.0.1           | 是                      |
-| `remark`                 | `TEXT`                        | 备注                                                | 0.0.1           |                         |
-| `createdAt`              | `DATETIME`                    | 记录创建时间                                        | 0.0.1           | 是                      |
-| `updatedAt`              | `DATETIME`                    | 记录最后更新时间                                    | 0.0.1           | 是                      |
+| 字段名（Field Name）     | 数据类型（Data Type）         | 描述（Description）                      | 版本（Version） | 是否必填（Is Required） |
+| ------------------------ | ----------------------------- | ---------------------------------------- | --------------- | ----------------------- |
+| `id`                     | `INT`                         | 唯一标识符                               | 0.0.1           | 是                      |
+| `rawMaterialWarehouseId` | `INT`                         | 原料仓库 ID（`rawMaterialWarehouse` 表） | 0.0.1           | 是                      |
+| `quantity`               | `FLOAT`                       | 存储的原料数量                           | 0.0.1           | 是                      |
+| `cost`                   | `FLOAT`                       | 存储的原料成本                           | 0.0.1           |                         |
+| `dock`                   | `FLOAT`                       | 存储的原料扣成                           | 0.0.1           |                         |
+| `unit`                   | `VARCHAR`                     | 单位（KG, ton）                          | 0.0.1           | 是                      |
+| `computeUnit`            | `FLOAT`                       | 计算单位 (KG=>1，ton=>1000)              | 0.0.1           | 是                      |
+| `type`                   | `ENUM`：[表末](#inbound_type) | 详情：[变更类型枚举](#inbound_type)      | 0.0.1           | 是                      |
+| `operator`               | `UUID`                        | 操作人员（外键，关联 `User` 表）         | 0.0.1           | 是                      |
+| `operatorName`           | `VARCHAR`                     | 操作人员名称                             | 0.0.1           | 是                      |
+| `remark`                 | `TEXT`                        | 备注                                     | 0.0.1           |                         |
+| `createdAt`              | `DATETIME`                    | 记录创建时间                             | 0.0.1           | 是                      |
+| `updatedAt`              | `DATETIME`                    | 记录最后更新时间                         | 0.0.1           | 是                      |
 
 - <a id="inbound_type"></a> `type` 字段的 ENUM 值：`ENUM('IN', 'OUT','COMPLETED', 'SUPPLEMENT', 'WITHDRAWAL'，'O')`
   - `IN`: 入库

@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "companyId",
         as: "company",
       });
-      Product.belongsTo(models.RawMaterial, {
-        foreignKey: "rawMaterialId",
-        as: "rawMaterial",
-      });
     }
   }
   Product.init({

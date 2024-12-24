@@ -10,7 +10,7 @@ module.exports = {
         companyId: 1,
         rawMaterialId: 1,
         quantity: 100,
-        unit: 'ton',
+        unit: 'TON',
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -20,7 +20,7 @@ module.exports = {
         companyId: 2,
         rawMaterialId: 2,
         quantity: 200,
-        unit: 'ton',
+        unit: 'TON',
         createdAt: new Date(),
         updatedAt: new Date()
       }

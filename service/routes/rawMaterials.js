@@ -10,9 +10,8 @@ router.post("/create", async (req, res) => {
     const newRawMaterial = await models.RawMaterial.create({
       materialName: req.body.materialName,
       companyId: req.body.companyId,
-      quantity: req.body.quantity,
+      computeUnit: req.body.computeUnit,
       unit: req.body.unit,
-      status: req.body.status,
       remark: req.body.remark,
       isDeleted: false, // 默认设置为未删除
     });
@@ -29,7 +28,7 @@ router.post("/create", async (req, res) => {
 
 // 获取所有原料 (带分页和关键词查询)
 router.get("/", async (req, res) => {
-  const { page = 1, limit = 10, keyword = '', status } = req.query;
+  const { page = 1, limit = 10, keyword = '' } = req.query;
   const offset = (page - 1) * limit;
   const limitNumber = parseInt(limit);
 
@@ -39,16 +38,16 @@ router.get("/", async (req, res) => {
       ? { materialName: { [Op.like]: `%${keyword}%` } }
       : {};
 
-    // 定义状态筛选条件
-    const statusCondition = status
-      ? { status: status }
-      : {};
+    // // 定义状态筛选条件
+    // const statusCondition = status
+    //   ? { status: status }
+    //   : {};
 
     // 查询原料列表并分页
     const rawMaterials = await models.RawMaterial.findAndCountAll({
       where: {
         ...keywordCondition,
-        ...statusCondition,
+        // ...statusCondition,
         isDeleted: false // 只查询未被删除的记录
         // 不需要 isDeleted 字段的过滤
       },
@@ -123,9 +122,8 @@ router.put("/update/:id", async (req, res) => {
       {
         materialName: req.body.materialName,
         companyId: req.body.companyId,
-        quantity: req.body.quantity,
         unit: req.body.unit,
-        status: req.body.status,
+        computeUnit: req.body.computeUnit,
         remark: req.body.remark,
       },
       {

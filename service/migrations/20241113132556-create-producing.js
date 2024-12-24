@@ -10,21 +10,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       productionBatch: {
+        allowNull: false,
         type: Sequelize.STRING
+      },
+      batchSequence: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       type: {
         allowNull: false,
-        type: Sequelize.ENUM('PREPARING', 'PROCESSING', 'COMPLETED', 'RESTART', 'O')
+        type: Sequelize.ENUM('PREPARING', 'PROCESSING', 'COMPLETED', 'RESTART', 'CLOSE', 'DELETE', 'O')
       },
       operator: {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'Users', // 假设 Users 表存在
-          key: 'id'
+          model: "Users", // name of Target model
+          key: "id", // key in Target model that we're referencing
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        onDelete: 'CASCADE'
       },
       operatorName: {
         allowNull: false,

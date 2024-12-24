@@ -47,14 +47,17 @@ exports.generateBatchNumber = async (dateString, sequence) => {
   const { default: base32Encode } = await import('base32-encode');
 
   // 生成4字节的随机数部分，以增强唯一性
-  const randomPart = crypto.randomBytes(4).toString('hex');
+  const randomPart = crypto.randomBytes(1).toString('hex');
 
   // 拼接日期 + 批次号 + 随机数
   const data = `${dateString}-${sequence}-${randomPart}`;
 
+  console.log('data :>> ', data);
+
   // 将拼接后的数据进行Base32编码并转换为大写
   const buffer = Buffer.from(data, 'utf-8');
   const encoded = base32Encode(buffer, 'Crockford').toUpperCase();
+  console.log('encoded :>> ', encoded);
 
   // 去除Base32中的等号（=）
   return encoded.replace(/=/g, '');

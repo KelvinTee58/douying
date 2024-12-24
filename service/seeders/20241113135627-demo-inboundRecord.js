@@ -7,7 +7,7 @@ module.exports = {
       {
         rawMaterialWarehouseId: 1,
         quantity: 500,
-        unit: 'kg',
+        unit: 'KG',
         computeUnit: 1,
         type: 'IN',
         operator: 'e737832d-5e73-8aa5-9fdf-84a677dd098a', // 填写用户 UUID
@@ -19,7 +19,7 @@ module.exports = {
       {
         rawMaterialWarehouseId: 2,
         quantity: 2,
-        unit: 'ton',
+        unit: 'TON',
         computeUnit: 1000,
         type: 'OUT',
         operator: 'e737832d-5e73-8aa5-9fdf-84a677dd098a', // 填写用户 UUID

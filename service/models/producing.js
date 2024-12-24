@@ -12,8 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Producing.belongsTo(models.User, {
-        foreignKey: 'operator',
-        as: 'user'
+        foreignKey: {
+          name: 'operator', // 外键名称与 User 模型中的字段名一致
+          allowNull: false,
+        },
+        as: 'user',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       });
     }
   }
@@ -22,8 +27,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    batchSequence: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     type: {
-      type: DataTypes.ENUM('PREPARING', 'PROCESSING', 'COMPLETED', 'RESTART', 'O'),
+      type: DataTypes.ENUM('PREPARING', 'PROCESSING', 'COMPLETED', 'RESTART', 'CLOSE', 'DELETE', 'O'),
       allowNull: false
     },
     operator: {

@@ -18,7 +18,7 @@ module.exports = {
         warehouseId: 2,
         rawMaterialId: 2,
         quantity: 200,
-        unit: 'ton',
+        unit: 'TON',
         computeUnit: 1000,
         isDeleted: false,
         createdAt: new Date(),

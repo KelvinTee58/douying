@@ -7,7 +7,6 @@ module.exports = {
       {
         productName: 'Product A',
         specification: 'Spec A',
-        companyId: 1,
         computeUnit: 1,
         unit: 'KG',
         remark: '666',
@@ -17,7 +16,6 @@ module.exports = {
       {
         productName: 'Product B',
         specification: 'Spec B',
-        companyId: 2,
         computeUnit: 1,
         unit: 'KG',
         createdAt: new Date(),

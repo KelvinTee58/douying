@@ -3,11 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Producing', [
+    await queryInterface.bulkInsert('Producings', [
       {
         productionBatch: 'Batch001',
+        batchSequence: 1,
         type: 'PREPARING',
-        operator: 'uuid-sample-1',
+        operator: 'e737832d-5e73-8aa5-9fdf-84a677dd098a',
         operatorName: 'Operator A',
         completionTime: new Date(),
         remarks: 'Initial production batch',
@@ -16,8 +17,9 @@ module.exports = {
       },
       {
         productionBatch: 'Batch002',
+        batchSequence: 2,
         type: 'PROCESSING',
-        operator: 'uuid-sample-2',
+        operator: 'e737832d-5e73-8aa5-9fdf-84a677dd098a',
         operatorName: 'Operator B',
         remarks: 'Second production batch',
         createdAt: new Date(),
@@ -27,6 +29,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Producing', null, {});
+    await queryInterface.bulkDelete('Producings', null, {});
   }
 };

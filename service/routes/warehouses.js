@@ -12,6 +12,7 @@ router.post("/create", async (req, res) => {
       warehouseName: req.body.warehouseName,
       address: req.body.address,
       detailedAddress: req.body.detailedAddress,
+      type: req.body.type,
       unit: req.body.unit,
       areaCode: req.body.areaCode, // 添加 areaCode 字段
       capacity: req.body.capacity,
@@ -103,6 +104,7 @@ router.put("/update/:id", async (req, res) => {
         warehouseName: req.body.warehouseName,
         address: req.body.address,
         detailedAddress: req.body.detailedAddress,
+        type: req.body.type,
         unit: req.body.unit,
         areaCode: req.body.areaCode, // 支持 areaCode 的更新
         capacity: req.body.capacity,
@@ -112,7 +114,6 @@ router.put("/update/:id", async (req, res) => {
         returning: true, // 返回更新后的记录
       }
     );
-    console.log('updatedWarehouse :>> ', warehouseId, updatedWarehouse);
     if (updatedWarehouse[1]) {
       send.success(req, res, {
         data: updatedWarehouse[1].dataValues, // 更新后的仓库数据

@@ -8,7 +8,6 @@ const fs = require('fs');
 
 var app = express();
 
-
 // 路由文件导入
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -17,6 +16,7 @@ var employeesRouter = require("./routes/employees");
 var rawMaterialsRouter = require("./routes/rawMaterials");
 var warehousesRouter = require("./routes/warehouses");
 var productsRouter = require("./routes/products");
+var producingsRouter = require("./routes/producings");
 
 
 // view engine setup
@@ -39,6 +39,7 @@ app.use("/employees", employeesRouter);
 app.use("/rawMaterials", rawMaterialsRouter);
 app.use("/warehouses", warehousesRouter);
 app.use("/products", productsRouter);
+app.use("/producings", producingsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
