@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Producing.init({
     productionBatch: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     batchSequence: {
@@ -40,11 +40,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     operatorName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     completionTime: DataTypes.DATE,
-    remarks: DataTypes.TEXT
+    remark: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Producing',

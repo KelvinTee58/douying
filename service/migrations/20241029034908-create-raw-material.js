@@ -10,18 +10,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       materialName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       companyId: {
         type: Sequelize.INTEGER
       },
       unit: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       computeUnit: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false,
       },
       remark: {

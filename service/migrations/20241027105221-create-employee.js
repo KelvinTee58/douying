@@ -10,11 +10,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       employeeNumber: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       gender: {
@@ -22,7 +22,7 @@ module.exports = {
         defaultValue: 'O', // 默认值为O
       },
       phone: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,

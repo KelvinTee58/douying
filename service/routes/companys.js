@@ -21,7 +21,7 @@ router.post("/create", async (req, res) => {
   } catch (error) {
     send.error(req, res, {
       message: "添加公司时发生错误",
-      data: error,
+      detail: error.message,
     });
   }
 });
@@ -68,7 +68,7 @@ router.get("/", async (req, res) => {
     });
   } catch (error) {
     console.error("获取公司列表时发生错误:", error);
-    return send.error(req, res, { message: "获取公司列表时发生错误", data: error });
+    return send.error(req, res, { message: "获取公司列表时发生错误", detail: error.message });
   }
 });
 
@@ -91,7 +91,8 @@ router.get("/:id", async (req, res) => {
       send.error(req, res, { message: "公司未找到" }); // 使用自定义错误响应
     }
   } catch (error) {
-    send.error(req, res, { message: "获取公司时发生错误", data: error }); // 使用自定义错误响应
+    console.log('error :>> ', error);
+    send.error(req, res, { message: "获取公司时发生错误", detail: error.message }); // 使用自定义错误响应
   }
 });
 
@@ -125,8 +126,7 @@ router.put("/update/:id", async (req, res) => {
     }
   } catch (error) {
     send.error(req, res, {
-      message: "更新公司信息时发生错误",
-      data: error,
+      message: "更新公司信息时发生错误", detail: error.message
     });
   }
 });
@@ -155,8 +155,7 @@ router.delete("/delete/:id", async (req, res) => {
     }
   } catch (error) {
     send.error(req, res, {
-      message: "删除公司时发生错误",
-      data: error,
+      message: "删除公司时发生错误", detail: error.message
     });
   }
 });

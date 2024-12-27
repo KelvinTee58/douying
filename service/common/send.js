@@ -39,6 +39,7 @@ send.error = (req, res, sendOption) => {
   sendOption = {
     status: 1,
     message: "请求失败",
+    detail: "",
     data: {},
     ...sendOption, // 使用解构来合并默认值和传入的值
   };

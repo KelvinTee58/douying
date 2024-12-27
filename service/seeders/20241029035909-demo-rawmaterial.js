@@ -7,7 +7,7 @@ module.exports = {
       {
         materialName: '芒果',
         companyId: 1,
-        computeUnit: 1,
+        computeUnit: 1.000,
         unit: 'KG',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -16,7 +16,7 @@ module.exports = {
       {
         materialName: '火龙果',
         companyId: 2,
-        computeUnit: 1,
+        computeUnit: 1.000,
         unit: 'KG',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -25,7 +25,7 @@ module.exports = {
       {
         materialName: '木瓜',
         companyId: 1,
-        computeUnit: 1,
+        computeUnit: 1.000,
         unit: 'KG',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -34,7 +34,7 @@ module.exports = {
       {
         materialName: '菠萝',
         companyId: 3,
-        computeUnit: 1,
+        computeUnit: 1.000,
         unit: 'KG',
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -30,15 +30,15 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       quantity: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false
       },
       unit: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false
       },
       computeUnit: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false
       },
       isDeleted: {

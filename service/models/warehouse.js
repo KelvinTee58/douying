@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Warehouse.init({
     warehouseName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false, // 必填
     },
     address: {
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false, // 必填
     },
     areaCode: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false, // 必填
     },
     type: {
@@ -35,12 +35,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'O', // 默认值设置为 'O'
     },
     capacity: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false,
       defaultValue: 999999
     },
     unit: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     isDeleted: {

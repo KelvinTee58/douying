@@ -20,21 +20,45 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       quantity: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false
       },
       dock: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(10, 2)
       },
       cost: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(10, 2)
       },
       unit: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false
       },
       computeUnit: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false
+      },
+      beforeQuantity: {
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false
+      },
+      beforeUnit: {
+        type: Sequelize.STRING(50),
+        allowNull: false
+      },
+      beforeComputeUnit: {
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false
+      },
+      afterQuantity: {
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false
+      },
+      afterUnit: {
+        type: Sequelize.STRING(50),
+        allowNull: false
+      },
+      afterComputeUnit: {
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false
       },
       type: {
@@ -52,7 +76,7 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       operatorName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false
       },
       remark: {
@@ -68,6 +92,7 @@ module.exports = {
       }
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('InboundRecords');
   }

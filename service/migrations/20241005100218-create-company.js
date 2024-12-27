@@ -11,14 +11,14 @@ module.exports = {
       },
       companyName: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       contactPerson: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       contactPhone: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       address: {
         allowNull: false,
@@ -30,7 +30,7 @@ module.exports = {
       },
       areaCode: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(50)
       },
       isDeleted: {
         type: Sequelize.BOOLEAN,

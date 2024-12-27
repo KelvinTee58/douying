@@ -7,9 +7,9 @@ module.exports = {
       {
         warehouseId: 1,
         rawMaterialId: 1,
-        quantity: 100,
+        quantity: 100.000,
         unit: 'KG',
-        computeUnit: 1,
+        computeUnit: 1.000,
         isDeleted: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -17,9 +17,9 @@ module.exports = {
       {
         warehouseId: 2,
         rawMaterialId: 2,
-        quantity: 200,
+        quantity: 200.000,
         unit: 'TON',
-        computeUnit: 1000,
+        computeUnit: 1000.000,
         isDeleted: false,
         createdAt: new Date(),
         updatedAt: new Date()

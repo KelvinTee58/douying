@@ -11,7 +11,7 @@ module.exports = {
       },
       productionBatch: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       batchSequence: {
         allowNull: false,
@@ -33,7 +33,7 @@ module.exports = {
       },
       operatorName: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       completionTime: {
         type: Sequelize.DATE

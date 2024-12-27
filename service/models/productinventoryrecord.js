@@ -31,19 +31,46 @@ module.exports = (sequelize, DataTypes) => {
   ProductInventoryRecord.init({
     productWarehouseId: DataTypes.INTEGER,
     type: {
-      type: DataTypes.ENUM('IN', 'OUT'),
+      type: DataTypes.ENUM('IN', 'OUT', 'MOVING_IN', 'MOVING_OUT', 'SUPPLEMENT', 'WITHDRAWAL', 'O'),
       allowNull: false,
     },
+    cost: {
+      type: DataTypes.DECIMAL(10, 2),
+    },
     quantity: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false,
     },
     unit: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50), // 字符串类型，50个字符足够
       allowNull: false,
     },
     computeUnit: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false,
+    },
+    beforeQuantity: {
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false,
+    },
+    beforeUnit: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    beforeComputeUnit: {
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false,
+    },
+    afterQuantity: {
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false,
+    },
+    afterUnit: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    afterComputeUnit: {
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false,
     },
     transactionDate: {
@@ -52,10 +79,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     operator: DataTypes.UUID,
     operatorName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
-    remarks: DataTypes.TEXT
+    remark: DataTypes.TEXT,
   }, {
     sequelize,
     modelName: 'ProductInventoryRecord',

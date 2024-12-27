@@ -17,6 +17,8 @@ var rawMaterialsRouter = require("./routes/rawMaterials");
 var warehousesRouter = require("./routes/warehouses");
 var productsRouter = require("./routes/products");
 var producingsRouter = require("./routes/producings");
+var rawMaterialWarehousesRouter = require("./routes/rawMaterialWarehouses");
+var inboundRecordsRouter = require("./routes/inboundRecords");
 
 
 // view engine setup
@@ -40,6 +42,9 @@ app.use("/rawMaterials", rawMaterialsRouter);
 app.use("/warehouses", warehousesRouter);
 app.use("/products", productsRouter);
 app.use("/producings", producingsRouter);
+app.use("/rw", rawMaterialWarehousesRouter);
+app.use("/inboundRecords", inboundRecordsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

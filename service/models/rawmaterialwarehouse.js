@@ -25,15 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     quantity: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false
     },
     unit: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false
     },
     computeUnit: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false
     },
     isDeleted: {

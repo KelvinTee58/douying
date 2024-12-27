@@ -32,14 +32,14 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 99,
       },
       name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       username: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
-      phone: DataTypes.STRING,
+      phone: DataTypes.STRING(100),
       loginAttempts: {
         type: DataTypes.INTEGER,
         defaultValue: 0,

@@ -19,20 +19,20 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init({
     productName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     specification: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false
     },
     companyId: DataTypes.INTEGER,
     computeUnit: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false
     },
     unit: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false
     },
     isDeleted: {

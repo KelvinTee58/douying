@@ -16,13 +16,13 @@ module.exports = (sequelize, DataTypes) => {
   Company.init({
     companyName: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
     },
     contactPerson: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
     },
-    contactPhone: DataTypes.STRING,
+    contactPhone: DataTypes.STRING(100),
     address: {
       allowNull: false,
       type: DataTypes.STRING,
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     areaCode: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,

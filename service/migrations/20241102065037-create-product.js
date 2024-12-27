@@ -11,11 +11,11 @@ module.exports = {
       },
       productName: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       specification: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(50)
       },
       companyId: {
         type: Sequelize.INTEGER,
@@ -28,11 +28,11 @@ module.exports = {
       },
       unit: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(50)
       },
       computeUnit: {
         allowNull: false,
-        type: Sequelize.FLOAT
+        type: Sequelize.DECIMAL(10, 3)
       },
       remark: {
         type: Sequelize.TEXT

@@ -15,18 +15,18 @@ module.exports = (sequelize, DataTypes) => {
   }
   Employee.init({
     employeeNumber: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false, // 必填
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false, // 必填
     },
     gender: {
       type: DataTypes.ENUM('M', 'F', 'O'), // 定义 ENUM 值
       defaultValue: 'O', // 默认值设置为 'O'
     },
-    phone: DataTypes.STRING,
+    phone: DataTypes.STRING(100),
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false, // 默认值为 false

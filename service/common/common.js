@@ -89,3 +89,66 @@ exports.decodeBatchNumber = async (batchNumber) => {
     return null;  // 返回null表示解码失败
   }
 };
+
+const Decimal = require('decimal.js');
+
+/**
+ * 单位转换函数，将数量从一个单位转换为另一个单位
+ * @param {number} quantity - 原始数量
+ * @param {number} fromComputeUnit - 原单位的计算系数
+ * @param {number} toComputeUnit - 目标单位的计算系数
+ * @returns {string} - 转换后的数量，返回字符串避免精度丢失
+ */
+exports.convertUnit = (quantity, fromComputeUnit, toComputeUnit) => {
+  if (fromComputeUnit <= 0 || toComputeUnit <= 0) {
+    throw new Error('无效的转换单位系数');
+  }
+
+  // 使用 decimal.js 进行单位转换
+  return new Decimal(quantity)
+    .times(fromComputeUnit)
+    .div(toComputeUnit)
+    .toString(); // 返回字符串，避免精度丢失
+};
+
+/**
+ * 计算增减数量并进行单位转换
+ * @param {Object} base - 基准数量及计算单位 { quantity: number, computeUnit: number }
+ * @param {Object} change - 追加数量及计算单位 { quantity: number, computeUnit: number }
+ * @param {string} type - 计算类型，'add' 为增量，'subtract' 为减量
+ * @param {number} precision - 保留小数的位数（例如 4 位）
+ * @returns {Promise<number|null>} 返回更新后的仓库数量，保留精度，或者错误信息
+ */
+exports.calculateNewQuantity = (base, change, type, precision = 4) => {
+  try {
+    // 校验输入的计算单位
+    const baseComputeUnit = base.computeUnit;
+    const changeComputeUnit = change.computeUnit;
+
+    if (baseComputeUnit <= 0 || changeComputeUnit <= 0) {
+      throw new Error('无效的单位系数');
+    }
+
+    // 将 change 的数量转换为与 base 相同的计算单位
+    const changeConverted = convertUnit(change.quantity, changeComputeUnit, baseComputeUnit);
+
+    let result;
+
+    // 根据操作类型进行加减运算
+    if (type === 'add') {
+      result = new Decimal(base.quantity).plus(changeConverted);
+    } else if (type === 'subtract') {
+      result = new Decimal(base.quantity).minus(changeConverted);
+    } else {
+      throw new Error('无效的计算类型');
+    }
+
+    // 保留指定的小数位数
+    result = result.toFixed(precision);
+
+    return result;
+  } catch (error) {
+    console.error('计算增减数量时出错:', error);
+    return null;  // 返回 null 表示计算失败
+  }
+};

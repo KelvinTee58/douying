@@ -12,26 +12,53 @@ module.exports = {
       productWarehouseId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'ProductWarehouses', // 关联 productWarehouse 表
+          model: 'ProductWarehouses', // 关联 ProductWarehouses 表
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
       type: {
-        type: Sequelize.ENUM('IN', 'OUT'),
+        type: Sequelize.ENUM('IN', 'OUT', 'MOVING_IN', 'MOVING_OUT', 'SUPPLEMENT', 'WITHDRAWAL', 'O'),
         allowNull: false,
       },
+      cost: {
+        type: Sequelize.DECIMAL(10, 2),
+      },
       quantity: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false,
       },
       unit: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       computeUnit: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false,
+      },
+      beforeQuantity: {
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false,
+      },
+      beforeUnit: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+      },
+      beforeComputeUnit: {
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false,
+      },
+      afterQuantity: {
+        type: Sequelize.DECIMAL(10, 3),
+        allowNull: false,
+      },
+      afterUnit: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+      },
+      afterComputeUnit: {
+        type: Sequelize.DECIMAL(10, 3),
         allowNull: false,
       },
       transactionDate: {
@@ -49,10 +76,10 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       operatorName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
-      remarks: {
+      remark: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -65,6 +92,7 @@ module.exports = {
       }
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('ProductInventoryRecords');
   }

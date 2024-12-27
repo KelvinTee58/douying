@@ -11,7 +11,7 @@ module.exports = {
       },
       warehouseName: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(100)
       },
       address: {
         allowNull: false,
@@ -23,7 +23,7 @@ module.exports = {
       },
       areaCode: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(50)
       },
       type: {
         type: Sequelize.ENUM('P', 'R', 'O'),
@@ -31,11 +31,11 @@ module.exports = {
       },
       capacity: {
         allowNull: false,
-        type: Sequelize.FLOAT,
+        type: Sequelize.DECIMAL(10, 3),
         defaultValue: 999999
       },
       unit: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       isDeleted: {

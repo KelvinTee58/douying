@@ -1,22 +1,14 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class InboundRecord extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
-      // 关联到原料仓库表
       InboundRecord.belongsTo(models.RawMaterialWarehouse, {
         foreignKey: 'rawMaterialWarehouseId',
         as: 'rawMaterialWarehouse',
       });
-      // 关联到 User
+
       InboundRecord.belongsTo(models.User, {
         foreignKey: {
           name: 'operator', // 外键名称与 User 模型中的字段名一致
@@ -28,23 +20,48 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
+
   InboundRecord.init({
     rawMaterialWarehouseId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
     quantity: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false
     },
-    cost: DataTypes.FLOAT,
-    dock: DataTypes.FLOAT,
+    cost: DataTypes.DECIMAL(10, 2),
+    dock: DataTypes.DECIMAL(10, 2),
     unit: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false
     },
     computeUnit: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false
+    },
+    beforeQuantity: {
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false
+    },
+    beforeUnit: {
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
+    beforeComputeUnit: {
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false
+    },
+    afterQuantity: {
+      type: DataTypes.DECIMAL(10, 3),
+      allowNull: false
+    },
+    afterUnit: {
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
+    afterComputeUnit: {
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false
     },
     type: {
@@ -56,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     operatorName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     remark: DataTypes.TEXT
@@ -65,5 +82,6 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'InboundRecord',
     timestamps: true
   });
+
   return InboundRecord;
 };

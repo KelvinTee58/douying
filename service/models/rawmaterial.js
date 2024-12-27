@@ -16,16 +16,16 @@ module.exports = (sequelize, DataTypes) => {
   }
   RawMaterial.init({
     materialName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     companyId: DataTypes.INTEGER,
     unit: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     computeUnit: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 3),
       allowNull: false,
     },
     isDeleted: {

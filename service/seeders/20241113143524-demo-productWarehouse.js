@@ -7,18 +7,18 @@ module.exports = {
       {
         productId: 1, // 假设产品ID为1
         warehouseId: 1, // 假设仓库ID为1
-        quantity: 500,
+        quantity: 500.000,
         unit: '12.5KG/箱',
-        computeUnit: 12.5,
+        computeUnit: 12.500,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         productId: 2, // 假设产品ID为2
         warehouseId: 2, // 假设仓库ID为2
-        quantity: 300,
+        quantity: 300.000,
         unit: '12.5KG/箱',
-        computeUnit: 12.5,
+        computeUnit: 12.500,
         createdAt: new Date(),
         updatedAt: new Date()
       }
