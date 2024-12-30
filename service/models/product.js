@@ -12,8 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Product.belongsTo(models.Company, {
-        foreignKey: "companyId",
-        as: "company",
+        foreignKey: {
+          allowNull: true,  // 允许外键为 NULL
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       });
     }
   }

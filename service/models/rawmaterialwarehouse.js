@@ -11,8 +11,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      RawMaterialWarehouse.belongsTo(models.Warehouse, { foreignKey: 'warehouseId', as: 'warehouse' });
-      RawMaterialWarehouse.belongsTo(models.RawMaterial, { foreignKey: 'rawMaterialId', as: 'rawMaterial' });
+      RawMaterialWarehouse.belongsTo(models.Warehouse, {
+        foreignKey: {
+          name: 'warehouseId',
+          allowNull: false,
+        }
+      });
+      RawMaterialWarehouse.belongsTo(models.RawMaterial, {
+        foreignKey: {
+          name: 'rawMaterialId',
+          allowNull: false,
+        }
+      });
+
+      // 添加反向关系：RawMaterialWarehouse 可能有多个 InboundRecord
+      RawMaterialWarehouse.hasMany(models.InboundRecord, {
+        foreignKey: 'rawMaterialWarehouseId',
+        onDelete: 'CASCADE',
+      });
+
     }
   }
   RawMaterialWarehouse.init({

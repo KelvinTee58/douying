@@ -5,8 +5,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       InboundRecord.belongsTo(models.RawMaterialWarehouse, {
-        foreignKey: 'rawMaterialWarehouseId',
-        as: 'rawMaterialWarehouse',
+        foreignKey: {
+          name: 'rawMaterialWarehouseId',
+          allowNull: false,
+        },
       });
 
       InboundRecord.belongsTo(models.User, {
@@ -18,6 +20,18 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+
+      // 新增的生产批次关联
+      InboundRecord.belongsTo(models.Producing, {
+        foreignKey: {
+          name: 'productionBatch', // 外键名称
+          allowNull: false,        // 可以根据业务决定是否允许为空
+        },
+        targetKey: 'productionBatch',  // Producing 表中的 productionBatch 字段
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      });
+
     }
   }
 
@@ -26,9 +40,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    productionBatch: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
     quantity: {
       type: DataTypes.DECIMAL(10, 3),
-      allowNull: false
+      allowNull: false,
     },
     cost: DataTypes.DECIMAL(10, 2),
     dock: DataTypes.DECIMAL(10, 2),

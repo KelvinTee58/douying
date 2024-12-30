@@ -19,6 +19,16 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      productionBatch: {
+        allowNull: false,
+        type: Sequelize.STRING(100),
+        references: {
+          model: 'Producings', // 关联 Producings 表
+          key: 'productionBatch' // 假设 Producing 表中的字段为 productionBatch
+        },
+        onUpdate: 'CASCADE', // 当 Producing 表中的 productionBatch 更新时，InboundRecords 表的 productionBatch 自动更新
+        onDelete: 'NO ACTION' // 当 Producing 表中的记录删除时，InboundRecords 表中的 productionBatch 字段设置为 NULL
+      },
       quantity: {
         type: Sequelize.DECIMAL(10, 3),
         allowNull: false

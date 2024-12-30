@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
     }
 
 
-    const records = await models.RawMaterialWarehouses.findAndCountAll({
+    const records = await models.RawMaterialWarehouse.findAndCountAll({
       where: whereConditions,
       limit: limitNumber,
       offset: offset,
@@ -101,7 +101,7 @@ router.get("/", async (req, res) => {
 // 获取指定记录 (Read by ID)
 router.get("/:id", async (req, res) => {
   try {
-    const record = await models.RawMaterialWarehouses.findOne({
+    const record = await models.RawMaterialWarehouse.findOne({
       where: { id: req.params.id, isDeleted: false },
       include: [
         {
@@ -134,7 +134,7 @@ router.get("/:id", async (req, res) => {
 router.put("/update/:id", async (req, res) => {
   try {
     const recordId = req.params.id;
-    const [updatedCount, updatedRows] = await models.RawMaterialWarehouses.update(
+    const [updatedCount, updatedRows] = await models.RawMaterialWarehouse.update(
       {
         warehouseId: req.body.warehouseId,
         rawMaterialId: req.body.rawMaterialId,
@@ -163,7 +163,7 @@ router.put("/update/:id", async (req, res) => {
 router.delete("/delete/:id", async (req, res) => {
   try {
     const recordId = req.params.id;
-    const [deletedCount] = await models.RawMaterialWarehouses.update(
+    const [deletedCount] = await models.RawMaterialWarehouse.update(
       {
         isDeleted: true, // 标记为已删除
         deletedAt: new Date(), // 设置删除时间

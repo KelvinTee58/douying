@@ -11,7 +11,8 @@ module.exports = {
       },
       productionBatch: {
         allowNull: false,
-        type: Sequelize.STRING(100)
+        type: Sequelize.STRING(100),
+        unique: true,  // 添加唯一约束
       },
       batchSequence: {
         allowNull: false,

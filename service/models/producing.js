@@ -16,16 +16,31 @@ module.exports = (sequelize, DataTypes) => {
           name: 'operator', // 外键名称与 User 模型中的字段名一致
           allowNull: false,
         },
-        as: 'user',
+        as: 'operatorUser',
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
+      });
+
+      // 生产批次可以有多个入库记录
+      Producing.hasMany(models.InboundRecord, {
+        foreignKey: 'productionBatch',
+        onDelete: 'NO ACTION', // 如果 Producing 被删除，相关的 InboundRecord 的 productionBatch 设置为 NULL
+        onUpdate: 'CASCADE',
+      });
+
+      // 生产批次可以有多个入库记录
+      Producing.hasMany(models.ProductInventoryRecord, {
+        foreignKey: 'productionBatch',
+        onDelete: 'NO ACTION', // 如果 Producing 被删除，相关的 InboundRecord 的 productionBatch 设置为 NULL
+        onUpdate: 'CASCADE',
       });
     }
   }
   Producing.init({
     productionBatch: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
+      unique: true,  // 确保 productionBatch 字段唯一
     },
     batchSequence: {
       type: DataTypes.INTEGER,

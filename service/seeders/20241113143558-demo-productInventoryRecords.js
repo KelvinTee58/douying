@@ -6,6 +6,7 @@ module.exports = {
     await queryInterface.bulkInsert('ProductInventoryRecords', [
       {
         productWarehouseId: 1, // 假设存在一个产品仓库 ID 为 1
+        productionBatch: 'Batch001',
         type: 'IN',
         cost: 100.50, // 使用 DECIMAL 数据
         quantity: 100.000,
@@ -26,6 +27,7 @@ module.exports = {
       },
       {
         productWarehouseId: 2, // 假设存在一个产品仓库 ID 为 2
+        productionBatch: 'Batch001',
         type: 'OUT',
         cost: 50.20, // 使用 DECIMAL 数据
         quantity: 50.000,

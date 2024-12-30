@@ -4,19 +4,21 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Company extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
+      Company.hasMany(models.Product, {
+        foreignKey: {
+          allowNull: true,  // 允许外键为 NULL
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',  // 当 Company 被删除时，Product 中的外键会设置为 NULL
+      });
     }
   }
   Company.init({
     companyName: {
       allowNull: false,
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(100)
     },
     contactPerson: {
       allowNull: false,

@@ -35,6 +35,36 @@ exports.parseExpireTime = (timeString) => {
   return expireAt; // 返回到期的毫秒级时间戳
 }
 
+/**
+ * 去除浮动类型的尾随零
+ * @param {number} value - 需要格式化的数值
+ * @returns {number} - 格式化后的数值
+ */
+exports.formatDecimal = (value) => {
+  return parseFloat(value); // 去掉尾随的零
+}
+
+/**
+ * 格式化字符串，限制最大长度
+ * @param {string} value - 需要格式化的字符串
+ * @param {number} length - 最大长度
+ * @returns {string} - 格式化后的字符串
+ */
+exports.formatString = (value, length = 100) => {
+  if (typeof value !== 'string') return '';
+  return value.length > length ? value.slice(0, length) : value; // 限制最大长度
+}
+
+/**
+ * 格式化数字字段，保留两位小数
+ * @param {number} value - 需要格式化的数值
+ * @returns {string} - 格式化后的数值
+ */
+exports.formatNumber = (value, decimal = 2) => {
+  return value.toFixed(decimal); // 保留两位小数
+}
+
+
 
 const crypto = require('crypto');
 /**
@@ -116,39 +146,37 @@ exports.convertUnit = (quantity, fromComputeUnit, toComputeUnit) => {
  * @param {Object} base - 基准数量及计算单位 { quantity: number, computeUnit: number }
  * @param {Object} change - 追加数量及计算单位 { quantity: number, computeUnit: number }
  * @param {string} type - 计算类型，'add' 为增量，'subtract' 为减量
- * @param {number} precision - 保留小数的位数（例如 4 位）
+ * @param {number} precision - 保留小数的位数（例如 3 位）
  * @returns {Promise<number|null>} 返回更新后的仓库数量，保留精度，或者错误信息
  */
-exports.calculateNewQuantity = (base, change, type, precision = 4) => {
-  try {
-    // 校验输入的计算单位
-    const baseComputeUnit = base.computeUnit;
-    const changeComputeUnit = change.computeUnit;
+exports.calculateNewQuantity = (base, change, type, precision = 3) => {
+  // 校验输入的计算单位
+  const baseComputeUnit = base.computeUnit;
+  const changeComputeUnit = change.computeUnit;
 
-    if (baseComputeUnit <= 0 || changeComputeUnit <= 0) {
-      throw new Error('无效的单位系数');
-    }
-
-    // 将 change 的数量转换为与 base 相同的计算单位
-    const changeConverted = convertUnit(change.quantity, changeComputeUnit, baseComputeUnit);
-
-    let result;
-
-    // 根据操作类型进行加减运算
-    if (type === 'add') {
-      result = new Decimal(base.quantity).plus(changeConverted);
-    } else if (type === 'subtract') {
-      result = new Decimal(base.quantity).minus(changeConverted);
-    } else {
-      throw new Error('无效的计算类型');
-    }
-
-    // 保留指定的小数位数
-    result = result.toFixed(precision);
-
-    return result;
-  } catch (error) {
-    console.error('计算增减数量时出错:', error);
-    return null;  // 返回 null 表示计算失败
+  if (baseComputeUnit <= 0 || changeComputeUnit <= 0) {
+    throw new Error('无效的单位系数');
   }
+
+  // 将 change 的数量转换为与 base 相同的计算单位
+  const changeConverted = this.convertUnit(change.quantity, changeComputeUnit, baseComputeUnit);
+
+  let result;
+
+  // 根据操作类型进行加减运算
+  if (type === 'add') {
+    result = new Decimal(base.quantity).plus(changeConverted);
+  } else if (type === 'subtract') {
+    let subRes = new Decimal(base.quantity).minus(changeConverted);
+    if (subRes < 0) {
+      throw new Error('计算增减数量时出错:数量不足');
+    } else {
+      result = subRes;
+    }
+  } else {
+    throw new Error('计算增减数量时出错:无效的计算类型');
+  }
+  // 保留指定的小数位数
+  result = result.toFixed(precision);
+  return result;
 };

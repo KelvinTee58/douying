@@ -17,7 +17,7 @@ module.exports = {
           model: "Users", // name of Target model
           key: "id", // key in Target model that we're referencing
         },
-        onUpdate: 'CASCADE', // 可选，更新时自动更新外键
+        onUpdate: 'NO ACTION', // 不管
         onDelete: 'CASCADE', // 可选，删除时删除所有关联密码记录
       },
       originalPassword: {

@@ -4,17 +4,14 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class ProductInventoryRecord extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
       // 定义与 productWarehouse 表的关联
       ProductInventoryRecord.belongsTo(models.ProductWarehouse, {
-        foreignKey: 'productWarehouseId',
-        as: 'productWarehouse',
+        foreignKey: {
+          name: 'productWarehouseId',
+          allowNull: false,
+        },
       });
       // 定义与 User 表的关联
       ProductInventoryRecord.belongsTo(models.User, {
@@ -26,10 +23,28 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+
+      // 新增的生产批次关联
+      ProductInventoryRecord.belongsTo(models.Producing, {
+        foreignKey: {
+          name: 'productionBatch', // 外键名称
+          allowNull: false,        // 可以根据业务决定是否允许为空
+        },
+        targetKey: 'productionBatch',  // Producing 表中的 productionBatch 字段
+        onDelete: 'NO ACTION',          // 当 Producing 记录删除时，InboundRecord 的 productionBatch 会设为 NULL
+        onUpdate: 'CASCADE',           // 当 Producing 的 productionBatch 更新时，InboundRecord 的 productionBatch 会自动更新
+      });
     }
   }
   ProductInventoryRecord.init({
-    productWarehouseId: DataTypes.INTEGER,
+    productWarehouseId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    productionBatch: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
     type: {
       type: DataTypes.ENUM('IN', 'OUT', 'MOVING_IN', 'MOVING_OUT', 'SUPPLEMENT', 'WITHDRAWAL', 'O'),
       allowNull: false,

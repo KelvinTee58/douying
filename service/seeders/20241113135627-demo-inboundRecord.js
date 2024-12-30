@@ -5,6 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('InboundRecords', [
       {
         rawMaterialWarehouseId: 1,
+        productionBatch: 'Batch001',
         quantity: 500.000,
         unit: 'KG',
         computeUnit: 1.000,
@@ -23,6 +24,7 @@ module.exports = {
       },
       {
         rawMaterialWarehouseId: 2,
+        productionBatch: 'Batch001',
         quantity: 2.000,
         unit: 'TON',
         computeUnit: 1000.000,

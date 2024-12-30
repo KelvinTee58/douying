@@ -1,10 +1,10 @@
 const models = require("../models");
+const { Op } = require("sequelize");
 
-const rawMaterialWarehousesService = {
+const RawMaterialWarehouseService = {
   // 禁止的类型，可根据需求添加更多逻辑约束
-  forbiddenTypes: [],
-
-  async getRawMaterialWarehouses(data) {
+  forbiddenExclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"],
+  async getRawMaterialWarehouse(data) {
     const { warehouseId = "", rawMaterialId = "" } = data;
     try {
       // 定义查询条件
@@ -19,109 +19,99 @@ const rawMaterialWarehousesService = {
             { rawMaterialId: rawMaterialId },
           ],
         };
-      } else if (warehouseId) {
-        // 仅有 warehouseId
-        whereCondition = {
-          ...whereCondition,
-          warehouseId: warehouseId,
-        };
-      } else if (rawMaterialId) {
-        // 仅有 rawMaterialId
-        whereCondition = {
-          ...whereCondition,
-          rawMaterialId: rawMaterialId,
-        };
+      } else {
+        throw new Error("获取原料仓库失败: 缺少查询条件");
       }
-      console.log('whereCondition :>> ', whereCondition);
-
-
-      const record = await models.RawMaterialWarehouses.findOne({
+      const record = await models.RawMaterialWarehouse.findOne({
         where: whereCondition,
-        limit: limitNumber,
-        offset: offset,
         include: [
           {
             model: models.Warehouse,
             // attributes: ["name"], // 可按需调整返回的字段
             where: { isDeleted: false },
-            attributes: { exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"] },
+            attributes: { exclude: this.forbiddenExclude },
             required: false,
           },
           {
             model: models.RawMaterial,
             where: { isDeleted: false },
-            attributes: { exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"] },
+            attributes: { exclude: this.forbiddenExclude },
             required: false,
           },
         ],
-        attributes: { exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"] },
+        attributes: { exclude: this.forbiddenExclude },
       });
 
       return record ? record : null
     } catch (error) {
+      console.log('error :>> ', error);
       throw new Error(`获取原料仓库失败: ${error.message}`);
     }
   },
 
-  async getRawMaterialWarehousesById(id = '') {
+  async getRawMaterialWarehouseById(id = '') {
     try {
-      const record = await models.RawMaterialWarehouses.findOne({
-        where: { id: req.params.id, isDeleted: false },
+      console.log('id :>> ', id);
+      const record = await models.RawMaterialWarehouse.findOne({
+        where: { id, isDeleted: false },
         include: [
           {
             model: models.Warehouse,
             where: { isDeleted: false },
-            attributes: { exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"] },
+            attributes: { exclude: this.forbiddenExclude },
             required: false,
           },
           {
             model: models.RawMaterial,
             where: { isDeleted: false },
-            attributes: { exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"] },
+            attributes: { exclude: this.forbiddenExclude },
             required: false,
           },
         ],
-        attributes: { exclude: ["isDeleted", "deletedAt", "updatedAt", "createdAt"] },
+        attributes: { exclude: this.forbiddenExclude },
       });
-
       return record ? record : null
     } catch (error) {
+      console.log('error :>> ', error);
       throw new Error(`获取原料仓库失败: ${error.message}`);
     }
   },
 
   // 根据 warehouseId 和 rawMaterialId 获取或创建 rawMaterialWarehouse
-  async getOrCreateRawMaterialWarehouses(rwId, data) {
-    let rawMaterialWarehouses = null;
+  async getOrCreateRawMaterialWarehouse(rwId, data) {
+    let RawMaterialWarehouse = null;
+    console.log('data :>> ', data);
     try {
       if (rwId) {
         // 先尝试根据 id 查找
-        rawMaterialWarehouse = this.getRawMaterialWarehousesById(rwId);
+        RawMaterialWarehouse = await this.getRawMaterialWarehouseById(rwId);
       } else {
         // 再 再尝试根据 warehouseId 和 rawMaterialId 查找
-        rawMaterialWarehouse = this.getRawMaterialWarehouses(data);
+        RawMaterialWarehouse = await this.getRawMaterialWarehouse(data);
+      }
+      if (RawMaterialWarehouse) {
+        return RawMaterialWarehouse;
+      }
+      if (data.warehouseId && data.rawMaterialId) {
+        let createData = {
+          warehouseId: data.warehouseId,
+          rawMaterialId: data.rawMaterialId,
+          quantity: 0,
+          unit: data.unit,
+          computeUnit: data.computeUnit,
+          isDeleted: false, // 默认未删除
+        }
+        // 都找不到就要创建
+        // return rawMaterialWarehouse;
+        return await models.RawMaterialWarehouse.create(createData);
+      } else {
+        throw new Error("获取原料仓库失败: 缺少创建原料仓库条件");
       }
     } catch (error) {
-      throw new Error(error);
-    }
-    try {
-      if (rawMaterialWarehouses) {
-        return rawMaterialWarehouses;
-      }
-      let createData = {
-        warehouseId: data.warehouseId,
-        rawMaterialId: data.rawMaterialId,
-        quantity: data.quantity,
-        unit: data.unit,
-        computeUnit: data.computeUnit,
-        isDeleted: false, // 默认未删除
-      }
-      // 都找不到就要创建
-      return await models.RawMaterialWarehouses.create(createData);
-    } catch (error) {
+      console.log('error :>> ', error);
       throw new Error(`创建原料仓库失败: ${error.message}`);
     }
   },
 };
 
-module.exports = rawMaterialWarehousesService;
+module.exports = RawMaterialWarehouseService;

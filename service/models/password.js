@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
           name: 'userId', // 外键名称与 User 模型中的字段名一致
           allowNull: false,
         },
-        onDelete: "CASCADE", // 用户删除时，自动删除关联的密码
+        onDelete: "NO ACTION", // 不管
         onUpdate: "CASCADE", // 用户更新时，自动更新外键
       });
     }

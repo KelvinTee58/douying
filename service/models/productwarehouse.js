@@ -13,14 +13,24 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       // 关联到产品表
       ProductWarehouse.belongsTo(models.Product, {
-        foreignKey: 'productId',
-        as: 'product'
+        foreignKey: {
+          name: 'productId',
+          allowNull: false,
+        }
       });
 
       // 关联到仓库表
       ProductWarehouse.belongsTo(models.Warehouse, {
-        foreignKey: 'warehouseId',
-        as: 'warehouse'
+        foreignKey: {
+          name: 'warehouseId',
+          allowNull: false,
+        }
+      });
+
+      // 添加反向关系：RawMaterialWarehouse 可能有多个 InboundRecord
+      ProductWarehouse.hasMany(models.ProductInventoryRecord, {
+        foreignKey: 'productWarehouseId',
+        onDelete: 'CASCADE',
       });
     }
   }
