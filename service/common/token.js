@@ -31,10 +31,10 @@ exports.getToken = (ctx, userInfo, time) => {
   }
   // 创建token并导出
   const token = jwt.sign(userInfo, secret, { expiresIn: time }); // 60, "2 days", "10h", "7d".
-  const data = {
-    token,
-    useruid: userInfo.userId,
-  };
+  // const data = {
+  //   token,
+  //   useruid: userInfo.userId,
+  // };
   // models.onlineToken.create(data);
   // token加密
   const cipher = crypto.createCipheriv(ALGORITHM, key, iv);

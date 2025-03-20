@@ -51,7 +51,6 @@ const RawMaterialWarehouseService = {
 
   async getRawMaterialWarehouseById(id = '') {
     try {
-      console.log('id :>> ', id);
       const record = await models.RawMaterialWarehouse.findOne({
         where: { id, isDeleted: false },
         include: [

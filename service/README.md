@@ -199,6 +199,7 @@ npx sequelize-cli db:seed:all --seeders-path ./seeds_pro
 | `afterQuantity`          | `DECIMAL(10, 3)`              | 存储后的原料数量                                   | 0.0.1           | 是               |
 | `afterUnit`              | `STRING(50)`                  | 存储后的单位（KG, ton）                            | 0.0.1           | 是               |
 | `afterComputeUnit`       | `DECIMAL(10, 3)`              | 存储后的计算单位 (KG=>1，ton=>1000)                | 0.0.1           | 是               |
+| `withdrawalId`           | `JSON`                        | 回测对应的 inboundRecord 的 id 列表                | 0.0.1           |                  |
 | `type`                   | `ENUM`：[表末](#inbound_type) | [记录类型](#inbound_type)                          | 0.0.1           | 是               |
 | `operator`               | `UUID`                        | 操作人员（外键，关联 `User` 表）                   | 0.0.1           | 是               |
 | `operatorName`           | `STRING(100)`                 | 操作人员名称                                       | 0.0.1           | 是               |
@@ -211,7 +212,8 @@ npx sequelize-cli db:seed:all --seeders-path ./seeds_pro
 - `IN`: 入库
 - `OUT`: 出库
 - `COMPLETED`: 已完成
-- `WITHDRAWAL`: 回撤
+- `WITHDRAWAL`: 回撤入库 (等于去掉一部分，但是不计入总的入库和出库)
+- `SUPPLEMENT`: 回撤出库 (等于去掉一部分，但是不计入总的入库和出库)
 - `O`: 其他
 
 ---

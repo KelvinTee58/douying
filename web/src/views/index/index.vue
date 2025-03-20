@@ -59,5 +59,6 @@ export default {
 <style lang="scss" scoped>
 .index-page {
   font-size: 2rem;
+  min-height: 100vh;
 }
 </style>

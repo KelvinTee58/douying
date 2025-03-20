@@ -142,6 +142,24 @@ exports.convertUnit = (quantity, fromComputeUnit, toComputeUnit) => {
 };
 
 /**
+ * 比较两个不同单位的数量大小
+ * @param {Object} a - 第一个数量对象 { quantity: number, computeUnit: number }
+ * @param {Object} b - 第二个数量对象 { quantity: number, computeUnit: number }
+ * @returns {number} - 返回比较结果：-1表示a<b，0表示a=b，1表示a>b
+ */
+exports.compareQuantities = (a, b) => {
+  if (a.computeUnit <= 0 || b.computeUnit <= 0) {
+    throw new Error('无效的单位系数');
+  }
+
+  // 将两个数量转换到相同的计算单位（使用第一个数量的单位作为基准）
+  const bConverted = new Decimal(this.convertUnit(b.quantity, b.computeUnit, a.computeUnit));
+  const aDecimal = new Decimal(a.quantity);
+
+  return aDecimal.comparedTo(bConverted);
+};
+
+/**
  * 计算增减数量并进行单位转换
  * @param {Object} base - 基准数量及计算单位 { quantity: number, computeUnit: number }
  * @param {Object} change - 追加数量及计算单位 { quantity: number, computeUnit: number }

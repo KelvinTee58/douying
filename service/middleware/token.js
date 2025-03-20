@@ -11,10 +11,16 @@ module.exports = tokenMiddleware = (req, res, next) => {
       try {
         let isVerify = verifyToken(res, tokenList[1]);
         let { refresh, isValidity } = checkToken(res, tokenList[1]);
-        const dTokenInfo = decryptRSAToken(res, tokenList[1]);
-        req.user = dTokenInfo
-        // req.user = decoded; // 将解码后的用户信息存储到请求对象中
         if (isVerify && isValidity) {
+          const dTokenInfo = decryptRSAToken(res, tokenList[1]);
+          req.user = dTokenInfo // 将解码后的用户信息存储到请求对象中
+          // console.log('dTokenInfo', dTokenInfo)
+          if (dTokenInfo.type == 'refresh') {
+            send.error(req, res, {
+              status: 1,
+              message: "无法使用refreshtoken请求",
+            });
+          }
           if (refresh) {
             req.body.refresh = refresh;
           }

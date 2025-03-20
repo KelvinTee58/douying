@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: kevinzheng
+ * @Date: 2024-11-13 21:35:29
+ * @LastEditors: kevinzheng
+ * @LastEditTime: 2025-01-02 11:14:03
+ */
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
@@ -7,9 +15,9 @@ module.exports = {
       {
         warehouseId: 1,
         rawMaterialId: 1,
-        quantity: 100.000,
-        unit: 'KG',
-        computeUnit: 1.000,
+        quantity: 0.000,
+        unit: 'TON',
+        computeUnit: 1000.000,
         isDeleted: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -17,7 +25,7 @@ module.exports = {
       {
         warehouseId: 2,
         rawMaterialId: 2,
-        quantity: 200.000,
+        quantity: 0.000,
         unit: 'TON',
         computeUnit: 1000.000,
         isDeleted: false,

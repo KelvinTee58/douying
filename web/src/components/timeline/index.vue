@@ -1,215 +1,157 @@
 <template>
-  <div class="m-timeline" :style="`width: ${totalWidth};`">
-    <div
-      class="timeline-item"
-      :class="{ 'item-last': index === items.length - 1 }"
-      v-for="(item, index) in items"
-      :key="index"
-    >
-      <!-- 时间线尾部 -->
-      <span
-        class="timeline-tail"
-        :class="`tail-${mode}`"
-        :style="`border-left-style: ${lineStyle};`"
-      ></span>
+  <div class="timeline">
+    <div v-for="(event, index) in events" :key="index" class="timeline-item">
+      <div class="timeline-node"></div>
+      <div class="timeline-content" @click="toggle(index)">
+        <div class="time">{{ event.time }}</div>
+        <div class="card">
+          <div class="title">{{ event.title }}</div>
+          <div class="platform" v-if="event.platform">
+            <span :class="platformClass(event.platform)">{{
+              event.platform
+            }}</span>
+          </div>
+          <div class="details" v-if="expandedIndex === index">
+            <p>{{ event.details }}</p>
+            <div class="participants">
+              <!-- <img
+                v-for="(user, i) in event.participants"
+                :key="i"
+                :src="user.avatar"
+                :alt="user.name"
+                class="avatar"
+              /> -->
 
-      <!-- 时间点 -->
-      <div
-        class="timeline-dot"
-        :class="`dot-${mode}`"
-        :style="`height: ${dotsHeight[index]}`"
-      >
-        <slot name="dot" :item="item" :index="index">
-          <span
-            class="dot-item"
-            v-if="item.color === 'red'"
-            :style="{ borderColor: ColorStyle.red }"
-          ></span>
-          <span
-            class="dot-item"
-            v-else-if="item.color === 'gray'"
-            :style="{ borderColor: ColorStyle.gray }"
-          ></span>
-          <span
-            class="dot-item"
-            v-else-if="item.color === 'green'"
-            :style="{ borderColor: ColorStyle.green }"
-          ></span>
-          <span
-            class="dot-item"
-            v-else-if="item.color === 'blue'"
-            :style="{ borderColor: ColorStyle.blue }"
-          ></span>
-          <span
-            class="dot-item"
-            v-else
-            :style="{ borderColor: item.color || ColorStyle.blue }"
-          ></span>
-        </slot>
-      </div>
-
-      <!-- 显示 title -->
-      <div class="timeline-title" v-if="item.title">
-        <slot name="title" :item="item" :index="index">{{ item.title }}</slot>
-        <slot name="time" :item="item" :index="index">{{ item.time }}</slot>
-      </div>
-
-      <!-- 显示 desc -->
-      <div ref="descRef" :class="`timeline-desc desc-${mode}`">
-        <slot name="desc" :item="item" :index="index">{{
-          item.desc || '--'
-        }}</slot>
+              <Avatar
+                class="avatar"
+                v-for="(user, i) in event.participants"
+                :key="i"
+                size="30"
+                :username="user.name"
+                :src="user.avatar"
+                :inline="true"
+              >
+              </Avatar>
+              <span v-if="event.participants.length > 4" class="more"
+                >+{{ event.participants.length - 4 }}</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Avatar from 'vue-avatar';
 export default {
-  name: 'components-timeline-index',
+  components: {
+    Avatar
+  },
+  name: 'TimelineComponent',
   props: {
-    items: {
+    events: {
       type: Array,
-      default: () => []
-    },
-    width: {
-      type: [Number, String],
-      default: '100%'
-    },
-    lineStyle: {
-      type: String,
-      default: 'solid'
-    },
-    mode: {
-      type: String,
-      default: 'left'
-    },
-    position: {
-      type: String,
-      default: 'left'
+      required: true
     }
   },
   data() {
     return {
-      ColorStyle: {
-        blue: '#1677ff',
-        green: '#52c41a',
-        red: '#ff4d4f',
-        gray: '#00000040'
-      },
-      descRef: [],
-      dotsHeight: []
+      expandedIndex: null
     };
   },
-  computed: {
-    totalWidth() {
-      return typeof this.width === 'number' ? `${this.width}px` : this.width;
-    },
-    len() {
-      return this.items.length;
-    }
-  },
-  watch: {
-    mode: {
-      handler() {
-        this.updateAlternateClasses();
-      },
-      immediate: true
-    },
-    position: {
-      handler() {
-        this.updateAlternateClasses();
-      },
-      immediate: true
-    }
-  },
   methods: {
-    getDotsHeight() {
-      this.dotsHeight = this.descRef.map((desc) => {
-        return getComputedStyle(
-          desc.firstElementChild || desc,
-          null
-        ).getPropertyValue('line-height');
-      });
+    toggle(index) {
+      this.expandedIndex = this.expandedIndex === index ? null : index;
     },
-    updateAlternateClasses() {
-      if (this.mode === 'center') {
-        this.descRef.forEach((desc, index) => {
-          desc.classList.remove('desc-alternate-left', 'desc-alternate-right');
-          if ((index + 1) % 2 === 1) {
-            desc.classList.add(
-              this.position === 'left'
-                ? 'desc-alternate-left'
-                : 'desc-alternate-right'
-            );
-          } else {
-            desc.classList.add(
-              this.position === 'left'
-                ? 'desc-alternate-right'
-                : 'desc-alternate-left'
-            );
-          }
-        });
-      }
+    platformClass(platform) {
+      return {
+        skype: platform.includes('Skype'),
+        hangouts: platform.includes('Hangouts')
+      };
     }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.descRef = this.$refs.descRef || [];
-      this.getDotsHeight();
-      this.updateAlternateClasses();
-    });
   }
 };
 </script>
 
-<style lang="less" scoped>
-.m-timeline {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  line-height: 1.5;
+<style lang="scss" scoped>
+.timeline {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5rem;
+  padding-left: 1rem;
+  border-left: 0.2rem solid #cfd8dc;
 
   .timeline-item {
+    display: flex;
+    align-items: center;
     position: relative;
-    padding-bottom: 30px;
+    margin-bottom: 2rem;
 
-    .timeline-tail {
+    .timeline-node {
+      width: 0.6rem;
+      height: 0.6rem;
+      background: #42a5f5;
+      border-radius: 50%;
       position: absolute;
-      top: 12px;
-      width: 0;
-      height: 100%;
-      border-left-width: 2px;
-      border-left-color: #e8e8e8;
+      left: -1.4rem;
     }
 
-    .timeline-dot {
-      position: absolute;
+    .timeline-content {
       display: flex;
-      align-items: center;
-    }
+      flex-direction: column;
+      cursor: pointer;
 
-    /* 新增 title 样式 */
-    .timeline-title {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 8px; // 给 title 和 desc 留间隙
-    }
+      .time {
+        font-weight: bold;
+        color: #555;
+        margin-bottom: 0.2rem;
+        font-size: 1rem;
+      }
 
-    .timeline-desc {
-      font-size: 14px;
-      line-height: 1.5;
-      word-break: break-all;
-    }
+      .card {
+        background: #fff;
+        border-radius: 0.2rem;
+        padding: 0.4rem 0.8rem;
+        box-shadow: 0 0.08rem 0.24rem rgba(0, 0, 0, 0.1);
+        min-width: 6.4rem;
 
-    .desc-left {
-      margin-left: 25px;
-    }
-    .desc-center {
-      width: calc(50% - 12px);
-    }
-    .desc-right {
-      margin-right: 25px;
-      text-align: end;
+        .title {
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+
+        .platform {
+          margin-top: 0.2rem;
+          font-size: 0.8rem;
+          // color: #1976d2;
+        }
+
+        .details {
+          font-size: 0.8rem;
+          margin-top: 0.4rem;
+          .participants {
+            display: flex;
+            align-items: center;
+            margin-top: 0.4rem;
+
+            .avatar {
+              vertical-align: middle;
+              width: 1.6rem;
+              height: 1.6rem;
+              border-radius: 50%;
+              margin-right: 0.4rem;
+            }
+
+            .more {
+              font-size: 1rem;
+              color: #666;
+            }
+          }
+        }
+      }
     }
   }
 }

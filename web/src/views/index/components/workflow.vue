@@ -1,98 +1,101 @@
-<!--  -->
 <template>
-  <div class="view-index-components-homepages">
-    <div class="batch-switch-wrapper">
-      <div class="batch-switch-name"></div>
-      <div class="batch-switch-btn"></div>
+  <div class="workflow">
+    <div class="header">
+      <h2 class="title">操作板</h2>
+      <van-popover
+        v-model="showMorePopover"
+        trigger="click"
+        :actions="actions"
+        placement="bottom-end"
+        @select="openMenu"
+      >
+        <template #reference>
+          <van-icon name="ellipsis" />
+        </template>
+      </van-popover>
     </div>
-    <van-collapse v-model="activeName">
-      <van-collapse-item title="标题1" name="1">
-        <template #title>
-          <div>标题1</div>
-        </template>
-        内容
-      </van-collapse-item>
-      <van-collapse-item title="标题1" name="2">
-        <template #title>
-          <div>标题1></div>
-        </template>
-        内容
-      </van-collapse-item>
-    </van-collapse>
-    <div @click="jumpToNext('/company')">
-      <Inner-card
-        title="入料记录"
-        icon="ri-file-list-line"
-        iconSource="remixicon"
-      />
+    <div class="timelineWarpper">
+      <TimelineComponent :events="events" />
     </div>
   </div>
 </template>
 
 <script>
-import { Collapse, CollapseItem } from 'vant';
-import InnerCard from '@/components/card/InnerCard.vue';
+import TimelineComponent from '@/components/timeline';
+import { Icon, Popover } from 'vant';
 export default {
-  name: 'view-index-components-homepages',
+  name: 'view-index-components-workflow',
   components: {
-    'van-collapse': Collapse,
-    'van-collapse-item': CollapseItem,
-    InnerCard
+    'van-icon': Icon,
+    [Popover.name]: Popover,
+    TimelineComponent
   },
   data() {
     return {
-      activeName: []
+      showMorePopover: false,
+      actions: [{ text: '选项一' }, { text: '选项二' }, { text: '选项三' }],
+      events: [
+        {
+          time: '2023.10.20 8:00',
+          title: 'File preparation',
+          details: 'Organizing and preparing necessary files for the project.',
+          participants: [
+            { name: 'Alice', avatar: 'https://i.pravatar.cc/32?img=1' },
+            { name: 'Bob', avatar: 'https://i.pravatar.cc/32?img=2' }
+          ]
+        },
+        {
+          time: '10:00',
+          title: 'Webshop mockups discussions',
+          platform: 'Skype for Business',
+          details: 'Reviewing design mockups for the webshop project.',
+          participants: [
+            { name: 'Charlie', avatar: 'https://i.pravatar.cc/32?img=3' },
+            { name: 'David', avatar: 'https://i.pravatar.cc/32?img=4' },
+            { name: 'Eve', avatar: 'https://i.pravatar.cc/32?img=5' }
+          ]
+        },
+        {
+          time: '11:15',
+          title: 'Daily Scrum meeting',
+          platform: 'Hangouts',
+          details: 'Team stand-up meeting to discuss progress and blockers.',
+          participants: [
+            { name: '郑凯杰' },
+            { name: '郑凯杰' },
+            { name: 'Hank', avatar: 'https://i.pravatar.cc/32?img=8' },
+            { name: 'Ivy', avatar: 'https://i.pravatar.cc/32?img=9' },
+            { name: 'Jack', avatar: 'https://i.pravatar.cc/32?img=10' }
+          ]
+        }
+      ]
     };
   },
-  props: {},
   methods: {
-    jumpToNext(path) {
-      console.log('path :>> ', path);
-      this.$router.push(path);
-    },
-    async getProducingList() {
-      try {
-        let { data: company } = await this.$request.get(`/api/companies/${id}`);
-        console.log('company :>> ', company);
-        company.address = company.areaCode ? company.address : '';
-        this.formData = company;
-      } catch (error) {
-        console.log('error :>> ', error);
-      }
+    openMenu() {
+      this.$emit('openMenu');
     }
   }
 };
 </script>
+
 <style lang="scss" scoped>
-//@import url(); 引入公共css类
-.view-index-components-homepages {
-  padding: 1rem;
-  // overflow-x: scroll;
-  // display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  // -webkit-overflow-scrolling: touch;
-  padding-bottom: 25px;
-  row-gap: 1rem;
-  column-gap: 1rem;
-}
-.view-index-components-homepages::-webkit-scrollbar {
-  display: none;
-}
-// .navbarCustomClass {
-//   background-color: rgba(0, 0, 0, 0);
-// }
-// .navbarCustomClass::after {
-//   display: none;
-// }
-.find-more {
-  text-align: center;
-  border: 1px solid #000;
-  font-size: 1.4rem;
-  line-height: 2.5rem;
-  border-radius: 1.4rem;
-  width: 20rem;
-  margin: 1rem auto 0;
+.workflow {
+  height: 100%;
+  min-height: 100vh;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 1rem 1rem;
+    // background: #fff;
+    .title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+  .timelineWarpper {
+    padding: 20px;
+  }
 }
 </style>

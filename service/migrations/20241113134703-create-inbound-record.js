@@ -71,6 +71,18 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 3),
         allowNull: false
       },
+      withdrawalId: {
+        type: Sequelize.JSON,
+        allowNull: true,
+        defaultValue: [],
+        get() {
+          const value = this.getDataValue('withdrawalId');
+          return value ? JSON.parse(value) : [];
+        },
+        set(value) {
+          this.setDataValue('withdrawalId', JSON.stringify(value));
+        }
+      },
       type: {
         type: Sequelize.ENUM('IN', 'OUT', 'COMPLETED', 'SUPPLEMENT', 'WITHDRAWAL', 'O'),
         allowNull: false
